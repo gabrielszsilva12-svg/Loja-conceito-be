@@ -29,6 +29,7 @@
       --text-muted: #64748b;
       --accent-black: #0f172a;
       
+      --color-ceo: #111827;
       --color-csua: #2563eb;
       --color-csum: #7c3aed;
       --color-engo: #059669;
@@ -154,11 +155,22 @@
       letter-spacing: 0.5px;
     }
 
+    .team-CEO { background-color: var(--color-ceo); }
     .team-CSUA { background-color: var(--color-csua); }
     .team-CSUM { background-color: var(--color-csum); }
     .team-ENGO { background-color: var(--color-engo); }
     .team-ENGE { background-color: var(--color-enge); }
     .team-EDFE { background-color: var(--color-edfe); }
+
+    .recurrence-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      background: #e2e8f0;
+      color: #475569;
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-top: 2px;
+    }
 
     /* DASHBOARD */
     .dashboard-container {
@@ -415,8 +427,8 @@
     }
 
     .seat {
-      width: 64px;
-      height: 50px;
+      width: 72px;
+      height: 56px;
       border-radius: 6px;
       display: flex;
       flex-direction: column;
@@ -526,7 +538,7 @@
 </head>
 <body>
 
-  <!-- HEADER COM A IMAGEM EXATA DA SUA LOGO -->
+  <!-- HEADER -->
   <header>
     <div class="brand-container">
       <img id="main-logo-img" src="BE-amoradiadofuturo-3.png" alt="BE Logo" class="logo-be-img">
@@ -539,7 +551,7 @@
     </div>
   </header>
 
-  <!-- DASHBOARD DIÁRIO / SEMANAL -->
+  <!-- DASHBOARD -->
   <section class="dashboard-container" id="section-coworking">
     <div class="section-header">
       <div>
@@ -559,6 +571,7 @@
         <label for="filter-team" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">TIME:</label>
         <select id="filter-team" onchange="renderDashboard()">
           <option value="ALL">Todos os Times</option>
+          <option value="CEO">CEO</option>
           <option value="CSUA">CSUA</option>
           <option value="CSUM">CSUM</option>
           <option value="ENGO">ENGO</option>
@@ -630,7 +643,7 @@
     </div>
   </section>
 
-  <!-- MODAIS DE AÇÃO -->
+  <!-- MODAIS -->
   <div class="modal-backdrop" id="collab-modal">
     <div class="modal">
       <div class="modal-title">Gestão de Colaboradores</div>
@@ -642,6 +655,7 @@
         <div class="form-group">
           <label>Time</label>
           <select id="collab-team" required>
+            <option value="CEO">CEO</option>
             <option value="CSUA">CSUA</option>
             <option value="CSUM">CSUM</option>
             <option value="ENGO">ENGO</option>
@@ -689,6 +703,16 @@
             <input type="time" id="m-end" required>
           </div>
         </div>
+        <div class="form-group">
+          <label>Recorrência</label>
+          <select id="m-recurrence">
+            <option value="none">Apenas nesta data (Única)</option>
+            <option value="daily">Diário</option>
+            <option value="weekly">Semanal</option>
+            <option value="biweekly">A cada 15 dias</option>
+            <option value="monthly">Mensal</option>
+          </select>
+        </div>
         <div class="modal-actions">
           <button type="button" class="btn" onclick="closeMeetingModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar Reunião</button>
@@ -703,6 +727,16 @@
       <div class="form-group">
         <label>Selecione o Colaborador</label>
         <select id="seat-person-select"></select>
+      </div>
+      <div class="form-group">
+        <label>Recorrência de Ocupação</label>
+        <select id="seat-recurrence">
+          <option value="none">Apenas nesta data (Única)</option>
+          <option value="daily">Diário</option>
+          <option value="weekly">Semanal</option>
+          <option value="biweekly">A cada 15 dias</option>
+          <option value="monthly">Mensal</option>
+        </select>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn" onclick="clearSeat()">Desocupar Assento</button>
@@ -725,10 +759,18 @@
     ]));
 
     let meetings = JSON.parse(localStorage.getItem('be_meetings') || '[]');
-    let allocations = JSON.parse(localStorage.getItem('be_allocations') || '{}');
+    let seatAllocations = JSON.parse(localStorage.getItem('be_seat_allocations') || '[]');
     let currentSeatTarget = null;
 
     document.getElementById('allocation-date').valueAsDate = new Date();
+
+    const recurrenceLabels = {
+      none: '',
+      daily: 'Diário',
+      weekly: 'Semanal',
+      biweekly: 'A cada 15 dias',
+      monthly: 'Mensal'
+    };
 
     function setViewMode(mode) {
       viewMode = mode;
@@ -760,6 +802,26 @@
 
     function getCollaboratorByName(name) {
       return collaborators.find(c => c.name.toLowerCase() === name.toLowerCase());
+    }
+
+    // Avalia se o evento/assento recorrente bate com a data selecionada
+    function isEventActiveOnDate(baseDateStr, recurrence, targetDateStr) {
+      if (baseDateStr === targetDateStr) return true;
+      if (!recurrence || recurrence === 'none') return false;
+
+      const base = new Date(baseDateStr + 'T00:00:00');
+      const target = new Date(targetDateStr + 'T00:00:00');
+
+      if (target < base) return false;
+
+      const diffDays = Math.round((target - base) / (1000 * 60 * 60 * 24));
+
+      if (recurrence === 'daily') return true;
+      if (recurrence === 'weekly') return diffDays % 7 === 0;
+      if (recurrence === 'biweekly') return diffDays % 14 === 0;
+      if (recurrence === 'monthly') return base.getDate() === target.getDate();
+
+      return false;
     }
 
     function renderDashboard() {
@@ -798,7 +860,8 @@
         meetingSlot.className = 'meeting-slot';
 
         const mList = meetings.filter(m => {
-          if (m.date !== dateISO || m.start > h || m.end <= h) return false;
+          if (!isEventActiveOnDate(m.date, m.recurrence, dateISO)) return false;
+          if (m.start > h || m.end <= h) return false;
           if (filterTeam !== 'ALL' && m.team !== filterTeam) return false;
           return true;
         });
@@ -810,6 +873,7 @@
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
               <span class="team-badge team-${m.team || 'CSUA'}">${m.team || 'BE'}</span>
               <strong>${m.title}</strong>
+              ${m.recurrence && m.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[m.recurrence]}</span>` : ''}
             </div>
             <div style="font-size: 0.78rem; color: #475569;">
               Resp: <strong>${m.owner}</strong> ${m.participants ? `| Part: ${m.participants}` : ''}
@@ -860,7 +924,8 @@
           cell.onclick = () => openMeetingModal({date: dateISO, start: h});
 
           const mList = meetings.filter(m => {
-            if (m.date !== dateISO || m.start > h || m.end <= h) return false;
+            if (!isEventActiveOnDate(m.date, m.recurrence, dateISO)) return false;
+            if (m.start > h || m.end <= h) return false;
             if (filterTeam !== 'ALL' && m.team !== filterTeam) return false;
             return true;
           });
@@ -893,14 +958,15 @@
 
     function renderTables() {
       const selectedDate = document.getElementById('allocation-date').value;
-      const dayData = allocations[selectedDate] || {};
 
       const buildSeats = (containerId, tableKey, count) => {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
         for(let i=1; i<=count; i++) {
           const seatKey = `${tableKey}_${i}`;
-          const personName = dayData[seatKey] || '';
+          
+          const alloc = seatAllocations.find(a => a.seatKey === seatKey && isEventActiveOnDate(a.date, a.recurrence, selectedDate));
+          const personName = alloc ? alloc.personName : '';
           const collab = getCollaboratorByName(personName);
 
           const seat = document.createElement('div');
@@ -911,12 +977,13 @@
               <strong>C${i}</strong>
               <span style="font-weight:700;">${personName.split(' ')[0]}</span>
               <span class="team-badge team-${collab.team}">${collab.team}</span>
+              ${alloc && alloc.recurrence && alloc.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[alloc.recurrence]}</span>` : ''}
             `;
           } else {
             seat.innerHTML = `<strong>C${i}</strong><span>${personName || 'Livre'}</span>`;
           }
 
-          seat.onclick = () => openSeatModal(selectedDate, seatKey, personName);
+          seat.onclick = () => openSeatModal(selectedDate, seatKey, alloc);
           container.appendChild(seat);
         }
       };
@@ -929,20 +996,18 @@
       buildSeats('row-mkt-bottom', 'mkt_bot', 3);
     }
 
-    /* EXPORTAÇÃO EM PNG UTILIZANDO A IMAGEM ORIGINAL DA LOGO */
+    /* EXPORTAÇÃO EM PNG */
     function exportSectionPNG(type) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       canvas.width = 1200;
       canvas.height = 800;
 
-      // Fundo
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const logoImg = document.getElementById('main-logo-img');
 
-      // Desenhar a imagem real no Canvas
       try {
         ctx.drawImage(logoImg, 60, 45, 45, 55);
       } catch (e) {
@@ -977,7 +1042,7 @@
 
       if (type === 'coworking') {
         const dateISO = currentDate.toISOString().split('T')[0];
-        const dayMeetings = meetings.filter(m => m.date === dateISO);
+        const dayMeetings = meetings.filter(m => isEventActiveOnDate(m.date, m.recurrence, dateISO));
 
         if (dayMeetings.length === 0) {
           ctx.font = '20px N27, sans-serif';
@@ -995,7 +1060,7 @@
 
             ctx.font = 'bold 20px N27, sans-serif';
             ctx.fillStyle = '#0f172a';
-            ctx.fillText(`${m.start} - ${m.end} | ${m.title}`, 85, yPos + 30);
+            ctx.fillText(`${m.start} - ${m.end} | ${m.title} ${m.recurrence && m.recurrence !== 'none' ? ' (Recorrente: ' + recurrenceLabels[m.recurrence] + ')' : ''}`, 85, yPos + 30);
 
             ctx.font = '16px N27, sans-serif';
             ctx.fillStyle = '#475569';
@@ -1006,7 +1071,6 @@
         }
       } else {
         const selectedDate = document.getElementById('allocation-date').value;
-        const dayData = allocations[selectedDate] || {};
 
         ctx.font = 'bold 22px N27, sans-serif';
         ctx.fillStyle = '#0f172a';
@@ -1026,7 +1090,9 @@
           yPos += 25;
 
           t.keys.forEach((k, idx) => {
-            const occupant = dayData[k] || 'Livre';
+            const alloc = seatAllocations.find(a => a.seatKey === k && isEventActiveOnDate(a.date, a.recurrence, selectedDate));
+            const occupant = alloc ? `${alloc.personName} ${alloc.recurrence !== 'none' ? '(' + recurrenceLabels[alloc.recurrence] + ')' : ''}` : 'Livre';
+            
             ctx.font = '16px N27, sans-serif';
             ctx.fillStyle = occupant === 'Livre' ? '#16a34a' : '#b91c1c';
             ctx.fillText(` • C${idx + 1}: ${occupant}`, 80, yPos);
@@ -1078,6 +1144,16 @@
       renderTables();
     }
 
+    function updateCollabTeam(id, newTeam) {
+      const collab = collaborators.find(c => c.id === id);
+      if (collab) {
+        collab.team = newTeam;
+        localStorage.setItem('be_collaborators', JSON.stringify(collaborators));
+        renderDashboard();
+        renderTables();
+      }
+    }
+
     function deleteCollaborator(id) {
       collaborators = collaborators.filter(c => c.id !== id);
       localStorage.setItem('be_collaborators', JSON.stringify(collaborators));
@@ -1094,10 +1170,19 @@
         item.className = 'collab-item';
         item.innerHTML = `
           <div>
-            <strong>${c.name}</strong> 
-            <span class="team-badge team-${c.team}">${c.team}</span>
+            <strong>${c.name}</strong>
           </div>
-          <button class="btn" style="padding: 2px 8px; font-size: 0.75rem;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <select style="padding: 2px 6px; font-size: 0.75rem;" onchange="updateCollabTeam('${c.id}', this.value)">
+              <option value="CEO" ${c.team === 'CEO' ? 'selected' : ''}>CEO</option>
+              <option value="CSUA" ${c.team === 'CSUA' ? 'selected' : ''}>CSUA</option>
+              <option value="CSUM" ${c.team === 'CSUM' ? 'selected' : ''}>CSUM</option>
+              <option value="ENGO" ${c.team === 'ENGO' ? 'selected' : ''}>ENGO</option>
+              <option value="ENGE" ${c.team === 'ENGE' ? 'selected' : ''}>ENGE</option>
+              <option value="EDFE" ${c.team === 'EDFE' ? 'selected' : ''}>EDFE</option>
+            </select>
+            <button class="btn" style="padding: 2px 8px; font-size: 0.75rem;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+          </div>
         `;
         container.appendChild(item);
       });
@@ -1121,6 +1206,7 @@
       document.getElementById('m-date').value = data.date || currentDate.toISOString().split('T')[0];
       document.getElementById('m-start').value = data.start || '09:00';
       document.getElementById('m-end').value = data.end || '10:00';
+      document.getElementById('m-recurrence').value = data.recurrence || 'none';
       document.getElementById('meeting-modal').style.display = 'flex';
     }
 
@@ -1138,11 +1224,12 @@
         id,
         title: document.getElementById('m-title').value,
         owner: ownerName,
-        team: collab ? collab.team : 'CSUA',
+        team: collab ? collab.team : 'CEO',
         participants: document.getElementById('m-participants').value,
         date: document.getElementById('m-date').value,
         start: document.getElementById('m-start').value,
-        end: document.getElementById('m-end').value
+        end: document.getElementById('m-end').value,
+        recurrence: document.getElementById('m-recurrence').value
       };
 
       meetings = meetings.filter(m => m.id !== id);
@@ -1153,7 +1240,7 @@
     }
 
     // MODAL ASSENTO
-    function openSeatModal(date, seatKey, currentPerson) {
+    function openSeatModal(date, seatKey, currentAlloc) {
       currentSeatTarget = { date, seatKey };
       const select = document.getElementById('seat-person-select');
       select.innerHTML = '<option value="">-- Selecione --</option>';
@@ -1164,7 +1251,8 @@
         select.appendChild(opt);
       });
 
-      select.value = currentPerson || '';
+      select.value = currentAlloc ? currentAlloc.personName : '';
+      document.getElementById('seat-recurrence').value = currentAlloc ? (currentAlloc.recurrence || 'none') : 'none';
       document.getElementById('seat-modal').style.display = 'flex';
     }
 
@@ -1174,20 +1262,31 @@
 
     function saveSeat() {
       const name = document.getElementById('seat-person-select').value;
+      const recurrence = document.getElementById('seat-recurrence').value;
       const { date, seatKey } = currentSeatTarget;
-      if (!allocations[date]) allocations[date] = {};
-      allocations[date][seatKey] = name;
-      localStorage.setItem('be_allocations', JSON.stringify(allocations));
+
+      // Remover alocação existente para essa mesa nesse dia/recorrência
+      seatAllocations = seatAllocations.filter(a => !(a.seatKey === seatKey && a.date === date));
+
+      if (name) {
+        seatAllocations.push({
+          id: Date.now().toString(),
+          seatKey,
+          personName: name,
+          date,
+          recurrence
+        });
+      }
+
+      localStorage.setItem('be_seat_allocations', JSON.stringify(seatAllocations));
       closeSeatModal();
       renderTables();
     }
 
     function clearSeat() {
       const { date, seatKey } = currentSeatTarget;
-      if (allocations[date]) {
-        delete allocations[date][seatKey];
-        localStorage.setItem('be_allocations', JSON.stringify(allocations));
-      }
+      seatAllocations = seatAllocations.filter(a => !(a.seatKey === seatKey && a.date === date));
+      localStorage.setItem('be_seat_allocations', JSON.stringify(seatAllocations));
       closeSeatModal();
       renderTables();
     }
