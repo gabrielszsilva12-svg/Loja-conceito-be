@@ -64,7 +64,7 @@
     .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
     .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
 
-    /* ESTRUTURA VISUAL DO MAPA DE MESAS E SALAS */
+    /* ESTRUTURA VISUAL DO MAPA DE MESAS */
     .office-layout { display: flex; flex-direction: column; gap: 30px; margin-top: 10px; }
     .section-title { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
 
@@ -75,12 +75,11 @@
     .table-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; position: relative; }
     .table-surface { background: #e2e8f0; border: 2px solid #94a3b8; border-radius: 8px; font-weight: 800; font-size: 0.75rem; color: #475569; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
 
-    /* LINHAS DE CADEIRAS NA MESA */
     .seats-row { display: flex; gap: 12px; justify-content: center; margin: 4px 0; }
 
     .seat-chair {
-      width: 80px;
-      min-height: 48px;
+      width: 90px;
+      min-height: 52px;
       border: 1px solid var(--seat-border);
       background: var(--seat-bg);
       border-radius: 6px;
@@ -92,18 +91,22 @@
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--primary);
+      cursor: pointer;
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
       transition: all 0.2s;
+    }
+    .seat-chair:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
     }
     .seat-chair.occupied {
       background: var(--seat-occupied-bg);
       border-color: var(--seat-occupied-border);
       color: var(--seat-occupied-text);
     }
-    .seat-status { font-size: 0.65rem; font-weight: 500; color: var(--text-muted); }
+    .seat-status { font-size: 0.65rem; font-weight: 500; color: var(--text-muted); text-align: center; line-height: 1.1; }
     .seat-chair.occupied .seat-status { color: var(--seat-occupied-text); font-weight: 700; }
 
-    /* LAYOUT DAS ESTAÇÕES DE TRABALHO (DESKS) */
     .desks-row { display: flex; gap: 20px; flex-wrap: wrap; }
     .desk-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 15px; flex: 1; min-width: 280px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
   </style>
@@ -144,7 +147,7 @@
     <div id="view-seats" class="tab-content" style="display:none;">
       <div class="card">
         <h3>Mapa de Alocação do Escritório</h3>
-        <p class="card-subtitle">Visualização do layout do escritório e alocação de assentos por data.</p>
+        <p class="card-subtitle">Clique em qualquer cadeira para alocar ou alterar a pessoa do dia/período.</p>
         
         <div class="form-group" style="max-width: 200px; margin-top: 10px; margin-bottom: 25px;">
           <label>Data de Consulta</label>
@@ -152,78 +155,95 @@
         </div>
 
         <div class="office-layout">
-          
-          <!-- SALAS DE REUNIÃO -->
           <div>
-            <div class="section-title">Salas de Reunião</div>
             <div class="rooms-row">
               
-              <!-- MEETING #01 -->
+              <!-- MEETING 01 -->
               <div class="room-box">
-                <div class="room-box-title">Meeting #01 (4 Lugares)</div>
+                <div class="room-box-title">Meeting 01 (4 Lugares)</div>
                 <div class="table-container">
                   <div class="seats-row" id="m1-top"></div>
-                  <div class="table-surface" style="width: 170px; height: 35px; margin: 4px 0;">Tampo Reunião 01</div>
+                  <div class="table-surface" style="width: 190px; height: 35px; margin: 4px 0;">Meeting 01</div>
                   <div class="seats-row" id="m1-bottom"></div>
                 </div>
               </div>
 
-              <!-- MEETING #02 -->
+              <!-- MEETING 02 -->
               <div class="room-box">
-                <div class="room-box-title">Meeting #02 (4 Lugares)</div>
+                <div class="room-box-title">Meeting 02 (4 Lugares)</div>
                 <div class="table-container">
                   <div class="seats-row" id="m2-top"></div>
-                  <div class="table-surface" style="width: 170px; height: 35px; margin: 4px 0;">Tampo Reunião 02</div>
+                  <div class="table-surface" style="width: 190px; height: 35px; margin: 4px 0;">Meeting 02</div>
                   <div class="seats-row" id="m2-bottom"></div>
                 </div>
               </div>
 
             </div>
-          </div>
 
-          <!-- MESAS DE TRABALHO / ESTAÇÕES -->
-          <div>
-            <div class="section-title">Mesas de Trabalho / Estações</div>
-            <div class="desks-row">
-              
-              <!-- MESA 01 -->
+            <!-- MARKETING (MESA COM 6 LUGARES) -->
+            <div class="desks-row" style="margin-top: 25px;">
               <div class="desk-box">
-                <div class="room-box-title" style="text-align: center;">Mesa 01 (4 Lugares)</div>
+                <div class="room-box-title" style="text-align: center;">Marketing (6 Lugares)</div>
                 <div class="table-container">
-                  <div class="seats-row" id="d1-top"></div>
-                  <div class="table-surface" style="width: 170px; height: 30px; margin: 4px 0;">Mesa 01</div>
-                  <div class="seats-row" id="d1-bottom"></div>
-                </div>
-              </div>
-
-              <!-- MESA 02 -->
-              <div class="desk-box">
-                <div class="room-box-title" style="text-align: center;">Mesa 02 (4 Lugares)</div>
-                <div class="table-container">
-                  <div class="seats-row" id="d2-top"></div>
-                  <div class="table-surface" style="width: 170px; height: 30px; margin: 4px 0;">Mesa 02</div>
-                  <div class="seats-row" id="d2-bottom"></div>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- MESA 03 (MAIOR - 6 LUGARES) -->
-            <div class="desks-row" style="margin-top: 20px;">
-              <div class="desk-box">
-                <div class="room-box-title" style="text-align: center;">Mesa 03 - Diretoria / Operacional (6 Lugares)</div>
-                <div class="table-container">
-                  <div class="seats-row" id="d3-top"></div>
-                  <div class="table-surface" style="width: 260px; height: 35px; margin: 4px 0;">Mesa 03 (Principal)</div>
-                  <div class="seats-row" id="d3-bottom"></div>
+                  <div class="seats-row" id="m3-top"></div>
+                  <div class="table-surface" style="width: 290px; height: 38px; margin: 4px 0;">Mesa Marketing</div>
+                  <div class="seats-row" id="m3-bottom"></div>
                 </div>
               </div>
             </div>
 
           </div>
-
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE ALOCAÇÃO DE ASSENTO -->
+  <div class="modal-backdrop" id="seat-modal">
+    <div class="modal">
+      <div class="modal-title" id="seat-modal-title">Alocar Assento</div>
+      <form id="seat-form" onsubmit="saveSeatAllocation(event)">
+        <input type="hidden" id="s-table-id">
+        <input type="hidden" id="s-seat-code">
+
+        <div class="form-group">
+          <label>Colaborador *</label>
+          <select id="s-collab-select" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Data Inicial *</label>
+          <input type="date" id="s-start-date" required>
+        </div>
+
+        <div class="form-group">
+          <label>Frequência / Permanência *</label>
+          <select id="s-recurrence">
+            <option value="daily">Diariamente (Todos os dias úteis)</option>
+            <option value="single">Apenas na data selecionada</option>
+            <option value="weekly">Semanalmente (Mesmo dia da semana)</option>
+            <option value="biweekly">A cada 15 dias</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Exceção (Dias de Home Office / Ausência)</label>
+          <select id="s-except-day">
+            <option value="none">Nenhuma exceção</option>
+            <option value="1">Segunda-feira</option>
+            <option value="2">Terça-feira</option>
+            <option value="3">Quarta-feira</option>
+            <option value="4">Quinta-feira</option>
+            <option value="5">Sexta-feira</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn" style="color:#ef4444;" id="btn-remove-seat" onclick="removeSeatAllocation()">Remover Pessoa</button>
+          <button type="button" class="btn" onclick="closeSeatModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Assento</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -304,9 +324,11 @@
           <label>Time / Setor *</label>
           <select id="c-team" required>
             <option value="EDFE">EDFE</option>
-            <option value="CEO">CEO</option>
             <option value="CSUA">CSUA</option>
-            <option value="MARKETING">MARKETING</option>
+            <option value="CSUM">CSUM</option>
+            <option value="ENGO">ENGO</option>
+            <option value="ENGE">ENGE</option>
+            <option value="CEO">CEO</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%; margin-top:5px;">+ Adicionar Colaborador</button>
@@ -328,10 +350,11 @@
     }
 
     let collaborators = [
-      { id: '1', name: 'Gabriel Souza', team: 'MARKETING' },
+      { id: '1', name: 'Gabriel Souza', team: 'CEO' },
       { id: '2', name: 'Ana Silva', team: 'EDFE' }
     ];
     let meetings = [];
+    let seatAllocations = []; // Estrutura para os assentos fixos/recorrentes
 
     const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
 
@@ -348,6 +371,8 @@
         if (cData && cData.length > 0) collaborators = cData;
         const { data: mData } = await supabaseClient.from('meetings').select('*');
         if (mData) meetings = mData;
+        const { data: sData } = await supabaseClient.from('seat_allocations').select('*');
+        if (sData) seatAllocations = sData;
       }
       renderDashboard();
       renderSeats();
@@ -415,7 +440,6 @@
       container.innerHTML = html;
     }
 
-    /* AO CLICAR NA CÉLULA DO CALENDÁRIO -> CRIA EVENTO NO HORÁRIO E DATA */
     function handleSlotClick(dateStr, hourStr) {
       const nextHourNum = parseInt(hourStr.split(':')[0]) + 1;
       const endHourStr = `${nextHourNum.toString().padStart(2, '0')}:00`;
@@ -427,53 +451,155 @@
       });
     }
 
-    /* RENDERIZAR MAPA DAS SALAS E MESAS DE TRABALHO */
+    /* ALOCAÇÃO E RENDERIZAÇÃO DAS MESAS */
+    function checkSeatOccupant(tableId, seatCode, targetDateStr) {
+      const targetDate = new Date(targetDateStr + 'T00:00:00');
+      const dayOfWeek = targetDate.getDay().toString(); // 1=Seg, 2=Ter, etc.
+
+      const alloc = seatAllocations.find(a => {
+        if (a.tableId !== tableId || a.seatCode !== seatCode) return false;
+        
+        const startDate = new Date(a.startDate + 'T00:00:00');
+        if (targetDate < startDate) return false;
+
+        // Verificar exceção de Home Office
+        if (a.exceptDay && a.exceptDay === dayOfWeek) return false;
+
+        // Recorrência
+        if (a.recurrence === 'single') {
+          return a.startDate === targetDateStr;
+        } else if (a.recurrence === 'daily') {
+          return true;
+        } else if (a.recurrence === 'weekly') {
+          return startDate.getDay() === targetDate.getDay();
+        } else if (a.recurrence === 'biweekly') {
+          const diffDays = Math.floor((targetDate - startDate) / (1000 * 60 * 60 * 24));
+          return diffDays % 14 === 0;
+        }
+        return false;
+      });
+
+      return alloc ? alloc.collabName : null;
+    }
+
     function renderSeats() {
       const selectedDate = document.getElementById('seat-search-date').value;
-      
-      // Ocupações na data selecionada
-      const dateMeetings = meetings.filter(m => m.date === selectedDate);
 
-      // Função utilitária para gerar cadeira HTML
-      const createChairHTML = (code, occupant) => {
+      const createChair = (tableId, code) => {
+        const occupant = checkSeatOccupant(tableId, code, selectedDate);
         const isOccupied = Boolean(occupant);
+
         return `
-          <div class="seat-chair ${isOccupied ? 'occupied' : ''}">
+          <div class="seat-chair ${isOccupied ? 'occupied' : ''}" onclick="openSeatModal('${tableId}', '${code}')">
             <span>${code}</span>
             <span class="seat-status">${isOccupied ? occupant : 'Livre'}</span>
           </div>
         `;
       };
 
-      // Meeting 01 (4 cadeiras)
-      document.getElementById('m1-top').innerHTML = createChairHTML('C1', null) + createChairHTML('C2', null);
-      document.getElementById('m1-bottom').innerHTML = createChairHTML('C3', null) + createChairHTML('C4', null);
+      // Meeting 01 (4 Lugares)
+      document.getElementById('m1-top').innerHTML = createChair('Meeting01', 'C1') + createChair('Meeting01', 'C2');
+      document.getElementById('m1-bottom').innerHTML = createChair('Meeting01', 'C3') + createChair('Meeting01', 'C4');
 
-      // Meeting 02 (4 cadeiras)
-      document.getElementById('m2-top').innerHTML = createChairHTML('C1', null) + createChairHTML('C2', null);
-      document.getElementById('m2-bottom').innerHTML = createChairHTML('C3', null) + createChairHTML('C4', null);
+      // Meeting 02 (4 Lugares)
+      document.getElementById('m2-top').innerHTML = createChair('Meeting02', 'C1') + createChair('Meeting02', 'C2');
+      document.getElementById('m2-bottom').innerHTML = createChair('Meeting02', 'C3') + createChair('Meeting02', 'C4');
 
-      // Mesa 01 (4 cadeiras)
-      document.getElementById('d1-top').innerHTML = createChairHTML('C1', dateMeetings[0]?.owner || null) + createChairHTML('C2', dateMeetings[1]?.owner || null);
-      document.getElementById('d1-bottom').innerHTML = createChairHTML('C3', dateMeetings[2]?.owner || null) + createChairHTML('C4', dateMeetings[3]?.owner || null);
-
-      // Mesa 02 (4 cadeiras)
-      document.getElementById('d2-top').innerHTML = createChairHTML('C1', dateMeetings[4]?.owner || null) + createChairHTML('C2', dateMeetings[5]?.owner || null);
-      document.getElementById('d2-bottom').innerHTML = createChairHTML('C3', dateMeetings[6]?.owner || null) + createChairHTML('C4', dateMeetings[7]?.owner || null);
-
-      // Mesa 03 (6 cadeiras)
-      document.getElementById('d3-top').innerHTML = 
-        createChairHTML('C1', dateMeetings[8]?.owner || null) + 
-        createChairHTML('C2', dateMeetings[9]?.owner || null) + 
-        createChairHTML('C3', dateMeetings[10]?.owner || null);
-
-      document.getElementById('d3-bottom').innerHTML = 
-        createChairHTML('C4', dateMeetings[11]?.owner || null) + 
-        createChairHTML('C5', dateMeetings[12]?.owner || null) + 
-        createChairHTML('C6', dateMeetings[13]?.owner || null);
+      // Marketing (6 Lugares)
+      document.getElementById('m3-top').innerHTML = createChair('Marketing', 'C1') + createChair('Marketing', 'C2') + createChair('Marketing', 'C3');
+      document.getElementById('m3-bottom').innerHTML = createChair('Marketing', 'C4') + createChair('Marketing', 'C5') + createChair('Marketing', 'C6');
     }
 
-    /* GERENCIAMENTO DE COLABORADORES E MODAIS */
+    /* MODAL DE ASSENTO */
+    function openSeatModal(tableId, seatCode) {
+      const modal = document.getElementById('seat-modal');
+      const select = document.getElementById('s-collab-select');
+      const selectedDate = document.getElementById('seat-search-date').value;
+
+      document.getElementById('seat-modal-title').innerText = `Alocar Assento - ${tableId} (${seatCode})`;
+      document.getElementById('s-table-id').value = tableId;
+      document.getElementById('s-seat-code').value = seatCode;
+      document.getElementById('s-start-date').value = selectedDate;
+
+      select.innerHTML = '';
+      if (collaborators.length === 0) {
+        select.innerHTML = '<option value="">Cadastre colaboradores primeiro</option>';
+      } else {
+        collaborators.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.name;
+          opt.innerText = `${c.name} (${c.team})`;
+          select.appendChild(opt);
+        });
+      }
+
+      // Buscar se já tem alguém
+      const existing = seatAllocations.find(a => a.tableId === tableId && a.seatCode === seatCode);
+      if (existing) {
+        select.value = existing.collabName;
+        document.getElementById('s-start-date').value = existing.startDate;
+        document.getElementById('s-recurrence').value = existing.recurrence || 'daily';
+        document.getElementById('s-except-day').value = existing.exceptDay || 'none';
+        document.getElementById('btn-remove-seat').style.display = 'inline-block';
+      } else {
+        document.getElementById('s-recurrence').value = 'daily';
+        document.getElementById('s-except-day').value = 'none';
+        document.getElementById('btn-remove-seat').style.display = 'none';
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeSeatModal() { document.getElementById('seat-modal').style.display = 'none'; }
+
+    async function saveSeatAllocation(e) {
+      e.preventDefault();
+      const tableId = document.getElementById('s-table-id').value;
+      const seatCode = document.getElementById('s-seat-code').value;
+      const collabName = document.getElementById('s-collab-select').value;
+      const startDate = document.getElementById('s-start-date').value;
+      const recurrence = document.getElementById('s-recurrence').value;
+      const exceptDay = document.getElementById('s-except-day').value;
+
+      // Remover alocação anterior do assento se existir
+      seatAllocations = seatAllocations.filter(a => !(a.tableId === tableId && a.seatCode === seatCode));
+
+      const newAlloc = {
+        id: Date.now().toString(),
+        tableId,
+        seatCode,
+        collabName,
+        startDate,
+        recurrence,
+        exceptDay
+      };
+
+      if (supabaseClient) {
+        await supabaseClient.from('seat_allocations').delete().eq('tableId', tableId).eq('seatCode', seatCode);
+        const { data } = await supabaseClient.from('seat_allocations').insert([newAlloc]).select();
+        if (data) seatAllocations.push(data[0]);
+      } else {
+        seatAllocations.push(newAlloc);
+      }
+
+      closeSeatModal();
+      renderSeats();
+    }
+
+    async function removeSeatAllocation() {
+      const tableId = document.getElementById('s-table-id').value;
+      const seatCode = document.getElementById('s-seat-code').value;
+
+      if (supabaseClient) {
+        await supabaseClient.from('seat_allocations').delete().eq('tableId', tableId).eq('seatCode', seatCode);
+      }
+      seatAllocations = seatAllocations.filter(a => !(a.tableId === tableId && a.seatCode === seatCode));
+
+      closeSeatModal();
+      renderSeats();
+    }
+
+    /* MODAL DE COLABORADORES E REUNIÕES */
     function openCollabModal() { renderCollabList(); document.getElementById('collab-modal').style.display = 'flex'; }
     function closeCollabModal() { document.getElementById('collab-modal').style.display = 'none'; }
 
@@ -596,7 +722,6 @@
 
       closeMeetingModal();
       renderDashboard();
-      renderSeats();
     }
 
     async function deleteMeeting() {
@@ -606,7 +731,6 @@
       meetings = meetings.filter(m => m.id != id);
       closeMeetingModal();
       renderDashboard();
-      renderSeats();
     }
   </script>
 </body>
