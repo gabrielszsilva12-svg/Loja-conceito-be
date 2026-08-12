@@ -572,7 +572,6 @@
         <h2>COWORKING PRO BE</h2>
         <p id="dashboard-subtitle">Dashboard Diário de Ocupação</p>
       </div>
-      <button class="btn btn-share" onclick="exportSectionPNG('coworking')">📤 Exportar Dia (PNG)</button>
     </div>
 
     <div class="controls-bar">
@@ -612,7 +611,6 @@
         <h2>MAPA DE ALOCAÇÃO DO ESCRITÓRIO</h2>
         <p>Selecione a data e clique no assento para alocar um colaborador ou visitante</p>
       </div>
-      <button class="btn btn-share" onclick="exportSectionPNG('mapa')">📤 Exportar Mapa (PNG)</button>
     </div>
 
     <div class="controls-bar">
@@ -657,7 +655,7 @@
     </div>
   </section>
 
-  <!-- MODAIS -->
+  <!-- MODAL COLABORADORES -->
   <div class="modal-backdrop" id="collab-modal">
     <div class="modal">
       <div class="modal-title">Gestão de Colaboradores</div>
@@ -686,6 +684,7 @@
     </div>
   </div>
 
+  <!-- MODAL REUNIÕES -->
   <div class="modal-backdrop" id="meeting-modal">
     <div class="modal">
       <div class="modal-title" id="modal-title-text">Agendar Reunião</div>
@@ -739,6 +738,7 @@
           </select>
         </div>
         <div class="modal-actions">
+          <button type="button" class="btn" style="color:red" id="btn-delete-meeting" onclick="deleteMeeting()">Excluir</button>
           <button type="button" class="btn" onclick="closeMeetingModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar Reunião</button>
         </div>
@@ -746,6 +746,7 @@
     </div>
   </div>
 
+  <!-- MODAL ASSENTO -->
   <div class="modal-backdrop" id="seat-modal">
     <div class="modal">
       <div class="modal-title">Alocar Assento</div>
@@ -783,7 +784,6 @@
   </div>
 
   <script>
-    // Conexão com o Supabase na nuvem
     const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -791,14 +791,7 @@
     let currentDate = new Date();
     let viewMode = 'day';
 
-    let collaborators = [
-      { id: '1', name: 'Gabriel Souza', team: 'CSUA' },
-      { id: '2', name: 'Ana Beatriz', team: 'CSUM' },
-      { id: '3', name: 'Carlos Eduardo', team: 'ENGO' },
-      { id: '4', name: 'Mariana Lima', team: 'ENGE' },
-      { id: '5', name: 'Felipe Rocha', team: 'EDFE' }
-    ];
-
+    let collaborators = [];
     let meetings = [];
     let seatAllocations = [];
     let currentSeatTarget = null;
@@ -821,11 +814,11 @@
       '5': 'Sex'
     };
 
-    // Carrega os dados do Supabase
+    // BANCO DE DADOS - LEITURA
     async function loadCloudData() {
       try {
         const { data: collabData } = await supabaseClient.from('collaborators').select('*');
-        if (collabData && collabData.length > 0) collaborators = collabData;
+        if (collabData) collaborators = collabData;
 
         const { data: meetingData } = await supabaseClient.from('meetings').select('*');
         if (meetingData) meetings = meetingData;
@@ -833,7 +826,7 @@
         const { data: seatData } = await supabaseClient.from('seat_allocations').select('*');
         if (seatData) seatAllocations = seatData;
       } catch (err) {
-        console.warn('Usando dados locais temporários até a sincronização:', err);
+        console.error('Erro ao buscar dados do Supabase:', err);
       }
 
       renderDashboard();
@@ -1035,68 +1028,59 @@
     function renderTables() {
       const selectedDate = document.getElementById('allocation-date').value;
 
-      const buildSeats = (containerId, tableKey, count) => {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '';
-        for(let i=1; i<=count; i++) {
-          const seatKey = `${tableKey}_${i}`;
-          
-          const alloc = seatAllocations.find(a => a.seatKey === seatKey && isEventActiveOnDate(a.date, a.recurrence, a.exceptDay, selectedDate));
-          const personName = alloc ? alloc.personName : '';
-          const collab = getCollaboratorByName(personName);
+      buildSeats('row-m1-top', 'M1', 1, 2);
+      buildSeats('row-m1-bottom', 'M1', 3, 4);
 
-          const seat = document.createElement('div');
-          seat.className = `seat ${personName ? 'occupied' : 'free'}`;
-          
-          if (collab) {
-            seat.innerHTML = `
-              <strong>C${i}</strong>
-              <span style="font-weight:700;">${personName.split(' ')[0]}</span>
-              <span class="team-badge team-${collab.team}">${collab.team}</span>
-              ${alloc && alloc.recurrence && alloc.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[alloc.recurrence]}</span>` : ''}
-              ${alloc && alloc.exceptDay && alloc.exceptDay !== 'none' ? `<span class="exception-tag">🚫 Exc. ${weekDayLabels[alloc.exceptDay]}</span>` : ''}
-            `;
-          } else {
-            seat.innerHTML = `<strong>C${i}</strong><span>${personName || 'Livre'}</span>`;
-          }
+      buildSeats('row-m2-top', 'M2', 1, 2);
+      buildSeats('row-m2-bottom', 'M2', 3, 4);
 
-          seat.onclick = () => openSeatModal(selectedDate, seatKey, alloc);
-          container.appendChild(seat);
-        }
-      };
-
-      buildSeats('row-m1-top', 'm1_top', 2);
-      buildSeats('row-m1-bottom', 'm1_bot', 2);
-      buildSeats('row-m2-top', 'm2_top', 2);
-      buildSeats('row-m2-bottom', 'm2_bot', 2);
-      buildSeats('row-mkt-top', 'mkt_top', 3);
-      buildSeats('row-mkt-bottom', 'mkt_bot', 3);
+      buildSeats('row-mkt-top', 'MKT', 1, 3);
+      buildSeats('row-mkt-bottom', 'MKT', 4, 6);
     }
 
-    /* GESTÃO DE MODAIS & OPERAÇÕES */
+    function buildSeats(containerId, tableKey, startIdx, endIdx) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      const selectedDate = document.getElementById('allocation-date').value;
+
+      for(let i=startIdx; i<=endIdx; i++) {
+        const seatKey = `${tableKey}_${i}`;
+        
+        const alloc = seatAllocations.find(a => a.seatKey === seatKey && isEventActiveOnDate(a.date, a.recurrence, a.exceptDay, selectedDate));
+        const personName = alloc ? alloc.personName : '';
+        const collab = getCollaboratorByName(personName);
+
+        const seat = document.createElement('div');
+        seat.className = `seat ${personName ? 'occupied' : 'free'}`;
+        
+        if (collab) {
+          seat.innerHTML = `
+            <strong>C${i}</strong>
+            <span style="font-weight:700;">${personName.split(' ')[0]}</span>
+            <span class="team-badge team-${collab.team}">${collab.team}</span>
+            ${alloc && alloc.recurrence && alloc.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[alloc.recurrence]}</span>` : ''}
+            ${alloc && alloc.exceptDay && alloc.exceptDay !== 'none' ? `<span class="exception-tag">🚫 Exc. ${weekDayLabels[alloc.exceptDay]}</span>` : ''}
+          `;
+        } else {
+          seat.innerHTML = `<strong>C${i}</strong><span>${personName || 'Livre'}</span>`;
+        }
+
+        seat.onclick = () => openSeatModal(seatKey, selectedDate, alloc);
+        container.appendChild(seat);
+      }
+    }
+
+    // GESTÃO DE MODAIS E PERSISTÊNCIA SUPABASE
+
+    // COLABORADORES
     function openCollabModal() {
-      renderCollabList();
       document.getElementById('collab-modal').style.display = 'flex';
+      renderCollabList();
     }
 
     function closeCollabModal() {
       document.getElementById('collab-modal').style.display = 'none';
-    }
-
-    async function saveCollaborator(e) {
-      e.preventDefault();
-      const name = document.getElementById('collab-name').value;
-      const team = document.getElementById('collab-team').value;
-
-      const newCollab = { id: Date.now().toString(), name, team };
-      collaborators.push(newCollab);
-      
-      await supabaseClient.from('collaborators').upsert(newCollab);
-
-      document.getElementById('collab-form').reset();
-      renderCollabList();
-      renderTables();
     }
 
     function renderCollabList() {
@@ -1107,40 +1091,80 @@
         item.className = 'collab-item';
         item.innerHTML = `
           <div>
-            <strong>${c.name}</strong> 
-            <span class="team-badge team-${c.team}">${c.team}</span>
+            <strong>${c.name}</strong> <span class="team-badge team-${c.team}">${c.team}</span>
           </div>
-          <button class="btn" style="padding:2px 6px; font-size:0.7rem;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+          <button class="btn" style="color:red; padding: 2px 6px;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
         `;
         container.appendChild(item);
       });
     }
 
-    async function deleteCollaborator(id) {
-      collaborators = collaborators.filter(c => c.id !== id);
-      await supabaseClient.from('collaborators').delete().eq('id', id);
-      renderCollabList();
-      renderTables();
+    async function saveCollaborator(e) {
+      e.preventDefault();
+      const name = document.getElementById('collab-name').value;
+      const team = document.getElementById('collab-team').value;
+
+      const newCollab = { name, team };
+      const { data, error } = await supabaseClient.from('collaborators').insert([newCollab]).select();
+
+      if (!error && data) {
+        collaborators.push(data[0]);
+        document.getElementById('collab-form').reset();
+        renderCollabList();
+        renderDashboard();
+        renderTables();
+      } else {
+        alert('Erro ao salvar colaborador no Supabase: ' + (error?.message || 'Verifique o RLS ou conexão.'));
+      }
     }
 
-    function openMeetingModal(meetingData = {}) {
+    async function deleteCollaborator(id) {
+      const { error } = await supabaseClient.from('collaborators').delete().eq('id', id);
+      if (!error) {
+        collaborators = collaborators.filter(c => c.id !== id);
+        renderCollabList();
+        renderDashboard();
+        renderTables();
+      } else {
+        alert('Erro ao excluir do Supabase: ' + error.message);
+      }
+    }
+
+    // REUNIÕES
+    function openMeetingModal(meetingData) {
+      const modal = document.getElementById('meeting-modal');
       const selectOwner = document.getElementById('m-owner-select');
-      selectOwner.innerHTML = '<option value="">Selecione...</option>';
+      selectOwner.innerHTML = '';
+
       collaborators.forEach(c => {
-        selectOwner.innerHTML += `<option value="${c.name}">${c.name} (${c.team})</option>`;
+        const opt = document.createElement('option');
+        opt.value = c.name;
+        opt.innerText = `${c.name} (${c.team})`;
+        selectOwner.appendChild(opt);
       });
 
-      document.getElementById('m-id').value = meetingData.id || '';
-      document.getElementById('m-title').value = meetingData.title || '';
-      document.getElementById('m-owner-select').value = meetingData.owner || '';
-      document.getElementById('m-participants').value = meetingData.participants || '';
-      document.getElementById('m-date').value = meetingData.date || new Date().toISOString().split('T')[0];
-      document.getElementById('m-start').value = meetingData.start || '09:00';
-      document.getElementById('m-end').value = meetingData.end || '10:00';
-      document.getElementById('m-recurrence').value = meetingData.recurrence || 'none';
-      document.getElementById('m-except-day').value = meetingData.exceptDay || 'none';
+      if (meetingData && meetingData.id) {
+        document.getElementById('modal-title-text').innerText = 'Editar Reunião';
+        document.getElementById('m-id').value = meetingData.id;
+        document.getElementById('m-title').value = meetingData.title;
+        document.getElementById('m-owner-select').value = meetingData.owner;
+        document.getElementById('m-participants').value = meetingData.participants || '';
+        document.getElementById('m-date').value = meetingData.date;
+        document.getElementById('m-start').value = meetingData.start;
+        document.getElementById('m-end').value = meetingData.end;
+        document.getElementById('m-recurrence').value = meetingData.recurrence || 'none';
+        document.getElementById('m-except-day').value = meetingData.exceptDay || 'none';
+        document.getElementById('btn-delete-meeting').style.display = 'inline-block';
+      } else {
+        document.getElementById('modal-title-text').innerText = 'Agendar Reunião';
+        document.getElementById('meeting-form').reset();
+        document.getElementById('m-id').value = '';
+        if(meetingData && meetingData.date) document.getElementById('m-date').value = meetingData.date;
+        if(meetingData && meetingData.start) document.getElementById('m-start').value = meetingData.start;
+        document.getElementById('btn-delete-meeting').style.display = 'none';
+      }
 
-      document.getElementById('meeting-modal').style.display = 'flex';
+      modal.style.display = 'flex';
     }
 
     function closeMeetingModal() {
@@ -1149,15 +1173,14 @@
 
     async function saveMeeting(e) {
       e.preventDefault();
-      const id = document.getElementById('m-id').value || Date.now().toString();
+      const id = document.getElementById('m-id').value;
       const ownerName = document.getElementById('m-owner-select').value;
       const collab = getCollaboratorByName(ownerName);
 
-      const newMeeting = {
-        id,
+      const meetingObj = {
         title: document.getElementById('m-title').value,
         owner: ownerName,
-        team: collab ? collab.team : 'BE',
+        team: collab ? collab.team : 'CEO',
         participants: document.getElementById('m-participants').value,
         date: document.getElementById('m-date').value,
         start: document.getElementById('m-start').value,
@@ -1166,39 +1189,64 @@
         exceptDay: document.getElementById('m-except-day').value
       };
 
-      const existingIndex = meetings.findIndex(m => m.id === id);
-      if (existingIndex >= 0) {
-        meetings[existingIndex] = newMeeting;
+      if (id) {
+        const { error } = await supabaseClient.from('meetings').update(meetingObj).eq('id', id);
+        if (!error) {
+          const idx = meetings.findIndex(m => m.id == id);
+          meetings[idx] = { ...meetings[idx], ...meetingObj };
+        } else {
+          alert('Erro ao atualizar reunião: ' + error.message);
+        }
       } else {
-        meetings.push(newMeeting);
+        const { data, error } = await supabaseClient.from('meetings').insert([meetingObj]).select();
+        if (!error && data) {
+          meetings.push(data[0]);
+        } else {
+          alert('Erro ao cadastrar reunião no Supabase: ' + (error?.message || 'Erro desconhecido'));
+        }
       }
-
-      await supabaseClient.from('meetings').upsert(newMeeting);
 
       closeMeetingModal();
       renderDashboard();
     }
 
-    function openSeatModal(date, seatKey, alloc) {
-      currentSeatTarget = { date, seatKey };
+    async function deleteMeeting() {
+      const id = document.getElementById('m-id').value;
+      if (!id) return;
+      const { error } = await supabaseClient.from('meetings').delete().eq('id', id);
+      if (!error) {
+        meetings = meetings.filter(m => m.id != id);
+        closeMeetingModal();
+        renderDashboard();
+      } else {
+        alert('Erro ao excluir reunião: ' + error.message);
+      }
+    }
 
+    // MAPA DE ASSENTOS
+    function openSeatModal(seatKey, dateStr, currentAlloc) {
+      currentSeatTarget = { seatKey, dateStr, alloc: currentAlloc };
+      const modal = document.getElementById('seat-modal');
       const selectPerson = document.getElementById('seat-person-select');
-      selectPerson.innerHTML = '<option value="">Selecione...</option>';
+      selectPerson.innerHTML = '<option value="">-- Selecione ou Digite --</option>';
+
       collaborators.forEach(c => {
-        selectPerson.innerHTML += `<option value="${c.name}">${c.name} (${c.team})</option>`;
+        const opt = document.createElement('option');
+        opt.value = c.name;
+        opt.innerText = `${c.name} (${c.team})`;
+        selectPerson.appendChild(opt);
       });
 
-      if (alloc) {
-        selectPerson.value = alloc.personName || '';
-        document.getElementById('seat-recurrence').value = alloc.recurrence || 'none';
-        document.getElementById('seat-except-day').value = alloc.exceptDay || 'none';
+      if (currentAlloc) {
+        selectPerson.value = currentAlloc.personName;
+        document.getElementById('seat-recurrence').value = currentAlloc.recurrence || 'none';
+        document.getElementById('seat-except-day').value = currentAlloc.exceptDay || 'none';
       } else {
-        selectPerson.value = '';
         document.getElementById('seat-recurrence').value = 'none';
         document.getElementById('seat-except-day').value = 'none';
       }
 
-      document.getElementById('seat-modal').style.display = 'flex';
+      modal.style.display = 'flex';
     }
 
     function closeSeatModal() {
@@ -1207,24 +1255,30 @@
 
     async function saveSeat() {
       if (!currentSeatTarget) return;
-
       const personName = document.getElementById('seat-person-select').value;
-      const recurrence = document.getElementById('seat-recurrence').value;
-      const exceptDay = document.getElementById('seat-except-day').value;
+      if (!personName) return alert('Selecione um colaborador.');
 
-      seatAllocations = seatAllocations.filter(a => a.seatKey !== currentSeatTarget.seatKey || a.date !== currentSeatTarget.date);
+      const seatObj = {
+        seatKey: currentSeatTarget.seatKey,
+        personName: personName,
+        date: currentSeatTarget.dateStr,
+        recurrence: document.getElementById('seat-recurrence').value,
+        exceptDay: document.getElementById('seat-except-day').value
+      };
 
-      if (personName) {
-        const newAlloc = {
-          id: `${currentSeatTarget.seatKey}_${currentSeatTarget.date}`,
-          seatKey: currentSeatTarget.seatKey,
-          date: currentSeatTarget.date,
-          personName,
-          recurrence,
-          exceptDay
-        };
-        seatAllocations.push(newAlloc);
-        await supabaseClient.from('seat_allocations').upsert(newAlloc);
+      if (currentSeatTarget.alloc && currentSeatTarget.alloc.id) {
+        const { error } = await supabaseClient.from('seat_allocations').update(seatObj).eq('id', currentSeatTarget.alloc.id);
+        if(!error) {
+          const idx = seatAllocations.findIndex(s => s.id == currentSeatTarget.alloc.id);
+          seatAllocations[idx] = { ...seatAllocations[idx], ...seatObj };
+        }
+      } else {
+        const { data, error } = await supabaseClient.from('seat_allocations').insert([seatObj]).select();
+        if (!error && data) {
+          seatAllocations.push(data[0]);
+        } else {
+          alert('Erro ao salvar no banco: ' + error.message);
+        }
       }
 
       closeSeatModal();
@@ -1232,40 +1286,16 @@
     }
 
     async function clearSeat() {
-      if (!currentSeatTarget) return;
-
-      const allocId = `${currentSeatTarget.seatKey}_${currentSeatTarget.date}`;
-      seatAllocations = seatAllocations.filter(a => a.seatKey !== currentSeatTarget.seatKey || a.date !== currentSeatTarget.date);
-
-      await supabaseClient.from('seat_allocations').delete().eq('id', allocId);
-
+      if (currentSeatTarget && currentSeatTarget.alloc && currentSeatTarget.alloc.id) {
+        const { error } = await supabaseClient.from('seat_allocations').delete().eq('id', currentSeatTarget.alloc.id);
+        if (!error) {
+          seatAllocations = seatAllocations.filter(s => s.id != currentSeatTarget.alloc.id);
+        } else {
+          alert('Erro ao desocupar assento: ' + error.message);
+        }
+      }
       closeSeatModal();
       renderTables();
-    }
-
-    function exportSectionPNG(type) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = 1200;
-      canvas.height = 850;
-
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const logoImg = document.getElementById('main-logo-img');
-
-      try {
-        if (logoImg && logoImg.complete) {
-          ctx.drawImage(logoImg, 60, 45, 45, 55);
-        }
-      } catch (e) {
-        console.log('Exportando PNG...');
-      }
-
-      const link = document.createElement('a');
-      link.download = `${type}_export.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
     }
   </script>
 </body>
