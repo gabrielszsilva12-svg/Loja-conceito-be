@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOJA CONCEITO BE - Gestão de Reuniões & Espaço</title>
+
+  <!-- SDK do Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     @font-face {
       font-family: 'N27';
@@ -779,19 +783,24 @@
   </div>
 
   <script>
+    // Conexão com o Supabase na nuvem
+    const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     let currentDate = new Date();
     let viewMode = 'day';
 
-    let collaborators = JSON.parse(localStorage.getItem('be_collaborators') || JSON.stringify([
+    let collaborators = [
       { id: '1', name: 'Gabriel Souza', team: 'CSUA' },
       { id: '2', name: 'Ana Beatriz', team: 'CSUM' },
       { id: '3', name: 'Carlos Eduardo', team: 'ENGO' },
       { id: '4', name: 'Mariana Lima', team: 'ENGE' },
       { id: '5', name: 'Felipe Rocha', team: 'EDFE' }
-    ]));
+    ];
 
-    let meetings = JSON.parse(localStorage.getItem('be_meetings') || '[]');
-    let seatAllocations = JSON.parse(localStorage.getItem('be_seat_allocations') || '[]');
+    let meetings = [];
+    let seatAllocations = [];
     let currentSeatTarget = null;
 
     document.getElementById('allocation-date').valueAsDate = new Date();
@@ -811,6 +820,27 @@
       '4': 'Qui',
       '5': 'Sex'
     };
+
+    // Carrega os dados do Supabase
+    async function loadCloudData() {
+      try {
+        const { data: collabData } = await supabaseClient.from('collaborators').select('*');
+        if (collabData && collabData.length > 0) collaborators = collabData;
+
+        const { data: meetingData } = await supabaseClient.from('meetings').select('*');
+        if (meetingData) meetings = meetingData;
+
+        const { data: seatData } = await supabaseClient.from('seat_allocations').select('*');
+        if (seatData) seatAllocations = seatData;
+      } catch (err) {
+        console.warn('Usando dados locais temporários até a sincronização:', err);
+      }
+
+      renderDashboard();
+      renderTables();
+    }
+
+    loadCloudData();
 
     function setViewMode(mode) {
       viewMode = mode;
@@ -844,12 +874,10 @@
       return collaborators.find(c => c.name.toLowerCase() === name.toLowerCase());
     }
 
-    // Avalia se o evento/assento recorrente bate com a data selecionada e respeita exceções
     function isEventActiveOnDate(baseDateStr, recurrence, exceptDay, targetDateStr) {
       const target = new Date(targetDateStr + 'T00:00:00');
-      const targetDayOfWeek = target.getDay().toString(); // 0 = Dom, 1 = Seg, ..., 5 = Sex
+      const targetDayOfWeek = target.getDay().toString();
 
-      // Verifica regra de exceção ("exceto às")
       if (exceptDay && exceptDay !== 'none' && targetDayOfWeek === exceptDay) {
         return false;
       }
@@ -872,6 +900,7 @@
 
     function renderDashboard() {
       const container = document.getElementById('calendar-view-container');
+      if (!container) return;
       container.innerHTML = '';
 
       if (viewMode === 'day') {
@@ -1008,6 +1037,7 @@
 
       const buildSeats = (containerId, tableKey, count) => {
         const container = document.getElementById(containerId);
+        if (!container) return;
         container.innerHTML = '';
         for(let i=1; i<=count; i++) {
           const seatKey = `${tableKey}_${i}`;
@@ -1044,7 +1074,175 @@
       buildSeats('row-mkt-bottom', 'mkt_bot', 3);
     }
 
-    /* EXPORTAÇÃO EM PNG */
+    /* GESTÃO DE MODAIS & OPERAÇÕES */
+    function openCollabModal() {
+      renderCollabList();
+      document.getElementById('collab-modal').style.display = 'flex';
+    }
+
+    function closeCollabModal() {
+      document.getElementById('collab-modal').style.display = 'none';
+    }
+
+    async function saveCollaborator(e) {
+      e.preventDefault();
+      const name = document.getElementById('collab-name').value;
+      const team = document.getElementById('collab-team').value;
+
+      const newCollab = { id: Date.now().toString(), name, team };
+      collaborators.push(newCollab);
+      
+      await supabaseClient.from('collaborators').upsert(newCollab);
+
+      document.getElementById('collab-form').reset();
+      renderCollabList();
+      renderTables();
+    }
+
+    function renderCollabList() {
+      const container = document.getElementById('collab-list-container');
+      container.innerHTML = '';
+      collaborators.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'collab-item';
+        item.innerHTML = `
+          <div>
+            <strong>${c.name}</strong> 
+            <span class="team-badge team-${c.team}">${c.team}</span>
+          </div>
+          <button class="btn" style="padding:2px 6px; font-size:0.7rem;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function deleteCollaborator(id) {
+      collaborators = collaborators.filter(c => c.id !== id);
+      await supabaseClient.from('collaborators').delete().eq('id', id);
+      renderCollabList();
+      renderTables();
+    }
+
+    function openMeetingModal(meetingData = {}) {
+      const selectOwner = document.getElementById('m-owner-select');
+      selectOwner.innerHTML = '<option value="">Selecione...</option>';
+      collaborators.forEach(c => {
+        selectOwner.innerHTML += `<option value="${c.name}">${c.name} (${c.team})</option>`;
+      });
+
+      document.getElementById('m-id').value = meetingData.id || '';
+      document.getElementById('m-title').value = meetingData.title || '';
+      document.getElementById('m-owner-select').value = meetingData.owner || '';
+      document.getElementById('m-participants').value = meetingData.participants || '';
+      document.getElementById('m-date').value = meetingData.date || new Date().toISOString().split('T')[0];
+      document.getElementById('m-start').value = meetingData.start || '09:00';
+      document.getElementById('m-end').value = meetingData.end || '10:00';
+      document.getElementById('m-recurrence').value = meetingData.recurrence || 'none';
+      document.getElementById('m-except-day').value = meetingData.exceptDay || 'none';
+
+      document.getElementById('meeting-modal').style.display = 'flex';
+    }
+
+    function closeMeetingModal() {
+      document.getElementById('meeting-modal').style.display = 'none';
+    }
+
+    async function saveMeeting(e) {
+      e.preventDefault();
+      const id = document.getElementById('m-id').value || Date.now().toString();
+      const ownerName = document.getElementById('m-owner-select').value;
+      const collab = getCollaboratorByName(ownerName);
+
+      const newMeeting = {
+        id,
+        title: document.getElementById('m-title').value,
+        owner: ownerName,
+        team: collab ? collab.team : 'BE',
+        participants: document.getElementById('m-participants').value,
+        date: document.getElementById('m-date').value,
+        start: document.getElementById('m-start').value,
+        end: document.getElementById('m-end').value,
+        recurrence: document.getElementById('m-recurrence').value,
+        exceptDay: document.getElementById('m-except-day').value
+      };
+
+      const existingIndex = meetings.findIndex(m => m.id === id);
+      if (existingIndex >= 0) {
+        meetings[existingIndex] = newMeeting;
+      } else {
+        meetings.push(newMeeting);
+      }
+
+      await supabaseClient.from('meetings').upsert(newMeeting);
+
+      closeMeetingModal();
+      renderDashboard();
+    }
+
+    function openSeatModal(date, seatKey, alloc) {
+      currentSeatTarget = { date, seatKey };
+
+      const selectPerson = document.getElementById('seat-person-select');
+      selectPerson.innerHTML = '<option value="">Selecione...</option>';
+      collaborators.forEach(c => {
+        selectPerson.innerHTML += `<option value="${c.name}">${c.name} (${c.team})</option>`;
+      });
+
+      if (alloc) {
+        selectPerson.value = alloc.personName || '';
+        document.getElementById('seat-recurrence').value = alloc.recurrence || 'none';
+        document.getElementById('seat-except-day').value = alloc.exceptDay || 'none';
+      } else {
+        selectPerson.value = '';
+        document.getElementById('seat-recurrence').value = 'none';
+        document.getElementById('seat-except-day').value = 'none';
+      }
+
+      document.getElementById('seat-modal').style.display = 'flex';
+    }
+
+    function closeSeatModal() {
+      document.getElementById('seat-modal').style.display = 'none';
+    }
+
+    async function saveSeat() {
+      if (!currentSeatTarget) return;
+
+      const personName = document.getElementById('seat-person-select').value;
+      const recurrence = document.getElementById('seat-recurrence').value;
+      const exceptDay = document.getElementById('seat-except-day').value;
+
+      seatAllocations = seatAllocations.filter(a => a.seatKey !== currentSeatTarget.seatKey || a.date !== currentSeatTarget.date);
+
+      if (personName) {
+        const newAlloc = {
+          id: `${currentSeatTarget.seatKey}_${currentSeatTarget.date}`,
+          seatKey: currentSeatTarget.seatKey,
+          date: currentSeatTarget.date,
+          personName,
+          recurrence,
+          exceptDay
+        };
+        seatAllocations.push(newAlloc);
+        await supabaseClient.from('seat_allocations').upsert(newAlloc);
+      }
+
+      closeSeatModal();
+      renderTables();
+    }
+
+    async function clearSeat() {
+      if (!currentSeatTarget) return;
+
+      const allocId = `${currentSeatTarget.seatKey}_${currentSeatTarget.date}`;
+      seatAllocations = seatAllocations.filter(a => a.seatKey !== currentSeatTarget.seatKey || a.date !== currentSeatTarget.date);
+
+      await supabaseClient.from('seat_allocations').delete().eq('id', allocId);
+
+      closeSeatModal();
+      renderTables();
+    }
+
     function exportSectionPNG(type) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -1057,300 +1255,18 @@
       const logoImg = document.getElementById('main-logo-img');
 
       try {
-        ctx.drawImage(logoImg, 60, 45, 45, 55);
-      } catch (e) {
-        console.warn('Erro ao carregar a imagem na exportação:', e);
-      }
-
-      ctx.fillStyle = '#0f172a';
-      ctx.font = 'bold 28px N27, sans-serif';
-      ctx.fillText('LOJA CONCEITO BE', 120, 80);
-
-      const dateStr = type === 'coworking' 
-        ? document.getElementById('current-date-label').innerText 
-        : document.getElementById('allocation-date').value;
-
-      ctx.font = '16px N27, sans-serif';
-      ctx.fillStyle = '#64748b';
-      
-      if (type === 'coworking') {
-        ctx.fillText(`Relatório de Ocupação - Coworking (${dateStr})`, 120, 105);
-      } else {
-        ctx.fillText(`Mapa de Alocação de Mesas - Data: ${dateStr}`, 120, 105);
-      }
-
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(60, 130);
-      ctx.lineTo(1140, 130);
-      ctx.stroke();
-
-      let yPos = 175;
-
-      if (type === 'coworking') {
-        const dateISO = currentDate.toISOString().split('T')[0];
-        const dayMeetings = meetings.filter(m => isEventActiveOnDate(m.date, m.recurrence, m.exceptDay, dateISO));
-
-        if (dayMeetings.length === 0) {
-          ctx.font = '20px N27, sans-serif';
-          ctx.fillStyle = '#94a3b8';
-          ctx.fillText('Nenhuma reunião agendada para este dia.', 60, yPos);
-        } else {
-          dayMeetings.forEach(m => {
-            ctx.fillStyle = '#f8fafc';
-            ctx.fillRect(60, yPos, 1080, 70);
-            ctx.strokeStyle = '#cbd5e1';
-            ctx.strokeRect(60, yPos, 1080, 70);
-
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(60, yPos, 8, 70);
-
-            ctx.font = 'bold 20px N27, sans-serif';
-            ctx.fillStyle = '#0f172a';
-            let excStr = (m.exceptDay && m.exceptDay !== 'none') ? ` (Exceto ${weekDayLabels[m.exceptDay]})` : '';
-            ctx.fillText(`${m.start} - ${m.end} | ${m.title} ${m.recurrence && m.recurrence !== 'none' ? ' (Recorrente: ' + recurrenceLabels[m.recurrence] + excStr + ')' : ''}`, 85, yPos + 30);
-
-            ctx.font = '16px N27, sans-serif';
-            ctx.fillStyle = '#475569';
-            ctx.fillText(`Time: ${m.team} | Responsável: ${m.owner} ${m.participants ? '| Participantes: ' + m.participants : ''}`, 85, yPos + 55);
-
-            yPos += 85;
-          });
+        if (logoImg && logoImg.complete) {
+          ctx.drawImage(logoImg, 60, 45, 45, 55);
         }
-      } else {
-        const selectedDate = document.getElementById('allocation-date').value;
-
-        ctx.font = 'bold 22px N27, sans-serif';
-        ctx.fillStyle = '#0f172a';
-        ctx.fillText('STATUS DOS ASSENTOS:', 60, yPos);
-        yPos += 40;
-
-        const tables = [
-          { name: 'Meeting 01', keys: ['m1_top_1', 'm1_top_2', 'm1_bot_1', 'm1_bot_2'] },
-          { name: 'Meeting 02', keys: ['m2_top_1', 'm2_top_2', 'm2_bot_1', 'm2_bot_2'] },
-          { name: 'Marketing', keys: ['mkt_top_1', 'mkt_top_2', 'mkt_top_3', 'mkt_bot_1', 'mkt_bot_2', 'mkt_bot_3'] }
-        ];
-
-        tables.forEach(t => {
-          ctx.font = 'bold 18px N27, sans-serif';
-          ctx.fillStyle = '#0f172a';
-          ctx.fillText(t.name, 60, yPos);
-          yPos += 25;
-
-          t.keys.forEach((k, idx) => {
-            const alloc = seatAllocations.find(a => a.seatKey === k && isEventActiveOnDate(a.date, a.recurrence, a.exceptDay, selectedDate));
-            let occupant = 'Livre';
-            if (alloc) {
-              let excStr = (alloc.exceptDay && alloc.exceptDay !== 'none') ? ` - Exceto ${weekDayLabels[alloc.exceptDay]}` : '';
-              occupant = `${alloc.personName} ${alloc.recurrence !== 'none' ? '(' + recurrenceLabels[alloc.recurrence] + excStr + ')' : ''}`;
-            }
-            
-            ctx.font = '16px N27, sans-serif';
-            ctx.fillStyle = occupant === 'Livre' ? '#16a34a' : '#b91c1c';
-            ctx.fillText(` • C${idx + 1}: ${occupant}`, 80, yPos);
-            yPos += 22;
-          });
-
-          yPos += 15;
-        });
+      } catch (e) {
+        console.log('Exportando PNG...');
       }
-
-      ctx.font = '14px N27, sans-serif';
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillText('Gerado por LOJA CONCEITO BE', 60, 810);
 
       const link = document.createElement('a');
-      link.download = `BE_${type}_${dateStr}.png`;
+      link.download = `${type}_export.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     }
-
-    // MODAL COLABORADORES
-    function openCollabModal() {
-      renderCollabList();
-      document.getElementById('collab-modal').style.display = 'flex';
-    }
-
-    function closeCollabModal() {
-      document.getElementById('collab-modal').style.display = 'none';
-    }
-
-    function saveCollaborator(e) {
-      e.preventDefault();
-      const name = document.getElementById('collab-name').value.trim();
-      const team = document.getElementById('collab-team').value;
-
-      if (!name) return;
-
-      const existingIndex = collaborators.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
-      if (existingIndex >= 0) {
-        collaborators[existingIndex].team = team;
-      } else {
-        collaborators.push({ id: Date.now().toString(), name, team });
-      }
-
-      localStorage.setItem('be_collaborators', JSON.stringify(collaborators));
-      document.getElementById('collab-name').value = '';
-      renderCollabList();
-      renderDashboard();
-      renderTables();
-    }
-
-    function updateCollabTeam(id, newTeam) {
-      const collab = collaborators.find(c => c.id === id);
-      if (collab) {
-        collab.team = newTeam;
-        localStorage.setItem('be_collaborators', JSON.stringify(collaborators));
-        renderDashboard();
-        renderTables();
-      }
-    }
-
-    function deleteCollaborator(id) {
-      collaborators = collaborators.filter(c => c.id !== id);
-      localStorage.setItem('be_collaborators', JSON.stringify(collaborators));
-      renderCollabList();
-      renderDashboard();
-      renderTables();
-    }
-
-    function renderCollabList() {
-      const container = document.getElementById('collab-list-container');
-      container.innerHTML = '';
-      collaborators.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'collab-item';
-        item.innerHTML = `
-          <div>
-            <strong>${c.name}</strong>
-          </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <select style="padding: 2px 6px; font-size: 0.75rem;" onchange="updateCollabTeam('${c.id}', this.value)">
-              <option value="CEO" ${c.team === 'CEO' ? 'selected' : ''}>CEO</option>
-              <option value="CSUA" ${c.team === 'CSUA' ? 'selected' : ''}>CSUA</option>
-              <option value="CSUM" ${c.team === 'CSUM' ? 'selected' : ''}>CSUM</option>
-              <option value="ENGO" ${c.team === 'ENGO' ? 'selected' : ''}>ENGO</option>
-              <option value="ENGE" ${c.team === 'ENGE' ? 'selected' : ''}>ENGE</option>
-              <option value="EDFE" ${c.team === 'EDFE' ? 'selected' : ''}>EDFE</option>
-            </select>
-            <button class="btn" style="padding: 2px 8px; font-size: 0.75rem;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    // MODAL REUNIÃO
-    function openMeetingModal(data = {}) {
-      const ownerSelect = document.getElementById('m-owner-select');
-      ownerSelect.innerHTML = '';
-      collaborators.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.name;
-        opt.innerText = `${c.name} (${c.team})`;
-        ownerSelect.appendChild(opt);
-      });
-
-      document.getElementById('m-id').value = data.id || '';
-      document.getElementById('m-title').value = data.title || '';
-      if (data.owner) ownerSelect.value = data.owner;
-      document.getElementById('m-participants').value = data.participants || '';
-      document.getElementById('m-date').value = data.date || currentDate.toISOString().split('T')[0];
-      document.getElementById('m-start').value = data.start || '09:00';
-      document.getElementById('m-end').value = data.end || '10:00';
-      document.getElementById('m-recurrence').value = data.recurrence || 'none';
-      document.getElementById('m-except-day').value = data.exceptDay || 'none';
-      document.getElementById('meeting-modal').style.display = 'flex';
-    }
-
-    function closeMeetingModal() {
-      document.getElementById('meeting-modal').style.display = 'none';
-    }
-
-    function saveMeeting(e) {
-      e.preventDefault();
-      const id = document.getElementById('m-id').value || Date.now().toString();
-      const ownerName = document.getElementById('m-owner-select').value;
-      const collab = getCollaboratorByName(ownerName);
-
-      const meeting = {
-        id,
-        title: document.getElementById('m-title').value,
-        owner: ownerName,
-        team: collab ? collab.team : 'CEO',
-        participants: document.getElementById('m-participants').value,
-        date: document.getElementById('m-date').value,
-        start: document.getElementById('m-start').value,
-        end: document.getElementById('m-end').value,
-        recurrence: document.getElementById('m-recurrence').value,
-        exceptDay: document.getElementById('m-except-day').value
-      };
-
-      meetings = meetings.filter(m => m.id !== id);
-      meetings.push(meeting);
-      localStorage.setItem('be_meetings', JSON.stringify(meetings));
-      closeMeetingModal();
-      renderDashboard();
-    }
-
-    // MODAL ASSENTO
-    function openSeatModal(date, seatKey, currentAlloc) {
-      currentSeatTarget = { date, seatKey };
-      const select = document.getElementById('seat-person-select');
-      select.innerHTML = '<option value="">-- Selecione --</option>';
-      collaborators.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.name;
-        opt.innerText = `${c.name} (${c.team})`;
-        select.appendChild(opt);
-      });
-
-      select.value = currentAlloc ? currentAlloc.personName : '';
-      document.getElementById('seat-recurrence').value = currentAlloc ? (currentAlloc.recurrence || 'none') : 'none';
-      document.getElementById('seat-except-day').value = currentAlloc ? (currentAlloc.exceptDay || 'none') : 'none';
-      document.getElementById('seat-modal').style.display = 'flex';
-    }
-
-    function closeSeatModal() {
-      document.getElementById('seat-modal').style.display = 'none';
-    }
-
-    function saveSeat() {
-      const name = document.getElementById('seat-person-select').value;
-      const recurrence = document.getElementById('seat-recurrence').value;
-      const exceptDay = document.getElementById('seat-except-day').value;
-      const { date, seatKey } = currentSeatTarget;
-
-      // Remover alocação existente para essa mesa nesse dia/recorrência
-      seatAllocations = seatAllocations.filter(a => !(a.seatKey === seatKey && a.date === date));
-
-      if (name) {
-        seatAllocations.push({
-          id: Date.now().toString(),
-          seatKey,
-          personName: name,
-          date,
-          recurrence,
-          exceptDay
-        });
-      }
-
-      localStorage.setItem('be_seat_allocations', JSON.stringify(seatAllocations));
-      closeSeatModal();
-      renderTables();
-    }
-
-    function clearSeat() {
-      const { date, seatKey } = currentSeatTarget;
-      seatAllocations = seatAllocations.filter(a => !(a.seatKey === seatKey && a.date === date));
-      localStorage.setItem('be_seat_allocations', JSON.stringify(seatAllocations));
-      closeSeatModal();
-      renderTables();
-    }
-
-    renderDashboard();
-    renderTables();
   </script>
 </body>
 </html>
