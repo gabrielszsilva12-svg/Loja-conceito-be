@@ -3,719 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LOJA CONCEITO BE - Gestão de Reuniões & Espaço</title>
-
-  <!-- SDK do Supabase -->
+  <title>Loja Conceito BE</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
-    @font-face {
-      font-family: 'N27';
-      src: url('https://fonts.cdnfonts.com/s/93121/N27-Regular.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    @font-face {
-      font-family: 'N27';
-      src: url('https://fonts.cdnfonts.com/s/93121/N27-Bold.woff') format('woff');
-      font-weight: bold;
-      font-style: normal;
-    }
-
     :root {
-      --bg-light: #f4f5f7;
-      --panel-bg: #ffffff;
+      --bg-color: #f4f6f8;
       --card-bg: #ffffff;
       --border-color: #e2e8f0;
-      --border-hover: #cbd5e1;
-      --text-main: #0f172a;
+      --text-main: #1e293b;
       --text-muted: #64748b;
-      --accent-black: #0f172a;
-      
-      --color-ceo: #111827;
-      --color-csua: #2563eb;
-      --color-csum: #7c3aed;
-      --color-engo: #059669;
-      --color-enge: #d97706;
-      --color-edfe: #e11d48;
-
-      --seat-free-bg: #f0fdf4;
-      --seat-free-border: #16a34a;
-      --seat-free-text: #15803d;
-
-      --seat-occ-bg: #fef2f2;
-      --seat-occ-border: #dc2626;
-      --seat-occ-text: #b91c1c;
+      --primary: #0f172a;
+      --primary-hover: #1e293b;
+      --accent: #2563eb;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'N27', system-ui, -apple-system, sans-serif !important;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-    body {
-      background-color: var(--bg-light);
-      color: var(--text-main);
-      padding: 24px;
-      line-height: 1.5;
-    }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    header h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--primary); font-weight: 800; }
+    
+    .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+    .tab-btn { padding: 8px 16px; border: none; background: none; font-weight: 600; cursor: pointer; color: var(--text-muted); border-radius: 6px; }
+    .tab-btn.active { background-color: var(--primary); color: white; }
 
-    /* HEADER */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 2px solid var(--border-color);
-      flex-wrap: wrap;
-      gap: 16px;
-    }
+    .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .btn { padding: 8px 14px; border: 1px solid var(--border-color); border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+    .btn-primary { background: var(--primary); color: white; border: none; }
+    .btn-primary:hover { background: var(--primary-hover); }
 
-    .brand-container {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    /* MODAL COMPACTO */
+    .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+    .modal { background: #fff; border-radius: 10px; padding: 18px 20px; width: 90%; max-width: 440px; max-height: 88vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+    .modal-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; }
+    .form-group input, .form-group select { width: 100%; padding: 7px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 
-    .logo-be-img {
-      height: 52px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--text-main);
-      text-transform: uppercase;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    /* BOTÕES */
-    .btn {
-      background-color: #ffffff;
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn:hover {
-      background-color: #f8fafc;
-      border-color: var(--border-hover);
-    }
-
-    .btn-active {
-      background-color: var(--accent-black) !important;
-      color: #ffffff !important;
-      border-color: var(--accent-black) !important;
-    }
-
-    .btn-primary {
-      background-color: var(--accent-black);
-      color: #ffffff;
-      border: none;
-    }
-
-    .btn-primary:hover {
-      background-color: #334155;
-    }
-
-    .btn-share {
-      background-color: #0284c7;
-      color: #ffffff;
-      border: none;
-    }
-
-    .btn-share:hover {
-      background-color: #0369a1;
-    }
-
-    /* BADGES DE TIME */
-    .team-badge {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: #ffffff;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .team-CEO { background-color: var(--color-ceo); }
-    .team-CSUA { background-color: var(--color-csua); }
-    .team-CSUM { background-color: var(--color-csum); }
-    .team-ENGO { background-color: var(--color-engo); }
-    .team-ENGE { background-color: var(--color-enge); }
-    .team-EDFE { background-color: var(--color-edfe); }
-
-    .recurrence-tag {
-      display: inline-block;
-      font-size: 0.6rem;
-      background: #e2e8f0;
-      color: #475569;
-      padding: 1px 4px;
-      border-radius: 3px;
-      margin-top: 2px;
-    }
-
-    .exception-tag {
-      display: inline-block;
-      font-size: 0.58rem;
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 1px 4px;
-      border-radius: 3px;
-      margin-top: 2px;
-    }
-
-    /* DASHBOARD */
-    .dashboard-container {
-      background-color: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 32px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .section-header {
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .section-header h2 {
-      font-size: 1.3rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-main);
-    }
-
-    .section-header p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .controls-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .view-toggle {
-      display: flex;
-      gap: 4px;
-      background-color: var(--bg-light);
-      padding: 4px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-    }
-
-    .nav-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .filter-group select {
-      padding: 8px 12px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      background-color: #ffffff;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--text-main);
-    }
-
-    /* GRADE DIÁRIA */
-    .day-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .day-row {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      align-items: center;
-      background-color: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      min-height: 56px;
-      padding: 6px 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .day-row:hover {
-      border-color: var(--border-hover);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    }
-
-    .time-slot {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .meeting-slot {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    /* GRADE SEMANAL */
-    .week-grid {
-      display: grid;
-      grid-template-columns: 70px repeat(5, 1fr);
-      gap: 1px;
-      background-color: var(--border-color);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .grid-header, .grid-cell {
-      background-color: #ffffff;
-      padding: 10px 8px;
-      text-align: center;
-    }
-
-    .grid-header {
-      font-weight: 700;
-      background-color: #f8fafc;
-      font-size: 0.85rem;
-      color: var(--text-main);
-    }
-
-    .time-col {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      background-color: #f8fafc;
-    }
-
-    .grid-cell {
-      min-height: 60px;
-      cursor: pointer;
-      position: relative;
-      transition: background-color 0.2s;
-    }
-
-    .grid-cell:hover {
-      background-color: #f8fafc;
-    }
-
-    /* CARDS DE REUNIÃO */
-    .meeting-card {
-      background-color: #f8fafc;
-      border: 1px solid var(--border-color);
-      border-left: 4px solid var(--accent-black);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      text-align: left;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    }
-
-    .meeting-card-small {
-      padding: 4px 6px !important;
-      font-size: 0.72rem !important;
-      margin-bottom: 4px;
-    }
-
-    /* LAYOUT DAS MESAS */
-    .layout-container {
-      background-color: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .tables-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      margin-top: 20px;
-    }
-
-    .tables-row {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .table-card {
-      background-color: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 18px;
-      flex: 1;
-      min-width: 280px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .table-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-      text-align: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-      width: 100%;
-      text-transform: uppercase;
-    }
-
-    .table-visual {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      margin: 12px 0;
-      width: 100%;
-    }
-
-    .seats-row {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .table-surface {
-      background-color: #e2e8f0;
-      border: 2px solid var(--border-hover);
-      border-radius: 6px;
-      width: 100%;
-      max-width: 260px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .table-surface-small {
-      max-width: 170px !important;
-      height: 44px !important;
-      font-size: 0.8rem !important;
-    }
-
-    .seat {
-      width: 80px;
-      height: 62px;
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.68rem;
-      cursor: pointer;
-      padding: 4px;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .seat.free {
-      background-color: var(--seat-free-bg);
-      border: 1px solid var(--seat-free-border);
-      color: var(--seat-free-text);
-    }
-
-    .seat.occupied {
-      background-color: var(--seat-occ-bg);
-      border: 1px solid var(--seat-occ-border);
-      color: var(--seat-occ-text);
-    }
-
-    /* MODAL */
-    .modal-backdrop {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(15, 23, 42, 0.5);
-      backdrop-filter: blur(2px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal {
-      background-color: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 24px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-    .modal-title {
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 9px 12px;
-      background-color: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-main);
-      font-size: 0.9rem;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .collab-list {
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      margin-top: 10px;
-    }
-
-    .collab-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.85rem;
-    }
-
-    .collab-item:last-child {
-      border-bottom: none;
-    }
+    /* TABELAS E MAPAS */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .seat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .seat { border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; text-align: center; cursor: pointer; background: #f8fafc; }
+    .seat.occupied { background: #e0f2fe; border-color: #7dd3fc; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="brand-container">
-      <img id="main-logo-img" src="BE-amoradiadofuturo-3.png" alt="BE Logo" class="logo-be-img">
+  <div class="container">
+    <header>
       <h1>LOJA CONCEITO BE</h1>
-    </div>
-
-    <div class="header-actions">
-      <button class="btn" onclick="openCollabModal()">👥 Colaboradores</button>
-      <button class="btn btn-primary" onclick="openMeetingModal()">+ Nova Reunião</button>
-    </div>
-  </header>
-
-  <!-- DASHBOARD -->
-  <section class="dashboard-container" id="section-coworking">
-    <div class="section-header">
       <div>
-        <h2>COWORKING PRO BE</h2>
-        <p id="dashboard-subtitle">Dashboard Diário de Ocupação</p>
+        <button class="btn" onclick="openCollabModal()">👥 Colaboradores</button>
+        <button class="btn btn-primary" onclick="openMeetingModal()">+ Novo Evento/Reunião</button>
+      </div>
+    </header>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('coworking')">COWORKING PRO BE</button>
+      <button class="tab-btn" onclick="switchTab('seats')">ALOCAÇÃO DE ASSENTOS</button>
+    </div>
+
+    <!-- VIEW: COWORKING -->
+    <div id="view-coworking" class="tab-content">
+      <div class="card">
+        <h3>Dashboard Semanal de Ocupação</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Selecione o período para visualizar os agendamentos da sala.</p>
+        <div id="meetings-list" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <div class="controls-bar">
-      <div class="view-toggle">
-        <button id="btn-view-day" class="btn btn-active" onclick="setViewMode('day')">Diário</button>
-        <button id="btn-view-week" class="btn" onclick="setViewMode('week')">Semanal</button>
-      </div>
-
-      <div class="filter-group">
-        <label for="filter-team" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">TIME:</label>
-        <select id="filter-team" onchange="renderDashboard()">
-          <option value="ALL">Todos os Times</option>
-          <option value="CEO">CEO</option>
-          <option value="CSUA">CSUA</option>
-          <option value="CSUM">CSUM</option>
-          <option value="ENGO">ENGO</option>
-          <option value="ENGE">ENGE</option>
-          <option value="EDFE">EDFE</option>
-        </select>
-      </div>
-
-      <div class="nav-group">
-        <button class="btn" onclick="navigateDate(-1)">&larr; Anterior</button>
-        <span id="current-date-label" style="font-weight: 700; font-size: 0.95rem;"></span>
-        <button class="btn" onclick="navigateDate(1)">Próximo &rarr;</button>
-        <button class="btn" onclick="goToToday()">Hoje</button>
-      </div>
-    </div>
-
-    <div id="calendar-view-container"></div>
-  </section>
-
-  <!-- MAPA DE MESAS -->
-  <section class="layout-container" id="section-mapa">
-    <div class="section-header">
-      <div>
-        <h2>MAPA DE ALOCAÇÃO DO ESCRITÓRIO</h2>
-        <p>Selecione a data e clique no assento para alocar um colaborador ou visitante</p>
-      </div>
-    </div>
-
-    <div class="controls-bar">
-      <div>
-        <label for="allocation-date" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-right: 8px;">DATA:</label>
-        <input type="date" id="allocation-date" class="btn" onchange="renderTables()">
-      </div>
-    </div>
-
-    <div class="tables-wrapper">
-      <div class="tables-row">
-        <!-- Meeting 01 -->
-        <div class="table-card">
-          <div class="table-title">Meeting 01 (4 lugares)</div>
-          <div class="table-visual">
-            <div class="seats-row" id="row-m1-top"></div>
-            <div class="table-surface">Mesa Meeting 01</div>
-            <div class="seats-row" id="row-m1-bottom"></div>
+    <!-- VIEW: ASSENTOS -->
+    <div id="view-seats" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>Mapa de Alocação do Escritório</h3>
+        <div class="form-group" style="max-width: 200px; margin-top: 10px;">
+          <label>Data</label>
+          <input type="date" id="seat-search-date" onchange="renderSeats()">
+        </div>
+        <div class="grid-2" style="margin-top: 20px;">
+          <div>
+            <h4>MEETING #01</h4>
+            <div class="seat-grid" id="seats-m1"></div>
+          </div>
+          <div>
+            <h4>MEETING #02</h4>
+            <div class="seat-grid" id="seats-m2"></div>
           </div>
         </div>
-
-        <!-- Meeting 02 -->
-        <div class="table-card">
-          <div class="table-title">Meeting 02 (4 lugares)</div>
-          <div class="table-visual">
-            <div class="seats-row" id="row-m2-top"></div>
-            <div class="table-surface">Mesa Meeting 02</div>
-            <div class="seats-row" id="row-m2-bottom"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Marketing -->
-      <div class="table-card">
-        <div class="table-title">Marketing (6 lugares)</div>
-        <div class="table-visual">
-          <div class="seats-row" id="row-mkt-top"></div>
-          <div class="table-surface table-surface-small">Mesa Marketing</div>
-          <div class="seats-row" id="row-mkt-bottom"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- MODAL COLABORADORES -->
-  <div class="modal-backdrop" id="collab-modal">
-    <div class="modal">
-      <div class="modal-title">Gestão de Colaboradores</div>
-      <form id="collab-form" onsubmit="saveCollaborator(event)">
-        <div class="form-group">
-          <label>Nome do Colaborador</label>
-          <input type="text" id="collab-name" placeholder="Ex: Gabriel Souza" required>
-        </div>
-        <div class="form-group">
-          <label>Time</label>
-          <select id="collab-team" required>
-            <option value="CEO">CEO</option>
-            <option value="CSUA">CSUA</option>
-            <option value="CSUM">CSUM</option>
-            <option value="ENGO">ENGO</option>
-            <option value="ENGE">ENGE</option>
-            <option value="EDFE">EDFE</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">+ Adicionar Colaborador</button>
-      </form>
-      <div class="collab-list" id="collab-list-container"></div>
-      <div class="modal-actions">
-        <button type="button" class="btn" onclick="closeCollabModal()">Fechar</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL REUNIÕES -->
+  <!-- MODAL: AGENDAR REUNIÃO -->
   <div class="modal-backdrop" id="meeting-modal">
     <div class="modal">
       <div class="modal-title" id="modal-title-text">Agendar Reunião</div>
       <form id="meeting-form" onsubmit="saveMeeting(event)">
         <input type="hidden" id="m-id">
+        
         <div class="form-group">
-          <label>Título da Reunião</label>
-          <input type="text" id="m-title" required>
+          <label>Título da Reunião *</label>
+          <input type="text" id="m-title" required placeholder="Ex: Alinhamento Trade">
         </div>
-        <div class="form-group">
-          <label>Responsável</label>
-          <select id="m-owner-select" required></select>
+
+        <div style="display: flex; gap: 8px;">
+          <div class="form-group" style="flex: 2;">
+            <label>Responsável *</label>
+            <select id="m-owner-select" required></select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Pessoas *</label>
+            <input type="number" id="m-attendees" min="1" value="1" required placeholder="Qtd">
+          </div>
         </div>
+
         <div class="form-group">
-          <label>Participantes (separados por vírgula)</label>
+          <label>Participantes (Nomes separados por vírgula)</label>
           <input type="text" id="m-participants" placeholder="Ex: Ana, Carlos, Pedro">
         </div>
+
         <div class="form-group">
-          <label>Data Inicial</label>
+          <label>Data Inicial *</label>
           <input type="date" id="m-date" required>
         </div>
-        <div class="form-group" style="display: flex; gap: 8px;">
-          <div style="flex: 1;">
-            <label>Início</label>
+
+        <div style="display: flex; gap: 8px;">
+          <div class="form-group" style="flex: 1;">
+            <label>Início *</label>
             <input type="time" id="m-start" required>
           </div>
-          <div style="flex: 1;">
-            <label>Término</label>
+          <div class="form-group" style="flex: 1;">
+            <label>Término *</label>
             <input type="time" id="m-end" required>
           </div>
         </div>
+
         <div class="form-group">
           <label>Recorrência</label>
           <select id="m-recurrence">
@@ -726,6 +150,7 @@
             <option value="monthly">Mensal</option>
           </select>
         </div>
+
         <div class="form-group">
           <label>Exceto no dia da semana (Home Office)</label>
           <select id="m-except-day">
@@ -737,8 +162,9 @@
             <option value="5">Sexta-feira</option>
           </select>
         </div>
+
         <div class="modal-actions">
-          <button type="button" class="btn" style="color:red" id="btn-delete-meeting" onclick="deleteMeeting()">Excluir</button>
+          <button type="button" class="btn" style="color:red; display:none;" id="btn-delete-meeting" onclick="deleteMeeting()">Excluir</button>
           <button type="button" class="btn" onclick="closeMeetingModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar Reunião</button>
         </div>
@@ -746,376 +172,105 @@
     </div>
   </div>
 
-  <!-- MODAL ASSENTO -->
-  <div class="modal-backdrop" id="seat-modal">
+  <!-- MODAL: GERENCIAR COLABORADORES -->
+  <div class="modal-backdrop" id="collab-modal">
     <div class="modal">
-      <div class="modal-title">Alocar Assento</div>
-      <div class="form-group">
-        <label>Selecione o Colaborador</label>
-        <select id="seat-person-select"></select>
-      </div>
-      <div class="form-group">
-        <label>Recorrência de Ocupação</label>
-        <select id="seat-recurrence">
-          <option value="none">Apenas nesta data (Única)</option>
-          <option value="daily">Diário</option>
-          <option value="weekly">Semanal</option>
-          <option value="biweekly">A cada 15 dias</option>
-          <option value="monthly">Mensal</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Exceto às / de (Dia da semana livre / Home Office)</label>
-        <select id="seat-except-day">
-          <option value="none">Nenhuma exceção</option>
-          <option value="1">Exceto às Segundas-feiras</option>
-          <option value="2">Exceto às Terças-feiras</option>
-          <option value="3">Exceto às Quartas-feiras</option>
-          <option value="4">Exceto às Quintas-feiras</option>
-          <option value="5">Exceto às Sextas-feiras</option>
-        </select>
-      </div>
+      <div class="modal-title">Gerenciar Colaboradores</div>
+      <form onsubmit="saveCollaborator(event)">
+        <div class="form-group">
+          <label>Nome do Colaborador *</label>
+          <input type="text" id="c-name" required placeholder="Nome completo">
+        </div>
+        <div class="form-group">
+          <label>Time / Setor *</label>
+          <select id="c-team" required>
+            <option value="EDFE">EDFE</option>
+            <option value="CEO">CEO</option>
+            <option value="CSUA">CSUA</option>
+            <option value="MARKETING">MARKETING</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:5px;">+ Adicionar Colaborador</button>
+      </form>
+      <div id="collab-list" style="margin-top: 15px; max-height: 180px; overflow-y: auto;"></div>
       <div class="modal-actions">
-        <button type="button" class="btn" onclick="clearSeat()">Desocupar Assento</button>
-        <button type="button" class="btn" onclick="closeSeatModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="saveSeat()">Salvar</button>
+        <button type="button" class="btn" onclick="closeCollabModal()">Fechar</button>
       </div>
     </div>
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
+    // INICIALIZAÇÃO SUPABASE (Substitua se necessário)
+    const SUPABASE_URL = "https://your-supabase-url.supabase.co";
+    const SUPABASE_KEY = "your-anon-key";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    let currentDate = new Date();
-    let viewMode = 'day';
 
     let collaborators = [];
     let meetings = [];
     let seatAllocations = [];
-    let currentSeatTarget = null;
 
-    document.getElementById('allocation-date').valueAsDate = new Date();
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById('seat-search-date').value = new Date().toISOString().split('T')[0];
+      loadData();
+    });
 
-    const recurrenceLabels = {
-      none: '',
-      daily: 'Diário',
-      weekly: 'Semanal',
-      biweekly: 'A cada 15 dias',
-      monthly: 'Mensal'
-    };
+    async function loadData() {
+      const { data: colData } = await supabaseClient.from('collaborators').select('*');
+      if (colData) collaborators = colData;
 
-    const weekDayLabels = {
-      '1': 'Seg',
-      '2': 'Ter',
-      '3': 'Qua',
-      '4': 'Qui',
-      '5': 'Sex'
-    };
+      const { data: meetData } = await supabaseClient.from('meetings').select('*');
+      if (meetData) meetings = meetData;
 
-    // BANCO DE DADOS - LEITURA
-    async function loadCloudData() {
-      try {
-        const { data: collabData } = await supabaseClient.from('collaborators').select('*');
-        if (collabData) collaborators = collabData;
-
-        const { data: meetingData } = await supabaseClient.from('meetings').select('*');
-        if (meetingData) meetings = meetingData;
-
-        const { data: seatData } = await supabaseClient.from('seat_allocations').select('*');
-        if (seatData) seatAllocations = seatData;
-      } catch (err) {
-        console.error('Erro ao buscar dados do Supabase:', err);
-      }
+      const { data: seatData } = await supabaseClient.from('seat_allocations').select('*');
+      if (seatData) seatAllocations = seatData;
 
       renderDashboard();
-      renderTables();
+      renderSeats();
     }
 
-    loadCloudData();
-
-    function setViewMode(mode) {
-      viewMode = mode;
-      document.getElementById('btn-view-day').classList.toggle('btn-active', mode === 'day');
-      document.getElementById('btn-view-week').classList.toggle('btn-active', mode === 'week');
-      document.getElementById('dashboard-subtitle').innerText = mode === 'day' ? 'Dashboard Diário de Ocupação' : 'Dashboard Semanal de Ocupação';
-      renderDashboard();
-    }
-
-    function navigateDate(offset) {
-      if (viewMode === 'day') {
-        currentDate.setDate(currentDate.getDate() + offset);
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+      
+      if (tab === 'coworking') {
+        document.getElementById('view-coworking').style.display = 'block';
+        event.target.classList.add('active');
       } else {
-        currentDate.setDate(currentDate.getDate() + (offset * 7));
-      }
-      renderDashboard();
-    }
-
-    function goToToday() {
-      currentDate = new Date();
-      renderDashboard();
-    }
-
-    function getMonday(d) {
-      d = new Date(d);
-      let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
-      return new Date(d.setDate(diff));
-    }
-
-    function getCollaboratorByName(name) {
-      return collaborators.find(c => c.name.toLowerCase() === name.toLowerCase());
-    }
-
-    function isEventActiveOnDate(baseDateStr, recurrence, exceptDay, targetDateStr) {
-      const target = new Date(targetDateStr + 'T00:00:00');
-      const targetDayOfWeek = target.getDay().toString();
-
-      if (exceptDay && exceptDay !== 'none' && targetDayOfWeek === exceptDay) {
-        return false;
-      }
-
-      if (baseDateStr === targetDateStr) return true;
-      if (!recurrence || recurrence === 'none') return false;
-
-      const base = new Date(baseDateStr + 'T00:00:00');
-      if (target < base) return false;
-
-      const diffDays = Math.round((target - base) / (1000 * 60 * 60 * 24));
-
-      if (recurrence === 'daily') return true;
-      if (recurrence === 'weekly') return diffDays % 7 === 0;
-      if (recurrence === 'biweekly') return diffDays % 14 === 0;
-      if (recurrence === 'monthly') return base.getDate() === target.getDate();
-
-      return false;
-    }
-
-    function renderDashboard() {
-      const container = document.getElementById('calendar-view-container');
-      if (!container) return;
-      container.innerHTML = '';
-
-      if (viewMode === 'day') {
-        renderDayView(container);
-      } else {
-        renderWeekView(container);
+        document.getElementById('view-seats').style.display = 'block';
+        event.target.classList.add('active');
       }
     }
 
-    function renderDayView(container) {
-      const dateISO = currentDate.toISOString().split('T')[0];
-      const dayStr = currentDate.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-      document.getElementById('current-date-label').innerText = dayStr.charAt(0).toUpperCase() + dayStr.slice(1);
-
-      const filterTeam = document.getElementById('filter-team').value;
-
-      const dayGrid = document.createElement('div');
-      dayGrid.className = 'day-grid';
-
-      const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-
-      hours.forEach(h => {
-        const row = document.createElement('div');
-        row.className = 'day-row';
-        row.onclick = () => openMeetingModal({ date: dateISO, start: h });
-
-        const timeCol = document.createElement('div');
-        timeCol.className = 'time-slot';
-        timeCol.innerText = h;
-
-        const meetingSlot = document.createElement('div');
-        meetingSlot.className = 'meeting-slot';
-
-        const mList = meetings.filter(m => {
-          if (!isEventActiveOnDate(m.date, m.recurrence, m.exceptDay, dateISO)) return false;
-          if (m.start > h || m.end <= h) return false;
-          if (filterTeam !== 'ALL' && m.team !== filterTeam) return false;
-          return true;
-        });
-
-        mList.forEach(m => {
-          const card = document.createElement('div');
-          card.className = 'meeting-card';
-          card.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
-              <span class="team-badge team-${m.team || 'CSUA'}">${m.team || 'BE'}</span>
-              <strong>${m.title}</strong>
-              ${m.recurrence && m.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[m.recurrence]}</span>` : ''}
-              ${m.exceptDay && m.exceptDay !== 'none' ? `<span class="exception-tag">🚫 Exceto ${weekDayLabels[m.exceptDay]}</span>` : ''}
-            </div>
-            <div style="font-size: 0.78rem; color: #475569;">
-              Resp: <strong>${m.owner}</strong> ${m.participants ? `| Part: ${m.participants}` : ''}
-            </div>
-          `;
-          card.onclick = (e) => { e.stopPropagation(); openMeetingModal(m); };
-          meetingSlot.appendChild(card);
-        });
-
-        row.appendChild(timeCol);
-        row.appendChild(meetingSlot);
-        dayGrid.appendChild(row);
-      });
-
-      container.appendChild(dayGrid);
-    }
-
-    function renderWeekView(container) {
-      const monday = getMonday(currentDate);
-      const days = [];
-      for(let i=0; i<5; i++) {
-        let day = new Date(monday);
-        day.setDate(monday.getDate() + i);
-        days.push(day);
-      }
-
-      const label = `${monday.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'})} a ${days[4].toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'numeric'})}`;
-      document.getElementById('current-date-label').innerText = label;
-
-      const filterTeam = document.getElementById('filter-team').value;
-
-      const weekGrid = document.createElement('div');
-      weekGrid.className = 'week-grid';
-
-      weekGrid.appendChild(createCell('HORÁRIO', 'grid-header'));
-      days.forEach(d => {
-        const dayStr = d.toLocaleDateString('pt-BR', {weekday: 'short', day: '2-digit'});
-        weekGrid.appendChild(createCell(dayStr.toUpperCase(), 'grid-header'));
-      });
-
-      const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-
-      hours.forEach(h => {
-        weekGrid.appendChild(createCell(h, 'grid-cell time-col'));
-        days.forEach(d => {
-          const dateISO = d.toISOString().split('T')[0];
-          const cell = createCell('', 'grid-cell');
-          cell.onclick = () => openMeetingModal({date: dateISO, start: h});
-
-          const mList = meetings.filter(m => {
-            if (!isEventActiveOnDate(m.date, m.recurrence, m.exceptDay, dateISO)) return false;
-            if (m.start > h || m.end <= h) return false;
-            if (filterTeam !== 'ALL' && m.team !== filterTeam) return false;
-            return true;
-          });
-
-          mList.forEach(m => {
-            const card = document.createElement('div');
-            card.className = 'meeting-card meeting-card-small';
-            card.innerHTML = `
-              <span class="team-badge team-${m.team || 'CSUA'}">${m.team || 'BE'}</span>
-              <strong style="display:block; margin-top: 2px;">${m.title}</strong>
-              <small style="color: #64748b;">${m.owner}</small>
-            `;
-            card.onclick = (e) => { e.stopPropagation(); openMeetingModal(m); };
-            cell.appendChild(card);
-          });
-
-          weekGrid.appendChild(cell);
-        });
-      });
-
-      container.appendChild(weekGrid);
-    }
-
-    function createCell(text, className) {
-      const div = document.createElement('div');
-      div.className = className;
-      div.innerText = text;
-      return div;
-    }
-
-    function renderTables() {
-      const selectedDate = document.getElementById('allocation-date').value;
-
-      buildSeats('row-m1-top', 'M1', 1, 2);
-      buildSeats('row-m1-bottom', 'M1', 3, 4);
-
-      buildSeats('row-m2-top', 'M2', 1, 2);
-      buildSeats('row-m2-bottom', 'M2', 3, 4);
-
-      buildSeats('row-mkt-top', 'MKT', 1, 3);
-      buildSeats('row-mkt-bottom', 'MKT', 4, 6);
-    }
-
-    function buildSeats(containerId, tableKey, startIdx, endIdx) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = '';
-      const selectedDate = document.getElementById('allocation-date').value;
-
-      for(let i=startIdx; i<=endIdx; i++) {
-        const seatKey = `${tableKey}_${i}`;
-        
-        const alloc = seatAllocations.find(a => a.seatKey === seatKey && isEventActiveOnDate(a.date, a.recurrence, a.exceptDay, selectedDate));
-        const personName = alloc ? alloc.personName : '';
-        const collab = getCollaboratorByName(personName);
-
-        const seat = document.createElement('div');
-        seat.className = `seat ${personName ? 'occupied' : 'free'}`;
-        
-        if (collab) {
-          seat.innerHTML = `
-            <strong>C${i}</strong>
-            <span style="font-weight:700;">${personName.split(' ')[0]}</span>
-            <span class="team-badge team-${collab.team}">${collab.team}</span>
-            ${alloc && alloc.recurrence && alloc.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[alloc.recurrence]}</span>` : ''}
-            ${alloc && alloc.exceptDay && alloc.exceptDay !== 'none' ? `<span class="exception-tag">🚫 Exc. ${weekDayLabels[alloc.exceptDay]}</span>` : ''}
-          `;
-        } else {
-          seat.innerHTML = `<strong>C${i}</strong><span>${personName || 'Livre'}</span>`;
-        }
-
-        seat.onclick = () => openSeatModal(seatKey, selectedDate, alloc);
-        container.appendChild(seat);
-      }
-    }
-
-    // GESTÃO DE MODAIS E PERSISTÊNCIA SUPABASE
-
-    // COLABORADORES
+    /* COLABORADORES */
     function openCollabModal() {
-      document.getElementById('collab-modal').style.display = 'flex';
       renderCollabList();
+      document.getElementById('collab-modal').style.display = 'flex';
     }
-
-    function closeCollabModal() {
-      document.getElementById('collab-modal').style.display = 'none';
-    }
-
-    function renderCollabList() {
-      const container = document.getElementById('collab-list-container');
-      container.innerHTML = '';
-      collaborators.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'collab-item';
-        item.innerHTML = `
-          <div>
-            <strong>${c.name}</strong> <span class="team-badge team-${c.team}">${c.team}</span>
-          </div>
-          <button class="btn" style="color:red; padding: 2px 6px;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
-        `;
-        container.appendChild(item);
-      });
-    }
+    function closeCollabModal() { document.getElementById('collab-modal').style.display = 'none'; }
 
     async function saveCollaborator(e) {
       e.preventDefault();
-      const name = document.getElementById('collab-name').value;
-      const team = document.getElementById('collab-team').value;
+      const name = document.getElementById('c-name').value;
+      const team = document.getElementById('c-team').value;
 
-      const newCollab = { name, team };
-      const { data, error } = await supabaseClient.from('collaborators').insert([newCollab]).select();
-
+      const { data, error } = await supabaseClient.from('collaborators').insert([{ name, team }]).select();
       if (!error && data) {
         collaborators.push(data[0]);
-        document.getElementById('collab-form').reset();
+        document.getElementById('c-name').value = '';
         renderCollabList();
-        renderDashboard();
-        renderTables();
       } else {
-        alert('Erro ao salvar colaborador no Supabase: ' + (error?.message || 'Verifique o RLS ou conexão.'));
+        alert('Erro ao salvar colaborador: ' + (error?.message || 'Erro desconhecido'));
       }
+    }
+
+    function renderCollabList() {
+      const container = document.getElementById('collab-list');
+      container.innerHTML = collaborators.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee;">
+          <span>${c.name} <strong>(${c.team})</strong></span>
+          <button class="btn" style="color:red; padding:2px 6px;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+        </div>
+      `).join('');
     }
 
     async function deleteCollaborator(id) {
@@ -1123,14 +278,10 @@
       if (!error) {
         collaborators = collaborators.filter(c => c.id !== id);
         renderCollabList();
-        renderDashboard();
-        renderTables();
-      } else {
-        alert('Erro ao excluir do Supabase: ' + error.message);
       }
     }
 
-    // REUNIÕES
+    /* REUNIÕES */
     function openMeetingModal(meetingData) {
       const modal = document.getElementById('meeting-modal');
       const selectOwner = document.getElementById('m-owner-select');
@@ -1148,6 +299,7 @@
         document.getElementById('m-id').value = meetingData.id;
         document.getElementById('m-title').value = meetingData.title;
         document.getElementById('m-owner-select').value = meetingData.owner;
+        document.getElementById('m-attendees').value = meetingData.attendees_count || 1;
         document.getElementById('m-participants').value = meetingData.participants || '';
         document.getElementById('m-date').value = meetingData.date;
         document.getElementById('m-start').value = meetingData.start;
@@ -1159,28 +311,26 @@
         document.getElementById('modal-title-text').innerText = 'Agendar Reunião';
         document.getElementById('meeting-form').reset();
         document.getElementById('m-id').value = '';
-        if(meetingData && meetingData.date) document.getElementById('m-date').value = meetingData.date;
-        if(meetingData && meetingData.start) document.getElementById('m-start').value = meetingData.start;
+        document.getElementById('m-attendees').value = 1;
         document.getElementById('btn-delete-meeting').style.display = 'none';
       }
 
       modal.style.display = 'flex';
     }
 
-    function closeMeetingModal() {
-      document.getElementById('meeting-modal').style.display = 'none';
-    }
+    function closeMeetingModal() { document.getElementById('meeting-modal').style.display = 'none'; }
 
     async function saveMeeting(e) {
       e.preventDefault();
       const id = document.getElementById('m-id').value;
       const ownerName = document.getElementById('m-owner-select').value;
-      const collab = getCollaboratorByName(ownerName);
+      const collab = collaborators.find(c => c.name === ownerName);
 
       const meetingObj = {
         title: document.getElementById('m-title').value,
         owner: ownerName,
         team: collab ? collab.team : 'CEO',
+        attendees_count: parseInt(document.getElementById('m-attendees').value) || 1,
         participants: document.getElementById('m-participants').value,
         date: document.getElementById('m-date').value,
         start: document.getElementById('m-start').value,
@@ -1194,108 +344,39 @@
         if (!error) {
           const idx = meetings.findIndex(m => m.id == id);
           meetings[idx] = { ...meetings[idx], ...meetingObj };
-        } else {
-          alert('Erro ao atualizar reunião: ' + error.message);
-        }
+        } else alert('Erro ao atualizar: ' + error.message);
       } else {
         const { data, error } = await supabaseClient.from('meetings').insert([meetingObj]).select();
-        if (!error && data) {
-          meetings.push(data[0]);
-        } else {
-          alert('Erro ao cadastrar reunião no Supabase: ' + (error?.message || 'Erro desconhecido'));
-        }
+        if (!error && data) meetings.push(data[0]);
+        else alert('Erro ao agendar reunião: ' + (error?.message || 'Erro desconhecido'));
       }
 
       closeMeetingModal();
       renderDashboard();
     }
 
-    async function deleteMeeting() {
-      const id = document.getElementById('m-id').value;
-      if (!id) return;
-      const { error } = await supabaseClient.from('meetings').delete().eq('id', id);
-      if (!error) {
-        meetings = meetings.filter(m => m.id != id);
-        closeMeetingModal();
-        renderDashboard();
-      } else {
-        alert('Erro ao excluir reunião: ' + error.message);
+    function renderDashboard() {
+      const container = document.getElementById('meetings-list');
+      if (meetings.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted)">Nenhuma reunião agendada.</p>';
+        return;
       }
+      container.innerHTML = meetings.map(m => `
+        <div style="border:1px solid var(--border-color); padding:10px 14px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <strong>${m.title}</strong> (${m.date} das ${m.start} às ${m.end})<br>
+            <small style="color:var(--text-muted)">Resp: ${m.owner} | 👥 ${m.attendees_count || 1} pessoas</small>
+          </div>
+          <button class="btn" onclick='openMeetingModal(${JSON.stringify(m)})'>Editar</button>
+        </div>
+      `).join('');
     }
 
-    // MAPA DE ASSENTOS
-    function openSeatModal(seatKey, dateStr, currentAlloc) {
-      currentSeatTarget = { seatKey, dateStr, alloc: currentAlloc };
-      const modal = document.getElementById('seat-modal');
-      const selectPerson = document.getElementById('seat-person-select');
-      selectPerson.innerHTML = '<option value="">-- Selecione ou Digite --</option>';
-
-      collaborators.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.name;
-        opt.innerText = `${c.name} (${c.team})`;
-        selectPerson.appendChild(opt);
-      });
-
-      if (currentAlloc) {
-        selectPerson.value = currentAlloc.personName;
-        document.getElementById('seat-recurrence').value = currentAlloc.recurrence || 'none';
-        document.getElementById('seat-except-day').value = currentAlloc.exceptDay || 'none';
-      } else {
-        document.getElementById('seat-recurrence').value = 'none';
-        document.getElementById('seat-except-day').value = 'none';
-      }
-
-      modal.style.display = 'flex';
-    }
-
-    function closeSeatModal() {
-      document.getElementById('seat-modal').style.display = 'none';
-    }
-
-    async function saveSeat() {
-      if (!currentSeatTarget) return;
-      const personName = document.getElementById('seat-person-select').value;
-      if (!personName) return alert('Selecione um colaborador.');
-
-      const seatObj = {
-        seatKey: currentSeatTarget.seatKey,
-        personName: personName,
-        date: currentSeatTarget.dateStr,
-        recurrence: document.getElementById('seat-recurrence').value,
-        exceptDay: document.getElementById('seat-except-day').value
-      };
-
-      if (currentSeatTarget.alloc && currentSeatTarget.alloc.id) {
-        const { error } = await supabaseClient.from('seat_allocations').update(seatObj).eq('id', currentSeatTarget.alloc.id);
-        if(!error) {
-          const idx = seatAllocations.findIndex(s => s.id == currentSeatTarget.alloc.id);
-          seatAllocations[idx] = { ...seatAllocations[idx], ...seatObj };
-        }
-      } else {
-        const { data, error } = await supabaseClient.from('seat_allocations').insert([seatObj]).select();
-        if (!error && data) {
-          seatAllocations.push(data[0]);
-        } else {
-          alert('Erro ao salvar no banco: ' + error.message);
-        }
-      }
-
-      closeSeatModal();
-      renderTables();
-    }
-
-    async function clearSeat() {
-      if (currentSeatTarget && currentSeatTarget.alloc && currentSeatTarget.alloc.id) {
-        const { error } = await supabaseClient.from('seat_allocations').delete().eq('id', currentSeatTarget.alloc.id);
-        if (!error) {
-          seatAllocations = seatAllocations.filter(s => s.id != currentSeatTarget.alloc.id);
-        } else {
-          alert('Erro ao desocupar assento: ' + error.message);
-        }
-      }
-      closeSeatModal();
-      renderTables();
+    function renderSeats() {
+      const m1 = document.getElementById('seats-m1');
+      const m2 = document.getElementById('seats-m2');
+      m1.innerHTML = '<div class="seat">C1 - Livre</div><div class="seat">C2 - Livre</div>';
+      m2.innerHTML = '<div class="seat">C1 - Livre</div><div class="seat">C2 - Livre</div>';
     }
   </script>
 </body>
