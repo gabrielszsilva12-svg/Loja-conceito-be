@@ -172,6 +172,16 @@
       margin-top: 2px;
     }
 
+    .exception-tag {
+      display: inline-block;
+      font-size: 0.58rem;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 1px 4px;
+      border-radius: 3px;
+      margin-top: 2px;
+    }
+
     /* DASHBOARD */
     .dashboard-container {
       background-color: var(--panel-bg);
@@ -427,8 +437,8 @@
     }
 
     .seat {
-      width: 72px;
-      height: 56px;
+      width: 80px;
+      height: 62px;
       border-radius: 6px;
       display: flex;
       flex-direction: column;
@@ -690,7 +700,7 @@
           <input type="text" id="m-participants" placeholder="Ex: Ana, Carlos, Pedro">
         </div>
         <div class="form-group">
-          <label>Data</label>
+          <label>Data Inicial</label>
           <input type="date" id="m-date" required>
         </div>
         <div class="form-group" style="display: flex; gap: 8px;">
@@ -711,6 +721,17 @@
             <option value="weekly">Semanal</option>
             <option value="biweekly">A cada 15 dias</option>
             <option value="monthly">Mensal</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Exceto no dia da semana (Home Office)</label>
+          <select id="m-except-day">
+            <option value="none">Nenhuma exceção</option>
+            <option value="1">Segunda-feira</option>
+            <option value="2">Terça-feira</option>
+            <option value="3">Quarta-feira</option>
+            <option value="4">Quinta-feira</option>
+            <option value="5">Sexta-feira</option>
           </select>
         </div>
         <div class="modal-actions">
@@ -736,6 +757,17 @@
           <option value="weekly">Semanal</option>
           <option value="biweekly">A cada 15 dias</option>
           <option value="monthly">Mensal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Exceto às / de (Dia da semana livre / Home Office)</label>
+        <select id="seat-except-day">
+          <option value="none">Nenhuma exceção</option>
+          <option value="1">Exceto às Segundas-feiras</option>
+          <option value="2">Exceto às Terças-feiras</option>
+          <option value="3">Exceto às Quartas-feiras</option>
+          <option value="4">Exceto às Quintas-feiras</option>
+          <option value="5">Exceto às Sextas-feiras</option>
         </select>
       </div>
       <div class="modal-actions">
@@ -772,6 +804,14 @@
       monthly: 'Mensal'
     };
 
+    const weekDayLabels = {
+      '1': 'Seg',
+      '2': 'Ter',
+      '3': 'Qua',
+      '4': 'Qui',
+      '5': 'Sex'
+    };
+
     function setViewMode(mode) {
       viewMode = mode;
       document.getElementById('btn-view-day').classList.toggle('btn-active', mode === 'day');
@@ -804,14 +844,20 @@
       return collaborators.find(c => c.name.toLowerCase() === name.toLowerCase());
     }
 
-    // Avalia se o evento/assento recorrente bate com a data selecionada
-    function isEventActiveOnDate(baseDateStr, recurrence, targetDateStr) {
+    // Avalia se o evento/assento recorrente bate com a data selecionada e respeita exceções
+    function isEventActiveOnDate(baseDateStr, recurrence, exceptDay, targetDateStr) {
+      const target = new Date(targetDateStr + 'T00:00:00');
+      const targetDayOfWeek = target.getDay().toString(); // 0 = Dom, 1 = Seg, ..., 5 = Sex
+
+      // Verifica regra de exceção ("exceto às")
+      if (exceptDay && exceptDay !== 'none' && targetDayOfWeek === exceptDay) {
+        return false;
+      }
+
       if (baseDateStr === targetDateStr) return true;
       if (!recurrence || recurrence === 'none') return false;
 
       const base = new Date(baseDateStr + 'T00:00:00');
-      const target = new Date(targetDateStr + 'T00:00:00');
-
       if (target < base) return false;
 
       const diffDays = Math.round((target - base) / (1000 * 60 * 60 * 24));
@@ -860,7 +906,7 @@
         meetingSlot.className = 'meeting-slot';
 
         const mList = meetings.filter(m => {
-          if (!isEventActiveOnDate(m.date, m.recurrence, dateISO)) return false;
+          if (!isEventActiveOnDate(m.date, m.recurrence, m.exceptDay, dateISO)) return false;
           if (m.start > h || m.end <= h) return false;
           if (filterTeam !== 'ALL' && m.team !== filterTeam) return false;
           return true;
@@ -874,6 +920,7 @@
               <span class="team-badge team-${m.team || 'CSUA'}">${m.team || 'BE'}</span>
               <strong>${m.title}</strong>
               ${m.recurrence && m.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[m.recurrence]}</span>` : ''}
+              ${m.exceptDay && m.exceptDay !== 'none' ? `<span class="exception-tag">🚫 Exceto ${weekDayLabels[m.exceptDay]}</span>` : ''}
             </div>
             <div style="font-size: 0.78rem; color: #475569;">
               Resp: <strong>${m.owner}</strong> ${m.participants ? `| Part: ${m.participants}` : ''}
@@ -924,7 +971,7 @@
           cell.onclick = () => openMeetingModal({date: dateISO, start: h});
 
           const mList = meetings.filter(m => {
-            if (!isEventActiveOnDate(m.date, m.recurrence, dateISO)) return false;
+            if (!isEventActiveOnDate(m.date, m.recurrence, m.exceptDay, dateISO)) return false;
             if (m.start > h || m.end <= h) return false;
             if (filterTeam !== 'ALL' && m.team !== filterTeam) return false;
             return true;
@@ -965,7 +1012,7 @@
         for(let i=1; i<=count; i++) {
           const seatKey = `${tableKey}_${i}`;
           
-          const alloc = seatAllocations.find(a => a.seatKey === seatKey && isEventActiveOnDate(a.date, a.recurrence, selectedDate));
+          const alloc = seatAllocations.find(a => a.seatKey === seatKey && isEventActiveOnDate(a.date, a.recurrence, a.exceptDay, selectedDate));
           const personName = alloc ? alloc.personName : '';
           const collab = getCollaboratorByName(personName);
 
@@ -978,6 +1025,7 @@
               <span style="font-weight:700;">${personName.split(' ')[0]}</span>
               <span class="team-badge team-${collab.team}">${collab.team}</span>
               ${alloc && alloc.recurrence && alloc.recurrence !== 'none' ? `<span class="recurrence-tag">🔄 ${recurrenceLabels[alloc.recurrence]}</span>` : ''}
+              ${alloc && alloc.exceptDay && alloc.exceptDay !== 'none' ? `<span class="exception-tag">🚫 Exc. ${weekDayLabels[alloc.exceptDay]}</span>` : ''}
             `;
           } else {
             seat.innerHTML = `<strong>C${i}</strong><span>${personName || 'Livre'}</span>`;
@@ -1001,7 +1049,7 @@
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       canvas.width = 1200;
-      canvas.height = 800;
+      canvas.height = 850;
 
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1042,7 +1090,7 @@
 
       if (type === 'coworking') {
         const dateISO = currentDate.toISOString().split('T')[0];
-        const dayMeetings = meetings.filter(m => isEventActiveOnDate(m.date, m.recurrence, dateISO));
+        const dayMeetings = meetings.filter(m => isEventActiveOnDate(m.date, m.recurrence, m.exceptDay, dateISO));
 
         if (dayMeetings.length === 0) {
           ctx.font = '20px N27, sans-serif';
@@ -1060,7 +1108,8 @@
 
             ctx.font = 'bold 20px N27, sans-serif';
             ctx.fillStyle = '#0f172a';
-            ctx.fillText(`${m.start} - ${m.end} | ${m.title} ${m.recurrence && m.recurrence !== 'none' ? ' (Recorrente: ' + recurrenceLabels[m.recurrence] + ')' : ''}`, 85, yPos + 30);
+            let excStr = (m.exceptDay && m.exceptDay !== 'none') ? ` (Exceto ${weekDayLabels[m.exceptDay]})` : '';
+            ctx.fillText(`${m.start} - ${m.end} | ${m.title} ${m.recurrence && m.recurrence !== 'none' ? ' (Recorrente: ' + recurrenceLabels[m.recurrence] + excStr + ')' : ''}`, 85, yPos + 30);
 
             ctx.font = '16px N27, sans-serif';
             ctx.fillStyle = '#475569';
@@ -1090,8 +1139,12 @@
           yPos += 25;
 
           t.keys.forEach((k, idx) => {
-            const alloc = seatAllocations.find(a => a.seatKey === k && isEventActiveOnDate(a.date, a.recurrence, selectedDate));
-            const occupant = alloc ? `${alloc.personName} ${alloc.recurrence !== 'none' ? '(' + recurrenceLabels[alloc.recurrence] + ')' : ''}` : 'Livre';
+            const alloc = seatAllocations.find(a => a.seatKey === k && isEventActiveOnDate(a.date, a.recurrence, a.exceptDay, selectedDate));
+            let occupant = 'Livre';
+            if (alloc) {
+              let excStr = (alloc.exceptDay && alloc.exceptDay !== 'none') ? ` - Exceto ${weekDayLabels[alloc.exceptDay]}` : '';
+              occupant = `${alloc.personName} ${alloc.recurrence !== 'none' ? '(' + recurrenceLabels[alloc.recurrence] + excStr + ')' : ''}`;
+            }
             
             ctx.font = '16px N27, sans-serif';
             ctx.fillStyle = occupant === 'Livre' ? '#16a34a' : '#b91c1c';
@@ -1105,7 +1158,7 @@
 
       ctx.font = '14px N27, sans-serif';
       ctx.fillStyle = '#94a3b8';
-      ctx.fillText('Gerado por LOJA CONCEITO BE', 60, 760);
+      ctx.fillText('Gerado por LOJA CONCEITO BE', 60, 810);
 
       const link = document.createElement('a');
       link.download = `BE_${type}_${dateStr}.png`;
@@ -1207,6 +1260,7 @@
       document.getElementById('m-start').value = data.start || '09:00';
       document.getElementById('m-end').value = data.end || '10:00';
       document.getElementById('m-recurrence').value = data.recurrence || 'none';
+      document.getElementById('m-except-day').value = data.exceptDay || 'none';
       document.getElementById('meeting-modal').style.display = 'flex';
     }
 
@@ -1229,7 +1283,8 @@
         date: document.getElementById('m-date').value,
         start: document.getElementById('m-start').value,
         end: document.getElementById('m-end').value,
-        recurrence: document.getElementById('m-recurrence').value
+        recurrence: document.getElementById('m-recurrence').value,
+        exceptDay: document.getElementById('m-except-day').value
       };
 
       meetings = meetings.filter(m => m.id !== id);
@@ -1253,6 +1308,7 @@
 
       select.value = currentAlloc ? currentAlloc.personName : '';
       document.getElementById('seat-recurrence').value = currentAlloc ? (currentAlloc.recurrence || 'none') : 'none';
+      document.getElementById('seat-except-day').value = currentAlloc ? (currentAlloc.exceptDay || 'none') : 'none';
       document.getElementById('seat-modal').style.display = 'flex';
     }
 
@@ -1263,6 +1319,7 @@
     function saveSeat() {
       const name = document.getElementById('seat-person-select').value;
       const recurrence = document.getElementById('seat-recurrence').value;
+      const exceptDay = document.getElementById('seat-except-day').value;
       const { date, seatKey } = currentSeatTarget;
 
       // Remover alocação existente para essa mesa nesse dia/recorrência
@@ -1274,7 +1331,8 @@
           seatKey,
           personName: name,
           date,
-          recurrence
+          recurrence,
+          exceptDay
         });
       }
 
