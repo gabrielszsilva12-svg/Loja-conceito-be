@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Espaços e Reuniões - Loja Conceito BE</title>
+  
+  <!-- Estilos da Aplicação -->
+  <style>
+    :root {
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --primary: #1e293b;
+      --accent: #2563eb;
+      --text: #334155;
+      --border: #e2e8f0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .btn {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 2px solid var(--bg-color);
+      padding-bottom: 10px;
+    }
+
+    .seats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .seat {
+      background: #e2e8f0;
+      border: 2px dashed #cbd5e1;
+      padding: 15px;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .seat.occupied {
+      background: #dcfce7;
+      border-style: solid;
+      border-color: #22c55e;
+      color: #15803d;
+    }
+
+    .team-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      background: #e0f2fe;
+      color: #0369a1;
+      margin-left: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: #f8fafc;
+    }
+  </style>
+
+  <!-- Biblioteca do Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Cabecalho do Sistema -->
+  <header>
+    <div>
+      <h1>LOJA CONCEITO BE / COWORKING PRO BE</h1>
+      <small>Dashboard Diário de Ocupação & Gestão de Espaços</small>
+    </div>
+    <div>
+      <button class="btn" onclick="carregarDados()">🔄 Atualizar Dados</button>
+      <button class="btn" onclick="alert('Exportando mapa...')">📥 Exportar Mapa (PNG)</button>
+    </div>
+  </header>
+
+  <!-- Layout Principal -->
+  <div class="grid-container">
+    
+    <!-- Seção de Reuniões -->
+    <div class="card">
+      <h2>📅 Salas de Reunião</h2>
+      
+      <h3>Meeting 01 (4 lugares)</h3>
+      <div id="meeting1-status" class="seat">Carregando...</div>
+
+      <h3 style="margin-top:20px;">Meeting 02 (4 lugares)</h3>
+      <div id="meeting2-status" class="seat">Carregando...</div>
+    </div>
+
+    <!-- Mapa de Alocação de Assentos -->
+    <div class="card">
+      <h2>🪑 Mapa de Assentos - Marketing (6 lugares)</h2>
+      <p><small>Selecione a data e veja os assentos ocupados:</small></p>
+      
+      <div class="seats-grid" id="seats-container">
+        <div class="seat">Mesa 01</div>
+        <div class="seat">Mesa 02</div>
+        <div class="seat">Mesa 03</div>
+        <div class="seat">Mesa 04</div>
+        <div class="seat">Mesa 05</div>
+        <div class="seat">Mesa 06</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tabela de Colaboradores -->
+  <div class="card">
+    <h2>👥 Gestão de Colaboradores</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="collaborators-list">
+        <tr>
+          <td colspan="2">Carregando colaboradores...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Lógica JavaScript e Conexão Supabase -->
+  <script>
+    // Credenciais de Acesso do Supabase
+    const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_LP0IScAAxzrtd20Gk6QMw_ID2j8';
+
+    // Inicialização do cliente Supabase
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Função para carregar e exibir colaboradores
+    async function carregarColaboradores() {
+      const { data, error } = await supabase
+        .from('collaborators')
+        .select('*');
+
+      const tbody = document.getElementById('collaborators-list');
+      
+      if (error) {
+        console.error('Erro ao buscar colaboradores:', error);
+        tbody.innerHTML = '<tr><td colspan="2" style="color:red;">Erro ao carregar colaboradores do banco de dados.</td></tr>';
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2">Nenhum colaborador cadastrado no Supabase.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.map(c => `
+        <tr>
+          <td><strong>${c.name || c.nome || 'Sem Nome'}</strong></td>
+          <td><span class="team-badge">${c.team || c.time || 'CSUA'}</span></td>
+        </tr>
+      `).join('');
+
+      console.log('Colaboradores carregados:', data);
+    }
+
+    // Função para carregar e exibir reuniões
+    async function carregarReunioes() {
+      const { data, error } = await supabase
+        .from('meetings')
+        .select('*');
+
+      const m1 = document.getElementById('meeting1-status');
+      const m2 = document.getElementById('meeting2-status');
+
+      if (error) {
+        console.error('Erro ao buscar reuniões:', error);
+        m1.innerText = 'Livre / Disponível';
+        m2.innerText = 'Livre / Disponível';
+        return;
+      }
+
+      if (data && data.length > 0) {
+        m1.innerHTML = `<strong>${data[0].title || 'Reunião Agendada'}</strong><br><small>${data[0].time || 'Horário agendado'}</small>`;
+        m1.classList.add('occupied');
+      } else {
+        m1.innerText = 'Livre / Disponível';
+      }
+
+      console.log('Reuniões carregadas:', data);
+    }
+
+    // Função para carregar e exibir assentos
+    async function carregarAlocacaoAssentos() {
+      const { data, error } = await supabase
+        .from('seat_allocations')
+        .select('*');
+
+      if (error) {
+        console.error('Erro ao buscar alocação de assentos:', error);
+        return;
+      }
+
+      console.log('Alocações de assentos carregadas:', data);
+    }
+
+    // Função central de carregamento
+    function carregarDados() {
+      carregarColaboradores();
+      carregarReunioes();
+      carregarAlocacaoAssentos();
+    }
+
+    // Disparar carregamento automático quando a página carregar
+    document.addEventListener('DOMContentLoaded', carregarDados);
+  </script>
+</body>
+</html>
