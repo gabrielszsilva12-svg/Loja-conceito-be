@@ -1,208 +1,737 @@
-// ================== LOJA CONCEITO BE — Mapa de Alocação ==================
-// Persistência local via localStorage (sem dependências externas).
-
-const LS_COLLAB = "be_collaborators";
-const LS_ALLOC = "be_allocations";
-
-const SEAT_IDS = [
-  "m1-1", "m1-2", "m1-3", "m1-4",
-  "m2-1", "m2-2", "m2-3", "m2-4",
-  "mkt-1", "mkt-2", "mkt-3", "mkt-4", "mkt-5", "mkt-6",
-];
-
-let collaborators = loadCollaborators();
-let allocations = loadAllocations();
-let currentSeatId = null;
-
-// ---------- storage ----------
-function loadCollaborators() {
-  try {
-    return JSON.parse(localStorage.getItem(LS_COLLAB)) || [];
-  } catch (e) {
-    return [];
-  }
-}
-function saveCollaborators(list) {
-  localStorage.setItem(LS_COLLAB, JSON.stringify(list));
-}
-function loadAllocations() {
-  try {
-    return JSON.parse(localStorage.getItem(LS_ALLOC)) || {};
-  } catch (e) {
-    return {};
-  }
-}
-function saveAllocations(data) {
-  localStorage.setItem(LS_ALLOC, JSON.stringify(data));
-}
-
-// ---------- helpers ----------
-function pad(n) {
-  return String(n).padStart(2, "0");
-}
-function todayISO() {
-  const d = new Date();
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-function dateInputEl() {
-  return document.getElementById("allocation-date");
-}
-function currentDate() {
-  return dateInputEl().value || todayISO();
-}
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// ---------- seats ----------
-function renderSeats() {
-  const date = currentDate();
-  const dayAlloc = allocations[date] || {};
-  SEAT_IDS.forEach((id) => {
-    const btn = document.getElementById("seat-" + id);
-    if (!btn) return;
-    const name = dayAlloc[id];
-    if (name) {
-      btn.textContent = name;
-      btn.classList.add("occupied");
-    } else {
-      btn.textContent = btn.dataset.title || "Assento";
-      btn.classList.remove("occupied");
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja Conceito BE</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg-color: #f0f4f8;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #0a0f1d;
+      --primary-hover: #1e293b;
+      --seat-bg: #f8fafc;
+      --seat-border: #94a3b8;
+      --seat-occupied-bg: #dbeafe;
+      --seat-occupied-border: #2563eb;
+      --seat-occupied-text: #1e40af;
     }
-  });
-}
 
-function openSeatModal(seatId, title) {
-  currentSeatId = seatId;
-  document.getElementById("modal-seat-title").textContent = title;
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 25px; }
+    .container { max-width: 1200px; margin: 0 auto; }
 
-  const select = document.getElementById("select-collaborator");
-  select.innerHTML =
-    '<option value="">Selecione o colaborador...</option>' +
-    collaborators
-      .map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`)
-      .join("");
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    header h1 { font-size: 1.5rem; letter-spacing: 1.5px; color: var(--primary); font-weight: 900; text-transform: uppercase; }
+    
+    .header-actions { display: flex; gap: 10px; }
 
-  const date = currentDate();
-  const current = (allocations[date] || {})[seatId] || "";
-  select.value = current;
+    .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); }
+    .tab-btn { padding: 10px 18px; border: none; background: none; font-size: 0.85rem; font-weight: 800; cursor: pointer; color: var(--text-muted); text-transform: uppercase; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tab-btn.active { background-color: var(--primary); color: white; border-radius: 6px 6px 0 0; }
 
-  document.getElementById("modal-seat").classList.add("active");
-}
+    .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .card h3 { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .card-subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; }
 
-function closeSeatModal() {
-  document.getElementById("modal-seat").classList.remove("active");
-  currentSeatId = null;
-}
+    .btn { padding: 8px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: white; cursor: pointer; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--primary); color: white; border: none; }
+    .btn-primary:hover { background: var(--primary-hover); }
 
-function saveSeatAllocation() {
-  if (!currentSeatId) return;
-  const name = document.getElementById("select-collaborator").value;
-  const date = currentDate();
+    /* TABELA DE GRADE SEMANAL */
+    .schedule-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .schedule-grid { display: grid; grid-template-columns: 80px repeat(5, 1fr); gap: 1px; background: var(--border-color); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+    .grid-header { background: #f8fafc; padding: 10px; text-align: center; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+    .time-slot { background: #ffffff; padding: 12px 4px; text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid #f1f5f9; }
+    .day-cell { background: #ffffff; padding: 6px; min-height: 52px; border-bottom: 1px solid #f1f5f9; vertical-align: top; cursor: pointer; transition: background-color 0.15s; }
+    .day-cell:hover { background-color: #f1f5f9; }
+    
+    .event-card { background: #e0f2fe; border-left: 3px solid #0284c7; padding: 6px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; margin-bottom: 4px; }
+    .event-title { font-weight: 800; color: #0369a1; }
+    .event-time { font-size: 0.68rem; color: #075985; }
 
-  if (!allocations[date]) allocations[date] = {};
-  if (name) {
-    allocations[date][currentSeatId] = name;
-  } else {
-    delete allocations[date][currentSeatId];
-  }
+    /* MODAL */
+    .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(3px); justify-content: center; align-items: center; z-index: 1000; }
+    .modal { background: #fff; border-radius: 12px; padding: 20px 24px; width: 90%; max-width: 440px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
+    .modal-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 14px; color: var(--primary); }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 800; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+    .form-group input, .form-group select { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; outline: none; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
 
-  saveAllocations(allocations);
-  renderSeats();
-  closeSeatModal();
-}
+    /* ESTRUTURA VISUAL DO MAPA DE MESAS */
+    .office-layout { display: flex; flex-direction: column; gap: 30px; margin-top: 10px; }
+    .section-title { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
 
-function clearSeatAllocation() {
-  if (!currentSeatId) return;
-  const date = currentDate();
-  if (allocations[date]) delete allocations[date][currentSeatId];
-  saveAllocations(allocations);
-  renderSeats();
-  closeSeatModal();
-}
+    .rooms-row { display: flex; gap: 20px; flex-wrap: wrap; }
+    .room-box { flex: 1; min-width: 280px; background: #fafafa; border: 2px dashed #cbd5e1; border-radius: 10px; padding: 15px; text-align: center; }
+    .room-box-title { font-size: 0.85rem; font-weight: 800; color: var(--primary); margin-bottom: 15px; text-transform: uppercase; }
 
-// ---------- collaborators ----------
-function openCollabModal() {
-  renderCollabList();
-  document.getElementById("modal-collab").classList.add("active");
-  document.getElementById("new-collab-name").focus();
-}
-function closeCollabModal() {
-  document.getElementById("modal-collab").classList.remove("active");
-}
-function renderCollabList() {
-  const list = document.getElementById("collab-list");
-  if (collaborators.length === 0) {
-    list.innerHTML = '<li class="collab-empty">Nenhum colaborador cadastrado.</li>';
-    return;
-  }
-  list.innerHTML = collaborators
-    .map(
-      (c, i) => `
-      <li class="collab-item">
-        <span>${escapeHtml(c)}</span>
-        <button class="btn-remove-collab" onclick="removeCollaborator(${i})" title="Remover">&times;</button>
-      </li>`
-    )
-    .join("");
-}
-function addCollaborator() {
-  const input = document.getElementById("new-collab-name");
-  const name = input.value.trim();
-  if (!name) return;
-  if (collaborators.includes(name)) {
-    input.value = "";
-    return;
-  }
-  collaborators.push(name);
-  saveCollaborators(collaborators);
-  input.value = "";
-  renderCollabList();
-}
-function removeCollaborator(index) {
-  const removedName = collaborators[index];
-  collaborators.splice(index, 1);
-  saveCollaborators(collaborators);
-  renderCollabList();
+    .table-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; position: relative; }
+    .table-surface { background: #e2e8f0; border: 2px solid #94a3b8; border-radius: 8px; font-weight: 800; font-size: 0.75rem; color: #475569; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
 
-  // Remove esse colaborador de qualquer assento em que estava alocado
-  let changed = false;
-  Object.keys(allocations).forEach((date) => {
-    Object.keys(allocations[date]).forEach((seatId) => {
-      if (allocations[date][seatId] === removedName) {
-        delete allocations[date][seatId];
-        changed = true;
-      }
+    .seats-row { display: flex; gap: 12px; justify-content: center; margin: 4px 0; }
+
+    .seat-chair {
+      width: 90px;
+      min-height: 52px;
+      border: 1px solid var(--seat-border);
+      background: var(--seat-bg);
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+    .seat-chair:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .seat-chair.occupied {
+      background: var(--seat-occupied-bg);
+      border-color: var(--seat-occupied-border);
+      color: var(--seat-occupied-text);
+    }
+    .seat-status { font-size: 0.65rem; font-weight: 500; color: var(--text-muted); text-align: center; line-height: 1.1; }
+    .seat-chair.occupied .seat-status { color: var(--seat-occupied-text); font-weight: 700; }
+
+    .desks-row { display: flex; gap: 20px; flex-wrap: wrap; }
+    .desk-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 15px; flex: 1; min-width: 280px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>LOJA CONCEITO BE</h1>
+      <div class="header-actions">
+        <button class="btn" onclick="openCollabModal()">👥 Colaboradores</button>
+        <button class="btn btn-primary" onclick="openMeetingModal()">+ Novo Evento/Reunião</button>
+      </div>
+    </header>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="btn-tab-coworking" onclick="switchTab('coworking')">COWORKING PRO BE</button>
+      <button class="tab-btn" id="btn-tab-seats" onclick="switchTab('seats')">ALOCAÇÃO DE ASSENTOS</button>
+    </div>
+
+    <!-- ABA 1: CALENDÁRIO / GRADE SEMANAL -->
+    <div id="view-coworking" class="tab-content">
+      <div class="card">
+        <h3>Dashboard Semanal de Ocupação</h3>
+        <p class="card-subtitle">Selecione o período para visualizar e clique no horário desejado para agendar.</p>
+        
+        <div class="schedule-controls">
+          <div class="form-group" style="margin: 0; width: auto;">
+            <input type="date" id="week-picker" onchange="renderDashboard()">
+          </div>
+        </div>
+
+        <div class="schedule-grid" id="weekly-table"></div>
+      </div>
+    </div>
+
+    <!-- ABA 2: MAPA DE ASSENTOS DO ESCRITÓRIO -->
+    <div id="view-seats" class="tab-content" style="display:none;">
+      <div class="card">
+        <h3>Mapa de Alocação do Escritório</h3>
+        <p class="card-subtitle">Clique em qualquer cadeira para alocar ou alterar a pessoa do dia/período.</p>
+        
+        <div class="form-group" style="max-width: 200px; margin-top: 10px; margin-bottom: 25px;">
+          <label>Data de Consulta</label>
+          <input type="date" id="seat-search-date" onchange="renderSeats()">
+        </div>
+
+        <div class="office-layout">
+          <div>
+            <div class="rooms-row">
+              
+              <!-- MEETING 01 -->
+              <div class="room-box">
+                <div class="room-box-title">Meeting 01 (4 Lugares)</div>
+                <div class="table-container">
+                  <div class="seats-row" id="m1-top"></div>
+                  <div class="table-surface" style="width: 190px; height: 35px; margin: 4px 0;">Meeting 01</div>
+                  <div class="seats-row" id="m1-bottom"></div>
+                </div>
+              </div>
+
+              <!-- MEETING 02 -->
+              <div class="room-box">
+                <div class="room-box-title">Meeting 02 (4 Lugares)</div>
+                <div class="table-container">
+                  <div class="seats-row" id="m2-top"></div>
+                  <div class="table-surface" style="width: 190px; height: 35px; margin: 4px 0;">Meeting 02</div>
+                  <div class="seats-row" id="m2-bottom"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- MARKETING (MESA COM 6 LUGARES) -->
+            <div class="desks-row" style="margin-top: 25px;">
+              <div class="desk-box">
+                <div class="room-box-title" style="text-align: center;">Marketing (6 Lugares)</div>
+                <div class="table-container">
+                  <div class="seats-row" id="m3-top"></div>
+                  <div class="table-surface" style="width: 290px; height: 38px; margin: 4px 0;">Mesa Marketing</div>
+                  <div class="seats-row" id="m3-bottom"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE ALOCAÇÃO DE ASSENTO -->
+  <div class="modal-backdrop" id="seat-modal">
+    <div class="modal">
+      <div class="modal-title" id="seat-modal-title">Alocar Assento</div>
+      <form id="seat-form" onsubmit="saveSeatAllocation(event)">
+        <input type="hidden" id="s-table-id">
+        <input type="hidden" id="s-seat-code">
+
+        <div class="form-group">
+          <label>Colaborador *</label>
+          <select id="s-collab-select" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Data Inicial *</label>
+          <input type="date" id="s-start-date" required>
+        </div>
+
+        <div class="form-group">
+          <label>Frequência / Permanência *</label>
+          <select id="s-recurrence">
+            <option value="daily">Diariamente (Todos os dias úteis)</option>
+            <option value="single">Apenas na data selecionada</option>
+            <option value="weekly">Semanalmente (Mesmo dia da semana)</option>
+            <option value="biweekly">A cada 15 dias</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Exceção (Dias de Home Office / Ausência)</label>
+          <select id="s-except-day">
+            <option value="none">Nenhuma exceção</option>
+            <option value="1">Segunda-feira</option>
+            <option value="2">Terça-feira</option>
+            <option value="3">Quarta-feira</option>
+            <option value="4">Quinta-feira</option>
+            <option value="5">Sexta-feira</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn" style="color:#ef4444;" id="btn-remove-seat" onclick="removeSeatAllocation()">Remover Pessoa</button>
+          <button type="button" class="btn" onclick="closeSeatModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Assento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE REUNIÃO / EVENTO -->
+  <div class="modal-backdrop" id="meeting-modal">
+    <div class="modal">
+      <div class="modal-title" id="modal-title-text">Agendar Reunião</div>
+      <form id="meeting-form" onsubmit="saveMeeting(event)">
+        <input type="hidden" id="m-id">
+        
+        <div class="form-group">
+          <label>Título da Reunião / Evento *</label>
+          <input type="text" id="m-title" required placeholder="Ex: Reunião Trade Marketing">
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <div class="form-group" style="flex: 2;">
+            <label>Responsável *</label>
+            <select id="m-owner-select" required></select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Pessoas *</label>
+            <input type="number" id="m-attendees" min="1" value="1" required placeholder="Qtd">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Participantes (Separados por vírgula)</label>
+          <input type="text" id="m-participants" placeholder="Ex: Gabriel, Ana, Carlos">
+        </div>
+
+        <div class="form-group">
+          <label>Data *</label>
+          <input type="date" id="m-date" required>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <div class="form-group" style="flex: 1;">
+            <label>Horário Início *</label>
+            <input type="time" id="m-start" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Horário Término *</label>
+            <input type="time" id="m-end" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Recorrência</label>
+          <select id="m-recurrence">
+            <option value="none">Apenas nesta data (Única)</option>
+            <option value="daily">Diário</option>
+            <option value="weekly">Semanal</option>
+            <option value="biweekly">A cada 15 dias</option>
+            <option value="monthly">Mensal</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn" style="color:#ef4444; display:none;" id="btn-delete-meeting" onclick="deleteMeeting()">Excluir</button>
+          <button type="button" class="btn" onclick="closeMeetingModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Reunião</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE COLABORADORES -->
+  <div class="modal-backdrop" id="collab-modal">
+    <div class="modal">
+      <div class="modal-title">Gerenciar Colaboradores</div>
+      <form onsubmit="saveCollaborator(event)">
+        <div class="form-group">
+          <label>Nome do Colaborador *</label>
+          <input type="text" id="c-name" required placeholder="Nome completo">
+        </div>
+        <div class="form-group">
+          <label>Time / Setor *</label>
+          <select id="c-team" required>
+            <option value="EDFE">EDFE</option>
+            <option value="CSUA">CSUA</option>
+            <option value="CSUM">CSUM</option>
+            <option value="ENGO">ENGO</option>
+            <option value="ENGE">ENGE</option>
+            <option value="CEO">CEO</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:5px;">+ Adicionar Colaborador</button>
+      </form>
+      <div id="collab-list" style="margin-top: 15px; max-height: 180px; overflow-y: auto;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeCollabModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = ''; 
+    const SUPABASE_KEY = '';
+    
+    let supabaseClient = null;
+    if (SUPABASE_URL && SUPABASE_KEY && window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+
+    let collaborators = [
+      { id: '1', name: 'Gabriel Souza', team: 'CEO' },
+      { id: '2', name: 'Ana Silva', team: 'EDFE' }
+    ];
+    let meetings = [];
+    let seatAllocations = []; // Estrutura para os assentos fixos/recorrentes
+
+    const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('week-picker').value = today;
+      document.getElementById('seat-search-date').value = today;
+      loadData();
     });
-  });
-  if (changed) {
-    saveAllocations(allocations);
-    renderSeats();
-  }
-}
 
-// ---------- init ----------
-document.addEventListener("DOMContentLoaded", () => {
-  const dateInput = dateInputEl();
-  dateInput.value = todayISO();
-  dateInput.addEventListener("change", renderSeats);
-
-  document.getElementById("new-collab-name").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addCollaborator();
+    async function loadData() {
+      if (supabaseClient) {
+        const { data: cData } = await supabaseClient.from('collaborators').select('*');
+        if (cData && cData.length > 0) collaborators = cData;
+        const { data: mData } = await supabaseClient.from('meetings').select('*');
+        if (mData) meetings = mData;
+        const { data: sData } = await supabaseClient.from('seat_allocations').select('*');
+        if (sData) seatAllocations = sData;
+      }
+      renderDashboard();
+      renderSeats();
     }
-  });
 
-  // Fecha modais clicando fora do conteúdo
-  document.getElementById("modal-seat").addEventListener("click", (e) => {
-    if (e.target.id === "modal-seat") closeSeatModal();
-  });
-  document.getElementById("modal-collab").addEventListener("click", (e) => {
-    if (e.target.id === "modal-collab") closeCollabModal();
-  });
+    function switchTab(tab) {
+      document.getElementById('btn-tab-coworking').classList.remove('active');
+      document.getElementById('btn-tab-seats').classList.remove('active');
+      document.getElementById('view-coworking').style.display = 'none';
+      document.getElementById('view-seats').style.display = 'none';
+      
+      if (tab === 'coworking') {
+        document.getElementById('view-coworking').style.display = 'block';
+        document.getElementById('btn-tab-coworking').classList.add('active');
+      } else {
+        document.getElementById('view-seats').style.display = 'block';
+        document.getElementById('btn-tab-seats').classList.add('active');
+      }
+    }
 
-  renderSeats();
-});
+    /* RENDERIZAR TABELA SEMANAL (CALENDÁRIO) */
+    function renderDashboard() {
+      const container = document.getElementById('weekly-table');
+      const selectedDateVal = document.getElementById('week-picker').value;
+      const selectedDate = selectedDateVal ? new Date(selectedDateVal + 'T00:00:00') : new Date();
+      
+      const dayOfWeek = selectedDate.getDay();
+      const diffToMonday = selectedDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+      const monday = new Date(selectedDate);
+      monday.setDate(diffToMonday);
+
+      const weekDays = [];
+      for (let i = 0; i < 5; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        weekDays.push(d);
+      }
+
+      let html = '<div class="grid-header">Hora</div>';
+      const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex'];
+      weekDays.forEach((d, idx) => {
+        const formattedDate = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+        html += `<div class="grid-header">${dayNames[idx]}<br><small>${formattedDate}</small></div>`;
+      });
+
+      hours.forEach(hour => {
+        html += `<div class="time-slot">${hour}</div>`;
+        weekDays.forEach(d => {
+          const dateStr = d.toISOString().split('T')[0];
+          const matches = meetings.filter(m => m.date === dateStr && m.start.startsWith(hour.substring(0, 2)));
+
+          html += `<div class="day-cell" onclick="handleSlotClick('${dateStr}', '${hour}')">`;
+          matches.forEach(m => {
+            html += `
+              <div class="event-card" onclick="event.stopPropagation(); openMeetingModal(${JSON.stringify(m).replace(/"/g, '&quot;')})">
+                <div class="event-title">${m.title}</div>
+                <div class="event-time">${m.start} - ${m.end} (${m.owner})</div>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        });
+      });
+
+      container.innerHTML = html;
+    }
+
+    function handleSlotClick(dateStr, hourStr) {
+      const nextHourNum = parseInt(hourStr.split(':')[0]) + 1;
+      const endHourStr = `${nextHourNum.toString().padStart(2, '0')}:00`;
+
+      openMeetingModal({
+        date: dateStr,
+        start: hourStr,
+        end: endHourStr
+      });
+    }
+
+    /* ALOCAÇÃO E RENDERIZAÇÃO DAS MESAS */
+    function checkSeatOccupant(tableId, seatCode, targetDateStr) {
+      const targetDate = new Date(targetDateStr + 'T00:00:00');
+      const dayOfWeek = targetDate.getDay().toString(); // 1=Seg, 2=Ter, etc.
+
+      const alloc = seatAllocations.find(a => {
+        if (a.tableId !== tableId || a.seatCode !== seatCode) return false;
+        
+        const startDate = new Date(a.startDate + 'T00:00:00');
+        if (targetDate < startDate) return false;
+
+        // Verificar exceção de Home Office
+        if (a.exceptDay && a.exceptDay === dayOfWeek) return false;
+
+        // Recorrência
+        if (a.recurrence === 'single') {
+          return a.startDate === targetDateStr;
+        } else if (a.recurrence === 'daily') {
+          return true;
+        } else if (a.recurrence === 'weekly') {
+          return startDate.getDay() === targetDate.getDay();
+        } else if (a.recurrence === 'biweekly') {
+          const diffDays = Math.floor((targetDate - startDate) / (1000 * 60 * 60 * 24));
+          return diffDays % 14 === 0;
+        }
+        return false;
+      });
+
+      return alloc ? alloc.collabName : null;
+    }
+
+    function renderSeats() {
+      const selectedDate = document.getElementById('seat-search-date').value;
+
+      const createChair = (tableId, code) => {
+        const occupant = checkSeatOccupant(tableId, code, selectedDate);
+        const isOccupied = Boolean(occupant);
+
+        return `
+          <div class="seat-chair ${isOccupied ? 'occupied' : ''}" onclick="openSeatModal('${tableId}', '${code}')">
+            <span>${code}</span>
+            <span class="seat-status">${isOccupied ? occupant : 'Livre'}</span>
+          </div>
+        `;
+      };
+
+      // Meeting 01 (4 Lugares)
+      document.getElementById('m1-top').innerHTML = createChair('Meeting01', 'C1') + createChair('Meeting01', 'C2');
+      document.getElementById('m1-bottom').innerHTML = createChair('Meeting01', 'C3') + createChair('Meeting01', 'C4');
+
+      // Meeting 02 (4 Lugares)
+      document.getElementById('m2-top').innerHTML = createChair('Meeting02', 'C1') + createChair('Meeting02', 'C2');
+      document.getElementById('m2-bottom').innerHTML = createChair('Meeting02', 'C3') + createChair('Meeting02', 'C4');
+
+      // Marketing (6 Lugares)
+      document.getElementById('m3-top').innerHTML = createChair('Marketing', 'C1') + createChair('Marketing', 'C2') + createChair('Marketing', 'C3');
+      document.getElementById('m3-bottom').innerHTML = createChair('Marketing', 'C4') + createChair('Marketing', 'C5') + createChair('Marketing', 'C6');
+    }
+
+    /* MODAL DE ASSENTO */
+    function openSeatModal(tableId, seatCode) {
+      const modal = document.getElementById('seat-modal');
+      const select = document.getElementById('s-collab-select');
+      const selectedDate = document.getElementById('seat-search-date').value;
+
+      document.getElementById('seat-modal-title').innerText = `Alocar Assento - ${tableId} (${seatCode})`;
+      document.getElementById('s-table-id').value = tableId;
+      document.getElementById('s-seat-code').value = seatCode;
+      document.getElementById('s-start-date').value = selectedDate;
+
+      select.innerHTML = '';
+      if (collaborators.length === 0) {
+        select.innerHTML = '<option value="">Cadastre colaboradores primeiro</option>';
+      } else {
+        collaborators.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.name;
+          opt.innerText = `${c.name} (${c.team})`;
+          select.appendChild(opt);
+        });
+      }
+
+      // Buscar se já tem alguém
+      const existing = seatAllocations.find(a => a.tableId === tableId && a.seatCode === seatCode);
+      if (existing) {
+        select.value = existing.collabName;
+        document.getElementById('s-start-date').value = existing.startDate;
+        document.getElementById('s-recurrence').value = existing.recurrence || 'daily';
+        document.getElementById('s-except-day').value = existing.exceptDay || 'none';
+        document.getElementById('btn-remove-seat').style.display = 'inline-block';
+      } else {
+        document.getElementById('s-recurrence').value = 'daily';
+        document.getElementById('s-except-day').value = 'none';
+        document.getElementById('btn-remove-seat').style.display = 'none';
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeSeatModal() { document.getElementById('seat-modal').style.display = 'none'; }
+
+    async function saveSeatAllocation(e) {
+      e.preventDefault();
+      const tableId = document.getElementById('s-table-id').value;
+      const seatCode = document.getElementById('s-seat-code').value;
+      const collabName = document.getElementById('s-collab-select').value;
+      const startDate = document.getElementById('s-start-date').value;
+      const recurrence = document.getElementById('s-recurrence').value;
+      const exceptDay = document.getElementById('s-except-day').value;
+
+      // Remover alocação anterior do assento se existir
+      seatAllocations = seatAllocations.filter(a => !(a.tableId === tableId && a.seatCode === seatCode));
+
+      const newAlloc = {
+        id: Date.now().toString(),
+        tableId,
+        seatCode,
+        collabName,
+        startDate,
+        recurrence,
+        exceptDay
+      };
+
+      if (supabaseClient) {
+        await supabaseClient.from('seat_allocations').delete().eq('tableId', tableId).eq('seatCode', seatCode);
+        const { data } = await supabaseClient.from('seat_allocations').insert([newAlloc]).select();
+        if (data) seatAllocations.push(data[0]);
+      } else {
+        seatAllocations.push(newAlloc);
+      }
+
+      closeSeatModal();
+      renderSeats();
+    }
+
+    async function removeSeatAllocation() {
+      const tableId = document.getElementById('s-table-id').value;
+      const seatCode = document.getElementById('s-seat-code').value;
+
+      if (supabaseClient) {
+        await supabaseClient.from('seat_allocations').delete().eq('tableId', tableId).eq('seatCode', seatCode);
+      }
+      seatAllocations = seatAllocations.filter(a => !(a.tableId === tableId && a.seatCode === seatCode));
+
+      closeSeatModal();
+      renderSeats();
+    }
+
+    /* MODAL DE COLABORADORES E REUNIÕES */
+    function openCollabModal() { renderCollabList(); document.getElementById('collab-modal').style.display = 'flex'; }
+    function closeCollabModal() { document.getElementById('collab-modal').style.display = 'none'; }
+
+    async function saveCollaborator(e) {
+      e.preventDefault();
+      const name = document.getElementById('c-name').value;
+      const team = document.getElementById('c-team').value;
+
+      if (supabaseClient) {
+        const { data } = await supabaseClient.from('collaborators').insert([{ name, team }]).select();
+        if (data) collaborators.push(data[0]);
+      } else {
+        collaborators.push({ id: Date.now().toString(), name, team });
+      }
+      document.getElementById('c-name').value = '';
+      renderCollabList();
+      renderDashboard();
+    }
+
+    function renderCollabList() {
+      const container = document.getElementById('collab-list');
+      container.innerHTML = collaborators.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border-color);">
+          <span style="font-size:0.85rem;">${c.name} <strong>(${c.team})</strong></span>
+          <button class="btn" style="color:#ef4444; padding:2px 6px; font-size:0.75rem;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+        </div>
+      `).join('');
+    }
+
+    async function deleteCollaborator(id) {
+      if (supabaseClient) await supabaseClient.from('collaborators').delete().eq('id', id);
+      collaborators = collaborators.filter(c => c.id !== id);
+      renderCollabList();
+    }
+
+    function openMeetingModal(meetingData) {
+      const modal = document.getElementById('meeting-modal');
+      const selectOwner = document.getElementById('m-owner-select');
+      selectOwner.innerHTML = '';
+
+      if (collaborators.length === 0) {
+        selectOwner.innerHTML = '<option value="">Cadastre um colaborador antes</option>';
+      } else {
+        collaborators.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.name;
+          opt.innerText = `${c.name} (${c.team})`;
+          selectOwner.appendChild(opt);
+        });
+      }
+
+      if (meetingData && meetingData.id) {
+        document.getElementById('modal-title-text').innerText = 'Editar Reunião / Evento';
+        document.getElementById('m-id').value = meetingData.id;
+        document.getElementById('m-title').value = meetingData.title;
+        document.getElementById('m-owner-select').value = meetingData.owner;
+        document.getElementById('m-attendees').value = meetingData.attendees_count || 1;
+        document.getElementById('m-participants').value = meetingData.participants || '';
+        document.getElementById('m-date').value = meetingData.date;
+        document.getElementById('m-start').value = meetingData.start;
+        document.getElementById('m-end').value = meetingData.end;
+        document.getElementById('m-recurrence').value = meetingData.recurrence || 'none';
+        document.getElementById('btn-delete-meeting').style.display = 'inline-block';
+      } else {
+        document.getElementById('modal-title-text').innerText = 'Agendar Reunião / Evento';
+        document.getElementById('meeting-form').reset();
+        document.getElementById('m-id').value = '';
+        document.getElementById('m-attendees').value = 1;
+        
+        if (meetingData) {
+          if (meetingData.date) document.getElementById('m-date').value = meetingData.date;
+          if (meetingData.start) document.getElementById('m-start').value = meetingData.start;
+          if (meetingData.end) document.getElementById('m-end').value = meetingData.end;
+        }
+        
+        document.getElementById('btn-delete-meeting').style.display = 'none';
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeMeetingModal() { document.getElementById('meeting-modal').style.display = 'none'; }
+
+    async function saveMeeting(e) {
+      e.preventDefault();
+      const id = document.getElementById('m-id').value;
+      const ownerName = document.getElementById('m-owner-select').value;
+      const collab = collaborators.find(c => c.name === ownerName);
+
+      const meetingObj = {
+        title: document.getElementById('m-title').value,
+        owner: ownerName,
+        team: collab ? collab.team : 'CEO',
+        attendees_count: parseInt(document.getElementById('m-attendees').value) || 1,
+        participants: document.getElementById('m-participants').value,
+        date: document.getElementById('m-date').value,
+        start: document.getElementById('m-start').value,
+        end: document.getElementById('m-end').value,
+        recurrence: document.getElementById('m-recurrence').value
+      };
+
+      if (supabaseClient) {
+        if (id) {
+          await supabaseClient.from('meetings').update(meetingObj).eq('id', id);
+          const idx = meetings.findIndex(m => m.id == id);
+          if (idx !== -1) meetings[idx] = { ...meetings[idx], ...meetingObj };
+        } else {
+          const { data } = await supabaseClient.from('meetings').insert([meetingObj]).select();
+          if (data) meetings.push(data[0]);
+        }
+      } else {
+        if (id) {
+          const idx = meetings.findIndex(m => m.id == id);
+          if (idx !== -1) meetings[idx] = { ...meetingObj, id };
+        } else {
+          meetingObj.id = Date.now().toString();
+          meetings.push(meetingObj);
+        }
+      }
+
+      closeMeetingModal();
+      renderDashboard();
+    }
+
+    async function deleteMeeting() {
+      const id = document.getElementById('m-id').value;
+      if (!id) return;
+      if (supabaseClient) await supabaseClient.from('meetings').delete().eq('id', id);
+      meetings = meetings.filter(m => m.id != id);
+      closeMeetingModal();
+      renderDashboard();
+    }
+  </script>
+</body>
+</html>
