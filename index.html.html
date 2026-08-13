@@ -1,103 +1,2909 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Loja Conceito BE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BE | Agenda da Sala</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}body{margin:0;padding:24px;background:#f1f5f9;color:#0f172a;font-family:Arial,sans-serif}.wrap{max-width:1200px;margin:auto}
-header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}h1{font-size:24px}.actions{display:flex;gap:8px;flex-wrap:wrap}
-button{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer}.primary{background:#0f172a;color:#fff}.danger{color:#dc2626}
-.status{padding:7px 11px;border-radius:20px;background:#dcfce7;color:#15803d;font-size:12px;font-weight:700}.offline{background:#ffedd5;color:#c2410c}
-.tabs{display:flex;gap:8px;border-bottom:2px solid #cbd5e1;margin-bottom:18px}.tab{border:0;border-radius:7px 7px 0 0}.active{background:#0f172a;color:#fff}
-.card{background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:22px;margin-bottom:18px}.muted{color:#64748b;font-size:13px}.controls{display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:16px}
-input,select{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:7px;background:#fff}label{display:block;font-size:11px;font-weight:800;color:#64748b;margin-bottom:4px;text-transform:uppercase}.field{margin-bottom:12px}
-.weeknav{display:flex;gap:6px;align-items:center}.weeklabel{font-weight:800;min-width:180px;text-align:center}.scroll{overflow:auto}
-.grid{display:grid;grid-template-columns:75px repeat(5,minmax(145px,1fr));min-width:800px;gap:1px;background:#cbd5e1;border:1px solid #cbd5e1}.head{background:#f8fafc;padding:10px;text-align:center;font-size:12px;font-weight:800}.time,.cell{background:#fff;min-height:64px}.time{padding:12px 4px;text-align:center;font-size:12px;font-weight:700;color:#64748b}.cell{padding:5px;cursor:pointer}.cell:hover{background:#f8fafc}
-.event{background:#e0f2fe;border-left:3px solid #0284c7;border-radius:4px;padding:6px;margin-bottom:4px;font-size:12px}.event b{color:#0369a1;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.event small{color:#075985}
-.modalbg{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:15px;z-index:20}.modal{background:#fff;border-radius:12px;padding:22px;width:min(460px,95vw);max-height:90vh;overflow:auto}.modal h2{font-size:18px}.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
-.rooms{display:flex;gap:20px;flex-wrap:wrap}.room{flex:1;min-width:280px;border:2px dashed #cbd5e1;border-radius:10px;padding:15px;text-align:center}.chairs{display:flex;justify-content:center;gap:10px;margin:5px}.chair{width:85px;min-height:50px;border:1px solid #94a3b8;border-radius:6px;padding:5px;background:#f8fafc;font-size:11px;cursor:pointer}.chair.on{background:#dbeafe;border-color:#2563eb;color:#1e40af}.table{height:35px;background:#e2e8f0;border:2px solid #94a3b8;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin:5px auto}.empty{text-align:center;color:#64748b;font-size:13px}
-@media(max-width:700px){body{padding:12px}header{flex-direction:column;align-items:flex-start}.actions{width:100%}.actions button{flex:1}}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:#f5f7fa;
+  color:#172033
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.header{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:20
+}
+
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:-1px
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+
+.status{
+  padding:7px 12px;
+  border-radius:20px;
+  background:#dcfce7;
+  color:#15803d;
+  font-size:12px;
+  font-weight:800
+}
+
+.status.offline{
+  background:#fff7ed;
+  color:#c2410c
+}
+
+.container{
+  max-width:1500px;
+  margin:auto;
+  padding:24px
+}
+
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+  flex-wrap:wrap
+}
+
+.tabs{
+  display:flex;
+  gap:8px
+}
+
+.tab{
+  border:0;
+  background:#e9edf3;
+  padding:10px 18px;
+  border-radius:9px;
+  font-weight:700
+}
+
+.tab.active{
+  background:#172033;
+  color:#fff
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.btn{
+  border:1px solid #d7dce4;
+  background:#fff;
+  padding:9px 14px;
+  border-radius:8px;
+  font-weight:700
+}
+
+.btn:hover{background:#f1f5f9}
+
+.btn-primary{
+  background:#172033;
+  color:#fff;
+  border-color:#172033
+}
+
+.btn-danger{
+  color:#dc2626;
+  border-color:#fecaca
+}
+
+.week-controls{
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+
+.week-controls input,
+.date-input{
+  padding:9px 11px;
+  border:1px solid #d7dce4;
+  border-radius:8px;
+  background:#fff
+}
+
+/* CALENDÁRIO */
+
+.calendar-wrapper{
+  background:#fff;
+  border:1px solid #e1e5eb;
+  border-radius:14px;
+  overflow:auto;
+  box-shadow:0 3px 15px rgba(15,23,42,.04)
+}
+
+.calendar{
+  min-width:950px;
+  display:grid;
+  grid-template-columns:75px repeat(5,1fr)
+}
+
+.grid-header{
+  background:#f8fafc;
+  border-right:1px solid #e5e7eb;
+  border-bottom:1px solid #e5e7eb;
+  padding:12px;
+  text-align:center;
+  font-weight:800;
+  min-height:55px
+}
+
+.grid-header small{
+  font-weight:500;
+  color:#64748b
+}
+
+.time-slot{
+  min-height:82px;
+  padding:12px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  color:#64748b;
+  border-right:1px solid #e5e7eb;
+  border-bottom:1px solid #e5e7eb
+}
+
+.day-cell{
+  min-height:82px;
+  padding:5px;
+  border-right:1px solid #e5e7eb;
+  border-bottom:1px solid #e5e7eb;
+  background:#fff
+}
+
+.day-cell:hover{
+  background:#fafafa
+}
+
+.event-card{
+  background:#172033;
+  color:#fff;
+  border-radius:8px;
+  padding:8px;
+  margin-bottom:4px;
+  cursor:pointer;
+  font-size:11px
+}
+
+.event-card:hover{
+  opacity:.88
+}
+
+.event-title{
+  font-weight:800;
+  margin-bottom:3px
+}
+
+.event-time{
+  opacity:.8
+}
+
+.event-owner{
+  margin-top:3px;
+  font-size:10px;
+  opacity:.75
+}
+
+/* ASSENTOS */
+
+.seats-view{
+  display:none
+}
+
+.seat-toolbar{
+  background:#fff;
+  border:1px solid #e1e5eb;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap
+}
+
+.rooms{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+  gap:20px
+}
+
+.room{
+  background:#fff;
+  border:1px solid #e1e5eb;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 3px 15px rgba(15,23,42,.04)
+}
+
+.room h3{
+  margin:0 0 18px
+}
+
+.table{
+  background:#dbe3ec;
+  border-radius:10px;
+  padding:12px;
+  margin-bottom:22px
+}
+
+.table-name{
+  text-align:center;
+  font-weight:800;
+  font-size:12px;
+  margin-bottom:8px
+}
+
+.seats-row{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:8px 0
+}
+
+.seat-chair{
+  width:115px;
+  min-height:55px;
+  border:2px solid #cbd5e1;
+  border-radius:8px;
+  background:#f8fafc;
+  padding:7px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  transition:.15s
+}
+
+.seat-chair:hover{
+  transform:translateY(-2px);
+  border-color:#64748b
+}
+
+.seat-chair.occupied{
+  background:#172033;
+  color:#fff;
+  border-color:#172033
+}
+
+.seat-status{
+  font-size:10px;
+  margin-top:3px;
+  text-align:center;
+  max-width:100px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
+/* MODAIS */
+
+.modal-backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.55);
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:20px
+}
+
+.modal{
+  background:#fff;
+  width:100%;
+  max-width:600px;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:15px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2)
+}
+
+.modal-header{
+  padding:20px;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.modal-header h2{
+  margin:0;
+  font-size:19px
+}
+
+.close{
+  border:0;
+  background:none;
+  font-size:25px;
+  color:#64748b
+}
+
+.modal-body{
+  padding:20px
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px
+}
+
+.form-group.full{
+  grid-column:1/-1
+}
+
+.form-group label{
+  font-size:12px;
+  font-weight:800;
+  color:#475569
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  border:1px solid #d7dce4;
+  border-radius:8px;
+  padding:10px;
+  background:#fff
+}
+
+.form-group textarea{
+  min-height:80px;
+  resize:vertical
+}
+
+.modal-footer{
+  padding:15px 20px;
+  border-top:1px solid #e5e7eb;
+  display:flex;
+  justify-content:space-between;
+  gap:8px
+}
+
+.footer-right{
+  display:flex;
+  gap:8px
+}
+
+.empty-state{
+  text-align:center;
+  padding:30px;
+  color:#64748b
+}
+
+@media(max-width:700px){
+  .container{padding:12px}
+  .header{padding:0 14px}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:auto}
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-<header><h1>LOJA CONCEITO BE</h1><div class="actions"><span id="status" class="status offline">Conectando...</span><button onclick="openCollab()">👥 Colaboradores</button><button class="primary" onclick="openMeeting()">+ Nova reunião</button></div></header>
-<div class="tabs"><button id="tab1" class="tab active" onclick="tab('calendar')">COWORKING PRO BE</button><button id="tab2" class="tab" onclick="tab('seats')">ALOCAÇÃO DE ASSENTOS</button></div>
 
-<section id="calendar"><div class="card"><h2>Agenda semanal</h2><p class="muted">Clique em um horário para criar uma reunião ou em uma reunião para editar.</p>
-<div class="controls"><div><label>Semana</label><input type="date" id="week" onchange="renderCalendar()"></div><div class="weeknav"><button onclick="moveWeek(-1)">←</button><span id="weeklabel" class="weeklabel"></span><button onclick="moveWeek(1)">→</button></div></div>
-<div class="scroll"><div id="grid" class="grid"></div></div></div></section>
+<header class="header">
+  <div class="logo">BE</div>
 
-<section id="seats" style="display:none"><div class="card"><h2>Mapa de assentos</h2><p class="muted">Clique em uma cadeira para alocar, editar ou remover.</p><div style="max-width:210px" class="field"><label>Data</label><input type="date" id="seatdate" onchange="renderSeats()"></div>
-<div class="rooms"><div class="room"><b>Meeting 01 — 4 lugares</b><div class="chairs" id="r1a"></div><div class="table" style="width:190px">Meeting 01</div><div class="chairs" id="r1b"></div></div>
-<div class="room"><b>Meeting 02 — 4 lugares</b><div class="chairs" id="r2a"></div><div class="table" style="width:190px">Meeting 02</div><div class="chairs" id="r2b"></div></div></div>
-<div class="room" style="margin-top:20px"><b>Marketing — 6 lugares</b><div class="chairs" id="r3a"></div><div class="table" style="width:290px">Mesa Marketing</div><div class="chairs" id="r3b"></div></div>
-</div></section>
+  <div class="header-right">
+    <span id="connection-status" class="status offline">
+      ● Carregando...
+    </span>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="toolbar">
+
+    <div class="tabs">
+      <button id="btn-tab-coworking"
+              class="tab active"
+              onclick="switchTab('coworking')">
+        Agenda
+      </button>
+
+      <button id="btn-tab-seats"
+              class="tab"
+              onclick="switchTab('seats')">
+        Mesas
+      </button>
+    </div>
+
+    <div class="actions">
+
+      <button class="btn"
+              onclick="openCollabModal()">
+        Colaboradores
+      </button>
+
+      <button class="btn btn-primary"
+              onclick="openMeetingModal()">
+        + Nova reunião
+      </button>
+
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+
+  <section id="view-coworking">
+
+    <div class="toolbar">
+
+      <div class="week-controls">
+
+        <button class="btn"
+                onclick="changeWeek(-1)">
+          ←
+        </button>
+
+        <input id="week-picker"
+               type="date"
+               onchange="renderDashboard()">
+
+        <button class="btn"
+                onclick="changeWeek(1)">
+          →
+        </button>
+
+      </div>
+
+      <strong id="week-label"></strong>
+
+    </div>
+
+    <div class="calendar-wrapper">
+
+      <div id="weekly-table"
+           class="calendar">
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- MESAS -->
+
+  <section id="view-seats"
+           class="seats-view">
+
+    <div class="seat-toolbar">
+
+      <div>
+        <strong>Mapa de mesas</strong>
+        <div style="font-size:12px;color:#64748b">
+          Clique em um assento para alocar ou editar.
+        </div>
+      </div>
+
+      <input id="seat-search-date"
+             class="date-input"
+             type="date"
+             onchange="renderSeats()">
+
+    </div>
+
+    <div class="rooms">
+
+      <!-- SALA 1 -->
+
+      <div class="room">
+
+        <h3>Sala de Reunião 01</h3>
+
+        <div class="table">
+
+          <div class="table-name">
+            MESA 01
+          </div>
+
+          <div id="m1-top"
+               class="seats-row">
+          </div>
+
+          <div id="m1-bottom"
+               class="seats-row">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SALA 2 -->
+
+      <div class="room">
+
+        <h3>Sala de Reunião 02</h3>
+
+        <div class="table">
+
+          <div class="table-name">
+            MESA 02
+          </div>
+
+          <div id="m2-top"
+               class="seats-row">
+          </div>
+
+          <div id="m2-bottom"
+               class="seats-row">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- MARKETING -->
+
+      <div class="room">
+
+        <h3>Mesa Marketing</h3>
+
+        <div class="table">
+
+          <div class="table-name">
+            MARKETING
+          </div>
+
+          <div id="m3-top"
+               class="seats-row">
+          </div>
+
+          <div id="m3-bottom"
+               class="seats-row">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- MODAL REUNIÃO -->
+
+<div id="meeting-modal"
+     class="modal-backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2 id="modal-title-text">
+        Agendar Reunião
+      </h2>
+
+      <button class="close"
+              onclick="closeMeetingModal()">
+        ×
+      </button>
+
+    </div>
+
+    <form id="meeting-form"
+          onsubmit="saveMeeting(event)">
+
+      <div class="modal-body">
+
+        <input id="m-id"
+               type="hidden">
+
+        <div class="form-grid">
+
+          <div class="form-group full">
+            <label>Título da reunião</label>
+            <input id="m-title"
+                   required
+                   placeholder="Ex.: Reunião Comercial">
+          </div>
+
+          <div class="form-group">
+            <label>Responsável</label>
+
+            <select id="m-owner-select"
+                    required>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Nº de pessoas</label>
+
+            <input id="m-attendees"
+                   type="number"
+                   min="1"
+                   value="1">
+          </div>
+
+          <div class="form-group">
+            <label>Data</label>
+
+            <input id="m-date"
+                   type="date"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>Recorrência</label>
+
+            <select id="m-recurrence">
+
+              <option value="none">
+                Sem recorrência
+              </option>
+
+              <option value="daily">
+                Diária
+              </option>
+
+              <option value="weekly">
+                Semanal
+              </option>
+
+              <option value="biweekly">
+                Quinzenal
+              </option>
+
+              <option value="monthly">
+                Mensal
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group">
+            <label>Início</label>
+
+            <input id="m-start"
+                   type="time"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>Fim</label>
+
+            <input id="m-end"
+                   type="time"
+                   required>
+          </div>
+
+          <div class="form-group full">
+            <label>Participantes / observações</label>
+
+            <textarea id="m-participants"
+                      placeholder="Participantes, observações ou informações adicionais"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button"
+                id="btn-delete-meeting"
+                class="btn btn-danger"
+                style="display:none"
+                onclick="deleteMeeting()">
+          Excluir
+        </button>
+
+        <div class="footer-right">
+
+          <button type="button"
+                  class="btn"
+                  onclick="closeMeetingModal()">
+            Cancelar
+          </button>
+
+          <button type="submit"
+                  class="btn btn-primary">
+            Salvar
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
 </div>
 
-<div id="meetingModal" class="modalbg"><div class="modal"><h2 id="meetingTitle">Agendar reunião</h2><form onsubmit="saveMeeting(event)"><input type="hidden" id="mid">
-<div class="field"><label>Título *</label><input id="mtitle" required></div><div style="display:flex;gap:8px"><div class="field" style="flex:2"><label>Responsável *</label><select id="mowner" required></select></div><div class="field" style="flex:1"><label>Pessoas</label><input id="mpeople" type="number" min="1" value="1"></div></div>
-<div class="field"><label>Participantes</label><input id="mparticipants"></div><div class="field"><label>Data *</label><input id="mdate" type="date" required></div><div style="display:flex;gap:8px"><div class="field" style="flex:1"><label>Início *</label><input id="mstart" type="time" required></div><div class="field" style="flex:1"><label>Fim *</label><input id="mend" type="time" required></div></div>
-<div class="field"><label>Recorrência</label><select id="mrec"><option value="none">Única</option><option value="daily">Diária</option><option value="weekly">Semanal</option><option value="biweekly">A cada 15 dias</option><option value="monthly">Mensal</option></select></div>
-<div class="modalfoot"><button type="button" class="danger" id="mdel" onclick="deleteMeeting()">Excluir</button><button type="button" onclick="closeModals()">Cancelar</button><button class="primary">Salvar</button></div></form></div></div>
+<!-- MODAL ASSENTO -->
 
-<div id="seatModal" class="modalbg"><div class="modal"><h2 id="seatTitle">Alocar assento</h2><form onsubmit="saveSeat(event)"><input type="hidden" id="stable"><input type="hidden" id="scode"><input type="hidden" id="sid">
-<div class="field"><label>Colaborador *</label><select id="sname" required></select></div><div class="field"><label>Data inicial *</label><input id="sdate" type="date" required></div>
-<div class="field"><label>Frequência</label><select id="srec"><option value="daily">Dias úteis</option><option value="single">Somente esta data</option><option value="weekly">Semanal</option><option value="biweekly">A cada 15 dias</option></select></div>
-<div class="field"><label>Exceção</label><select id="sexcept"><option value="none">Nenhuma</option><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option></select></div>
-<div class="modalfoot"><button type="button" class="danger" id="sdel" onclick="deleteSeat()">Remover</button><button type="button" onclick="closeModals()">Cancelar</button><button class="primary">Salvar</button></div></form></div></div>
+<div id="seat-modal"
+     class="modal-backdrop">
 
-<div id="collabModal" class="modalbg"><div class="modal"><h2>Colaboradores</h2><form onsubmit="saveCollab(event)"><div class="field"><label>Nome *</label><input id="cname" required></div><div class="field"><label>Time *</label><select id="cteam"><option>EDFE</option><option>CSUA</option><option>CSUM</option><option>ENGO</option><option>ENGE</option><option>CEO</option></select></div><button class="primary" style="width:100%">+ Adicionar</button></form><div id="collabList" style="margin-top:15px"></div><div class="modalfoot"><button type="button" onclick="closeModals()">Fechar</button></div></div></div>
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2 id="seat-modal-title">
+        Alocar Assento
+      </h2>
+
+      <button class="close"
+              onclick="closeSeatModal()">
+        ×
+      </button>
+
+    </div>
+
+    <form onsubmit="saveSeatAllocation(event)">
+
+      <div class="modal-body">
+
+        <input id="s-table-id"
+               type="hidden">
+
+        <input id="s-seat-code"
+               type="hidden">
+
+        <input id="s-existing-id"
+               type="hidden">
+
+        <div class="form-grid">
+
+          <div class="form-group full">
+
+            <label>Colaborador</label>
+
+            <select id="s-collab-select"
+                    required>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Data inicial</label>
+
+            <input id="s-start-date"
+                   type="date"
+                   required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Recorrência</label>
+
+            <select id="s-recurrence">
+
+              <option value="single">
+                Apenas este dia
+              </option>
+
+              <option value="daily">
+                Todos os dias úteis
+              </option>
+
+              <option value="weekly">
+                Semanal
+              </option>
+
+              <option value="biweekly">
+                Quinzenal
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label>Dia de exceção</label>
+
+            <select id="s-except-day">
+
+              <option value="none">
+                Sem exceção
+              </option>
+
+              <option value="1">
+                Segunda-feira
+              </option>
+
+              <option value="2">
+                Terça-feira
+              </option>
+
+              <option value="3">
+                Quarta-feira
+              </option>
+
+              <option value="4">
+                Quinta-feira
+              </option>
+
+              <option value="5">
+                Sexta-feira
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button"
+                id="btn-remove-seat"
+                class="btn btn-danger"
+                style="display:none"
+                onclick="removeSeatAllocation()">
+          Remover
+        </button>
+
+        <div class="footer-right">
+
+          <button type="button"
+                  class="btn"
+                  onclick="closeSeatModal()">
+            Cancelar
+          </button>
+
+          <button type="submit"
+                  class="btn btn-primary">
+            Salvar
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- MODAL COLABORADORES -->
+
+<div id="collab-modal"
+     class="modal-backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2>Colaboradores</h2>
+
+      <button class="close"
+              onclick="closeCollabModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <form onsubmit="saveCollaborator(event)">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Nome</label>
+
+            <input id="c-name"
+                   required
+                   placeholder="Nome do colaborador">
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Equipe</label>
+
+            <input id="c-team"
+                   placeholder="Ex.: Marketing">
+
+          </div>
+
+        </div>
+
+        <br>
+
+        <button class="btn btn-primary"
+                type="submit">
+          + Adicionar colaborador
+        </button>
+
+      </form>
+
+      <hr style="border:0;border-top:1px solid #e5e7eb;margin:20px 0">
+
+      <div id="collab-list"></div>
+
+    </div>
+
+  </div>
+
+</div>
 
 <script>
-const SUPABASE_URL='https://twrtjqqaaiyleefbhdlz.supabase.co';
-const SUPABASE_KEY='sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let collaborators=[],meetings=[],seats=[];
-const hours=['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
 
-const ds=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
-const date=v=>new Date(v+'T00:00:00'); const add=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x};
-const monday=d=>{let x=new Date(d),n=x.getDay();x.setDate(x.getDate()+(n===0?-6:1-n));return x};
-const mins=t=>{let [h,m]=String(t).slice(0,5).split(':').map(Number);return h*60+m};
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SUPABASE_URL =
+  'https://twrtjqqaaiyleefbhdlz.supabase.co';
 
-document.addEventListener('DOMContentLoaded',async()=>{let t=ds(new Date());week.value=t;seatdate.value=t;await load();realtime();renderCalendar();renderSeats()});
-async function load(){
-try{let [c,m,s]=await Promise.all([db.from('collaborators').select('*').order('name'),db.from('meetings').select('*').order('date').order('start'),db.from('seat_allocations').select('*').order('startDate')]);
-if(c.error)throw c.error;if(m.error)throw m.error;if(s.error)throw s.error;collaborators=c.data||[];meetings=m.data||[];seats=s.data||[];status.textContent='● Sincronizado';status.classList.remove('offline')}catch(e){console.error(e);status.textContent='● Sem conexão';status.classList.add('offline');alert('Erro ao carregar o Supabase: '+e.message)}
+const SUPABASE_KEY =
+  'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
+
+let db = null;
+
+let collaborators = [];
+let meetings = [];
+let seatAllocations = [];
+
+let realtimeChannels = [];
+
+const hours = [
+  '08:00','09:00','10:00','11:00','12:00',
+  '13:00','14:00','15:00','16:00','17:00','18:00'
+];
+
+const $ = id => document.getElementById(id);
+
+const pad = n => String(n).padStart(2,'0');
+
+function localDateString(date = new Date()) {
+
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+
 }
-function realtime(){['collaborators','meetings','seat_allocations'].forEach(t=>db.channel('rt-'+t).on('postgres_changes',{event:'*',schema:'public',table:t},load).subscribe())}
-function tab(t){calendar.style.display=t==='calendar'?'block':'none';seats.style.display=t==='seats'?'block':'none';tab1.classList.toggle('active',t==='calendar');tab2.classList.toggle('active',t==='seats');if(t==='seats')renderSeats()}
-function moveWeek(n){let d=date(week.value);d.setDate(d.getDate()+n*7);week.value=ds(d);renderCalendar()}
-function occurs(m,target){let a=date(m.date),b=date(target);if(b<a)return false;let r=m.recurrence||'none';if(r==='none')return m.date===target;if(r==='daily')return b.getDay()>=1&&b.getDay()<=5;if(r==='weekly')return a.getDay()===b.getDay();if(r==='biweekly')return Math.floor((b-a)/86400000)%14===0;if(r==='monthly')return a.getDate()===b.getDate();return false}
-function renderCalendar(){
-let start=monday(date(week.value)),days=[0,1,2,3,4].map(i=>add(start,i));weeklabel.textContent=`${ds(days[0]).split('-').reverse().slice(0,2).join('/')} - ${ds(days[4]).split('-').reverse().slice(0,2).join('/')}`;
-let h='<div class="head">Hora</div>';['Seg','Ter','Qua','Qui','Sex'].forEach((n,i)=>h+=`<div class="head">${n}<br>${ds(days[i]).slice(8)}/${ds(days[i]).slice(5,7)}</div>`);
-hours.forEach(hr=>{h+=`<div class="time">${hr}</div>`;days.forEach(d=>{let dt=ds(d),ms=meetings.filter(m=>occurs(m,dt)&&String(m.start).slice(0,5)===hr);h+=`<div class="cell" onclick="slot('${dt}','${hr}')">`;ms.forEach(m=>{let e=encodeURIComponent(JSON.stringify(m));h+=`<div class="event" onclick="event.stopPropagation();editMeeting('${e}')"><b>${esc(m.title)}</b><small>${esc(String(m.start).slice(0,5))}-${esc(String(m.end).slice(0,5))} · ${esc(m.owner||'')}</small></div>`});h+='</div>'})});grid.innerHTML=h}
-function slot(d,h){let n=+h.slice(0,2)+1;if(n<=19)openMeeting({date:d,start:h,end:String(n).padStart(2,'0')+':00'})}
-function fillOwners(){mowner.innerHTML=collaborators.map(c=>`<option value="${esc(c.name)}">${esc(c.name)} (${esc(c.team)})</option>`).join('')}
-function openMeeting(x=null){fillOwners();document.getElementById('meetingModal').style.display='flex';document.getElementById('meetingTitle').textContent=x?.id?'Editar reunião':'Agendar reunião';document.getElementById('mid').value=x?.id||'';document.getElementById('mtitle').value=x?.title||'';mowner.value=x?.owner||collaborators[0]?.name||'';mpeople.value=x?.attendees_count||1;mparticipants.value=x?.participants||'';mdate.value=x?.date||week.value;mstart.value=x?.start?.slice(0,5)||'';mend.value=x?.end?.slice(0,5)||'';mrec.value=x?.recurrence||'none';mdel.style.display=x?.id?'inline-block':'none'}
-function editMeeting(e){openMeeting(JSON.parse(decodeURIComponent(e)))}
-function closeModals(){document.querySelectorAll('.modalbg').forEach(x=>x.style.display='none')}
-async function saveMeeting(e){e.preventDefault();let id=mid.value,c=collaborators.find(x=>x.name===mowner.value),o={title:mtitle.value.trim(),owner:mowner.value,team:c?.team||'',attendees_count:+mpeople.value||1,participants:mparticipants.value.trim(),date:mdate.value,start:mstart.value,end:mend.value,recurrence:mrec.value};if(mins(o.end)<=mins(o.start))return alert('O horário final deve ser maior que o inicial.');let conflict=meetings.find(x=>String(x.id)!==String(id)&&occurs(x,o.date)&&mins(o.start)<mins(x.end)&&mins(o.end)>mins(x.start));if(conflict)return alert(`Conflito com "${conflict.title}" (${String(conflict.start).slice(0,5)}-${String(conflict.end).slice(0,5)}).`);try{let r=id?await db.from('meetings').update(o).eq('id',id):await db.from('meetings').insert([o]);if(r.error)throw r.error;closeModals();await load();renderCalendar()}catch(x){alert('Erro ao salvar: '+x.message)}}
-async function deleteMeeting(){if(!mid.value||!confirm('Excluir esta reunião?'))return;let r=await db.from('meetings').delete().eq('id',mid.value);if(r.error)return alert(r.error.message);closeModals();await load();renderCalendar()}
 
-function seatOccurs(a,t){let s=date(a.startDate),d=date(t);if(d<s)return false;let dow=d.getDay();if(a.exceptDay&&a.exceptDay!=='none'&&+a.exceptDay===dow)return false;if(a.recurrence==='single')return a.startDate===t;if(a.recurrence==='daily')return dow>=1&&dow<=5;if(a.recurrence==='weekly')return s.getDay()===dow;if(a.recurrence==='biweekly')return Math.floor((d-s)/86400000)%14===0;return false}
-function occupant(table,code,t){return seats.filter(a=>a.tableId===table&&a.seatCode===code&&seatOccurs(a,t)).sort((a,b)=>b.startDate.localeCompare(a.startDate))[0]}
-function renderSeats(){let d=seatdate.value;const chair=(t,c)=>{let a=occupant(t,c,d);return `<div class="chair ${a?'on':''}" onclick="openSeat('${t}','${c}')"><b>${c}</b><br>${esc(a?.collabName||'Livre')}</div>`};r1a.innerHTML=chair('Meeting01','C1')+chair('Meeting01','C2');r1b.innerHTML=chair('Meeting01','C3')+chair('Meeting01','C4');r2a.innerHTML=chair('Meeting02','C1')+chair('Meeting02','C2');r2b.innerHTML=chair('Meeting02','C3')+chair('Meeting02','C4');r3a.innerHTML=chair('Marketing','C1')+chair('Marketing','C2')+chair('Marketing','C3');r3b.innerHTML=chair('Marketing','C4')+chair('Marketing','C5')+chair('Marketing','C6')}
-function openSeat(t,c){let d=seatdate.value,a=occupant(t,c,d);sname.innerHTML=collaborators.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} (${esc(x.team)})</option>`).join('');stable.value=t;scode.value=c;sid.value=a?.id||'';sdate.value=a?.startDate||d;srec.value=a?.recurrence||'daily';sexcept.value=a?.exceptDay||'none';sname.value=a?.collabName||'';sdel.style.display=a?'inline-block':'none';document.getElementById('seatModal').style.display='flex'}
-async function saveSeat(e){e.preventDefault();let o={tableId:stable.value,seatCode:scode.value,collabName:sname.value,startDate:sdate.value,recurrence:srec.value,exceptDay:sexcept.value},id=sid.value;let conflict=seats.some(x=>String(x.id)!==String(id)&&x.tableId===o.tableId&&x.seatCode===o.seatCode&&[...Array(366)].some((_,i)=>{let d=ds(add(date(seatdate.value),i));return seatOccurs(x,d)&&seatOccurs(o,d)}));if(conflict)return alert('Este assento já possui uma alocação conflitante.');try{let r=id?await db.from('seat_allocations').update(o).eq('id',id):await db.from('seat_allocations').insert([o]);if(r.error)throw r.error;closeModals();await load();renderSeats()}catch(x){alert('Erro ao salvar: '+x.message)}}
-async function deleteSeat(){if(!sid.value||!confirm('Remover esta alocação?'))return;let r=await db.from('seat_allocations').delete().eq('id',sid.value);if(r.error)return alert(r.error.message);closeModals();await load();renderSeats()}
+function dateFromInput(value) {
 
-function openCollab(){renderCollabs();collabModal.style.display='flex'}
-function renderCollabs(){collabList.innerHTML=collaborators.map(c=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e2e8f0">${esc(c.name)} (${esc(c.team)})<button class="danger" onclick="deleteCollab('${c.id}')">Excluir</button></div>`).join('')||'<div class="empty">Nenhum colaborador.</div>'}
-async function saveCollab(e){e.preventDefault();let n=cname.value.trim(),t=cteam.value;if(collaborators.some(c=>c.name.toLowerCase()===n.toLowerCase()))return alert('Esse colaborador já existe.');let r=await db.from('collaborators').insert([{name:n,team:t}]).select().single();if(r.error)return alert(r.error.message);cname.value='';await load();renderCollabs()}
-async function deleteCollab(id){let c=collaborators.find(x=>String(x.id)===String(id));if(!c)return;if(meetings.some(m=>m.owner===c.name)||seats.some(s=>s.collabName===c.name))return alert('Este colaborador possui reuniões ou assentos vinculados.');if(!confirm(`Excluir ${c.name}?`))return;let r=await db.from('collaborators').delete().eq('id',id);if(r.error)return alert(r.error.message);await load();renderCollabs()}
-document.querySelectorAll('.modalbg').forEach(m=>m.onclick=e=>{if(e.target===m)m.style.display='none'});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModals()});
+  return new Date(`${value}T00:00:00`);
+
+}
+
+function addDays(date,amount) {
+
+  const d = new Date(date);
+
+  d.setDate(d.getDate()+amount);
+
+  return d;
+
+}
+
+function startOfWeek(date) {
+
+  const d = new Date(date);
+
+  const day = d.getDay();
+
+  d.setDate(
+    d.getDate() +
+    (day === 0 ? -6 : 1-day)
+  );
+
+  d.setHours(0,0,0,0);
+
+  return d;
+
+}
+
+function minutes(time) {
+
+  const [h,m] =
+    String(time || '')
+      .slice(0,5)
+      .split(':')
+      .map(Number);
+
+  return (h || 0)*60 + (m || 0);
+
+}
+
+function esc(value) {
+
+  return String(value ?? '')
+    .replace(/[&<>"']/g,char => ({
+
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+
+    }[char]));
+
+}
+
+function setStatus(text,connected) {
+
+  const element =
+    $('connection-status');
+
+  if(!element) return;
+
+  element.textContent = text;
+
+  element.classList.toggle(
+    'offline',
+    !connected
+  );
+
+}
+
+
+/* =========================
+   INICIALIZAÇÃO
+========================= */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  init
+);
+
+async function init(){
+
+  const today =
+    localDateString();
+
+  $('week-picker').value =
+    today;
+
+  $('seat-search-date').value =
+    today;
+
+  /*
+    IMPORTANTE:
+    A interface é criada ANTES
+    da tentativa de conexão.
+  */
+
+  renderDashboard();
+  renderSeats();
+
+  if(!window.supabase){
+
+    setStatus(
+      '● Modo local',
+      false
+    );
+
+    return;
+
+  }
+
+  try{
+
+    db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    setStatus(
+      '● Conectando...',
+      false
+    );
+
+    await Promise.race([
+
+      loadData(),
+
+      new Promise(
+        (_,reject) =>
+          setTimeout(
+            () => reject(
+              new Error(
+                'Timeout de conexão'
+              )
+            ),
+            7000
+          )
+      )
+
+    ]);
+
+    setStatus(
+      '● Sincronizado',
+      true
+    );
+
+    setupRealtime();
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      '● Sem conexão',
+      false
+    );
+
+    /*
+      A agenda continua funcionando
+      visualmente mesmo sem banco.
+    */
+
+    renderDashboard();
+    renderSeats();
+
+  }
+
+}
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+async function loadData(){
+
+  if(!db) return;
+
+  const [
+    collaboratorsResult,
+    meetingsResult,
+    seatsResult
+  ] = await Promise.all([
+
+    db
+      .from('collaborators')
+      .select('*')
+      .order('name'),
+
+    db
+      .from('meetings')
+      .select('*')
+      .order('date')
+      .order('start'),
+
+    db
+      .from('seat_allocations')
+      .select('*')
+      .order('startDate')
+
+  ]);
+
+  if(collaboratorsResult.error)
+    throw collaboratorsResult.error;
+
+  if(meetingsResult.error)
+    throw meetingsResult.error;
+
+  if(seatsResult.error)
+    throw seatsResult.error;
+
+  collaborators =
+    collaboratorsResult.data || [];
+
+  meetings =
+    meetingsResult.data || [];
+
+  seatAllocations =
+    seatsResult.data || [];
+
+  renderDashboard();
+  renderSeats();
+
+}
+
+function setupRealtime(){
+
+  if(
+    !db ||
+    realtimeChannels.length
+  ) return;
+
+  [
+    'collaborators',
+    'meetings',
+    'seat_allocations'
+
+  ].forEach(table => {
+
+    const channel =
+      db
+        .channel(
+          `be-${table}-${Date.now()}`
+        )
+        .on(
+          'postgres_changes',
+          {
+            event:'*',
+            schema:'public',
+            table
+          },
+          async () => {
+
+            try{
+
+              await loadData();
+
+              setStatus(
+                '● Sincronizado',
+                true
+              );
+
+            }catch(error){
+
+              console.error(error);
+
+              setStatus(
+                '● Sem conexão',
+                false
+              );
+
+            }
+
+          }
+        )
+        .subscribe();
+
+    realtimeChannels.push(channel);
+
+  });
+
+}
+
+
+/* =========================
+   ABAS
+========================= */
+
+function switchTab(tab){
+
+  const coworking =
+    tab === 'coworking';
+
+  $('btn-tab-coworking')
+    .classList.toggle(
+      'active',
+      coworking
+    );
+
+  $('btn-tab-seats')
+    .classList.toggle(
+      'active',
+      !coworking
+    );
+
+  $('view-coworking')
+    .style.display =
+      coworking
+      ? 'block'
+      : 'none';
+
+  $('view-seats')
+    .style.display =
+      coworking
+      ? 'none'
+      : 'block';
+
+  if(coworking)
+    renderDashboard();
+  else
+    renderSeats();
+
+}
+
+
+/* =========================
+   CALENDÁRIO
+========================= */
+
+function changeWeek(amount){
+
+  const input =
+    $('week-picker');
+
+  const date =
+    dateFromInput(
+      input.value ||
+      localDateString()
+    );
+
+  date.setDate(
+    date.getDate() +
+    amount*7
+  );
+
+  input.value =
+    localDateString(date);
+
+  renderDashboard();
+
+}
+
+function meetingOccursOnDate(
+  meeting,
+  targetDate
+){
+
+  if(
+    !meeting ||
+    !meeting.date
+  ) return false;
+
+  const start =
+    dateFromInput(
+      meeting.date
+    );
+
+  const target =
+    dateFromInput(
+      targetDate
+    );
+
+  if(target < start)
+    return false;
+
+  switch(
+    meeting.recurrence ||
+    'none'
+  ){
+
+    case 'none':
+
+      return (
+        meeting.date ===
+        targetDate
+      );
+
+    case 'daily':
+
+      return (
+        target.getDay() >= 1 &&
+        target.getDay() <= 5
+      );
+
+    case 'weekly':
+
+      return (
+        target.getDay() ===
+        start.getDay()
+      );
+
+    case 'biweekly':{
+
+      const difference =
+        Math.floor(
+          (target-start) /
+          86400000
+        );
+
+      return (
+        difference >= 0 &&
+        difference % 14 === 0
+      );
+
+    }
+
+    case 'monthly':
+
+      return (
+        target.getDate() ===
+        start.getDate()
+      );
+
+    default:
+
+      return false;
+
+  }
+
+}
+
+function renderDashboard(){
+
+  const container =
+    $('weekly-table');
+
+  if(!container) return;
+
+  const selected =
+    $('week-picker').value ||
+    localDateString();
+
+  const monday =
+    startOfWeek(
+      dateFromInput(selected)
+    );
+
+  const days =
+    Array.from(
+      {length:5},
+      (_,index) =>
+        addDays(
+          monday,
+          index
+        )
+    );
+
+  $('week-label').textContent =
+    `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)}
+     -
+     ${pad(days[4].getDate())}/${pad(days[4].getMonth()+1)}`;
+
+  let html =
+    '<div class="grid-header">Hora</div>';
+
+  const names =
+    [
+      'Seg',
+      'Ter',
+      'Qua',
+      'Qui',
+      'Sex'
+    ];
+
+  days.forEach(
+    (day,index) => {
+
+      html += `
+        <div class="grid-header">
+
+          ${names[index]}
+
+          <br>
+
+          <small>
+            ${pad(day.getDate())}/${pad(day.getMonth()+1)}
+          </small>
+
+        </div>
+      `;
+
+    }
+  );
+
+  hours.forEach(hour => {
+
+    html += `
+      <div class="time-slot">
+        ${hour}
+      </div>
+    `;
+
+    days.forEach(day => {
+
+      const target =
+        localDateString(day);
+
+      const events =
+        meetings
+          .filter(
+            meeting =>
+              meetingOccursOnDate(
+                meeting,
+                target
+              )
+          )
+          .filter(
+            meeting =>
+              String(
+                meeting.start || ''
+              ).slice(0,5) === hour
+          )
+          .sort(
+            (a,b) =>
+              String(a.start)
+                .localeCompare(
+                  String(b.start)
+                )
+          );
+
+      html += `
+        <div
+          class="day-cell"
+          onclick="handleSlotClick(
+            '${target}',
+            '${hour}'
+          )"
+        >
+      `;
+
+      events.forEach(meeting => {
+
+        const encoded =
+          encodeURIComponent(
+            JSON.stringify(meeting)
+          );
+
+        html += `
+          <div
+            class="event-card"
+            onclick="
+              event.stopPropagation();
+              openMeetingModalFromEncoded(
+                '${encoded}'
+              )
+            "
+          >
+
+            <div class="event-title">
+              ${esc(meeting.title)}
+            </div>
+
+            <div class="event-time">
+              ${esc(
+                String(
+                  meeting.start || ''
+                ).slice(0,5)
+              )}
+              -
+              ${esc(
+                String(
+                  meeting.end || ''
+                ).slice(0,5)
+              )}
+            </div>
+
+            <div class="event-owner">
+              ${esc(meeting.owner || '')}
+            </div>
+
+          </div>
+        `;
+
+      });
+
+      html += `
+        </div>
+      `;
+
+    });
+
+  });
+
+  container.innerHTML =
+    html;
+
+}
+
+function handleSlotClick(
+  date,
+  hour
+){
+
+  const next =
+    parseInt(
+      hour.slice(0,2),
+      10
+    ) + 1;
+
+  if(next > 19)
+    return;
+
+  openMeetingModal({
+
+    date,
+
+    start:hour,
+
+    end:
+      `${pad(next)}:00`
+
+  });
+
+}
+
+
+/* =========================
+   REUNIÕES
+========================= */
+
+function fillOwnerSelect(){
+
+  const select =
+    $('m-owner-select');
+
+  select.innerHTML =
+    '';
+
+  if(!collaborators.length){
+
+    select.innerHTML =
+      `
+      <option value="">
+        Cadastre um colaborador primeiro
+      </option>
+      `;
+
+    return;
+
+  }
+
+  collaborators.forEach(
+    collaborator => {
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        collaborator.name;
+
+      option.textContent =
+        `${collaborator.name}
+         (${collaborator.team || ''})`;
+
+      select.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+function openMeetingModal(
+  data = null
+){
+
+  fillOwnerSelect();
+
+  $('meeting-form')
+    .reset();
+
+  $('m-id').value =
+    data?.id || '';
+
+  $('m-title').value =
+    data?.title || '';
+
+  $('m-owner-select').value =
+    data?.owner ||
+    collaborators[0]?.name ||
+    '';
+
+  $('m-attendees').value =
+    data?.attendees_count ||
+    1;
+
+  $('m-participants').value =
+    data?.participants ||
+    '';
+
+  $('m-date').value =
+    data?.date ||
+    $('week-picker').value ||
+    localDateString();
+
+  $('m-start').value =
+    data?.start
+      ? String(data.start).slice(0,5)
+      : '';
+
+  $('m-end').value =
+    data?.end
+      ? String(data.end).slice(0,5)
+      : '';
+
+  $('m-recurrence').value =
+    data?.recurrence ||
+    'none';
+
+  $('modal-title-text')
+    .textContent =
+      data?.id
+      ? 'Editar Reunião / Evento'
+      : 'Agendar Reunião';
+
+  $('btn-delete-meeting')
+    .style.display =
+      data?.id
+      ? 'inline-flex'
+      : 'none';
+
+  $('meeting-modal')
+    .style.display =
+      'flex';
+
+}
+
+function openMeetingModalFromEncoded(
+  encoded
+){
+
+  try{
+
+    openMeetingModal(
+      JSON.parse(
+        decodeURIComponent(encoded)
+      )
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      'Não foi possível abrir a reunião.'
+    );
+
+  }
+
+}
+
+function closeMeetingModal(){
+
+  $('meeting-modal')
+    .style.display =
+      'none';
+
+}
+
+function meetingConflict(
+  candidate,
+  editingId = ''
+){
+
+  const start =
+    minutes(
+      candidate.start
+    );
+
+  const end =
+    minutes(
+      candidate.end
+    );
+
+  if(end <= start){
+
+    return (
+      'O horário final deve ser maior ' +
+      'que o horário inicial.'
+    );
+
+  }
+
+  /*
+    Verifica 1 ano para frente.
+    Assim uma recorrência não consegue
+    colidir com outra recorrência.
+  */
+
+  const base =
+    dateFromInput(
+      candidate.date
+    );
+
+  for(
+    let i=0;
+    i<366;
+    i++
+  ){
+
+    const day =
+      localDateString(
+        addDays(base,i)
+      );
+
+    if(
+      !meetingOccursOnDate(
+        candidate,
+        day
+      )
+    ) continue;
+
+    for(
+      const existing of meetings
+    ){
+
+      if(
+        editingId &&
+        String(existing.id) ===
+        String(editingId)
+      )
+        continue;
+
+      if(
+        !meetingOccursOnDate(
+          existing,
+          day
+        )
+      )
+        continue;
+
+      if(
+        start <
+        minutes(existing.end) &&
+
+        end >
+        minutes(existing.start)
+      ){
+
+        return `
+          Conflito com "${existing.title}"
+          em
+          ${day.split('-').reverse().join('/')}
+          (
+          ${String(existing.start).slice(0,5)}
+          -
+          ${String(existing.end).slice(0,5)}
+          ).
+        `;
+
+      }
+
+    }
+
+  }
+
+  return null;
+
+}
+
+async function saveMeeting(event){
+
+  event.preventDefault();
+
+  if(!db){
+
+    alert(
+      'O Supabase está indisponível. ' +
+      'A agenda continua visível, mas a reunião ' +
+      'não pode ser salva neste momento.'
+    );
+
+    return;
+
+  }
+
+  const id =
+    $('m-id').value;
+
+  const owner =
+    $('m-owner-select').value;
+
+  const collaborator =
+    collaborators.find(
+      c => c.name === owner
+    );
+
+  const data = {
+
+    title:
+      $('m-title').value.trim(),
+
+    owner,
+
+    team:
+      collaborator?.team || '',
+
+    attendees_count:
+      parseInt(
+        $('m-attendees').value,
+        10
+      ) || 1,
+
+    participants:
+      $('m-participants').value.trim(),
+
+    date:
+      $('m-date').value,
+
+    start:
+      $('m-start').value,
+
+    end:
+      $('m-end').value,
+
+    recurrence:
+      $('m-recurrence').value
+
+  };
+
+  if(
+    !data.title ||
+    !data.owner ||
+    !data.date ||
+    !data.start ||
+    !data.end
+  ){
+
+    alert(
+      'Preencha todos os campos obrigatórios.'
+    );
+
+    return;
+
+  }
+
+  const conflict =
+    meetingConflict(
+      data,
+      id
+    );
+
+  if(conflict){
+
+    alert(conflict);
+
+    return;
+
+  }
+
+  try{
+
+    let response;
+
+    if(id){
+
+      response =
+        await db
+          .from('meetings')
+          .update(data)
+          .eq('id',id)
+          .select()
+          .single();
+
+    }else{
+
+      response =
+        await db
+          .from('meetings')
+          .insert([data])
+          .select()
+          .single();
+
+    }
+
+    if(response.error)
+      throw response.error;
+
+    closeMeetingModal();
+
+    await loadData();
+
+    setStatus(
+      '● Sincronizado',
+      true
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      '● Sem conexão',
+      false
+    );
+
+    alert(
+      'Erro ao salvar reunião: ' +
+      error.message
+    );
+
+  }
+
+}
+
+async function deleteMeeting(){
+
+  const id =
+    $('m-id').value;
+
+  if(
+    !id ||
+    !confirm(
+      'Tem certeza que deseja excluir esta reunião?'
+    )
+  )
+    return;
+
+  if(!db){
+
+    alert(
+      'Supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const {error} =
+      await db
+        .from('meetings')
+        .delete()
+        .eq('id',id);
+
+    if(error)
+      throw error;
+
+    closeMeetingModal();
+
+    await loadData();
+
+  }catch(error){
+
+    alert(
+      'Erro ao excluir reunião: ' +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   ASSENTOS
+========================= */
+
+function seatOccursOnDate(
+  allocation,
+  targetDate
+){
+
+  const start =
+    dateFromInput(
+      allocation.startDate
+    );
+
+  const target =
+    dateFromInput(
+      targetDate
+    );
+
+  if(target < start)
+    return false;
+
+  const day =
+    target.getDay();
+
+  if(
+    allocation.exceptDay &&
+    allocation.exceptDay !== 'none' &&
+    Number(
+      allocation.exceptDay
+    ) === day
+  ){
+
+    return false;
+
+  }
+
+  switch(
+    allocation.recurrence ||
+    'daily'
+  ){
+
+    case 'single':
+
+      return (
+        allocation.startDate ===
+        targetDate
+      );
+
+    case 'daily':
+
+      return (
+        day >= 1 &&
+        day <= 5
+      );
+
+    case 'weekly':
+
+      return (
+        day === start.getDay()
+      );
+
+    case 'biweekly':{
+
+      const difference =
+        Math.floor(
+          (target-start) /
+          86400000
+        );
+
+      return (
+        difference >= 0 &&
+        difference % 14 === 0
+      );
+
+    }
+
+    default:
+
+      return false;
+
+  }
+
+}
+
+function getSeatOccupant(
+  table,
+  seat,
+  date
+){
+
+  return seatAllocations
+    .filter(
+      allocation =>
+
+        String(
+          allocation.tableId
+        ) === String(table) &&
+
+        String(
+          allocation.seatCode
+        ) === String(seat) &&
+
+        seatOccursOnDate(
+          allocation,
+          date
+        )
+
+    )
+    .sort(
+      (a,b) =>
+        String(
+          b.startDate
+        ).localeCompare(
+          String(
+            a.startDate
+          )
+        )
+    )[0] || null;
+
+}
+
+function renderSeats(){
+
+  const date =
+    $('seat-search-date').value ||
+    localDateString();
+
+  function chair(
+    table,
+    code
+  ){
+
+    const allocation =
+      getSeatOccupant(
+        table,
+        code,
+        date
+      );
+
+    return `
+
+      <div
+        class="
+          seat-chair
+          ${allocation ? 'occupied' : ''}
+        "
+        onclick="
+          openSeatModal(
+            '${table}',
+            '${code}'
+          )
+        "
+      >
+
+        <span>
+          ${code}
+        </span>
+
+        <span class="seat-status">
+          ${esc(
+            allocation?.collabName ||
+            'Livre'
+          )}
+        </span>
+
+      </div>
+
+    `;
+
+  }
+
+  $('m1-top').innerHTML =
+    chair('Meeting01','C1') +
+    chair('Meeting01','C2');
+
+  $('m1-bottom').innerHTML =
+    chair('Meeting01','C3') +
+    chair('Meeting01','C4');
+
+  $('m2-top').innerHTML =
+    chair('Meeting02','C1') +
+    chair('Meeting02','C2');
+
+  $('m2-bottom').innerHTML =
+    chair('Meeting02','C3') +
+    chair('Meeting02','C4');
+
+  $('m3-top').innerHTML =
+    chair('Marketing','C1') +
+    chair('Marketing','C2') +
+    chair('Marketing','C3');
+
+  $('m3-bottom').innerHTML =
+    chair('Marketing','C4') +
+    chair('Marketing','C5') +
+    chair('Marketing','C6');
+
+}
+
+function openSeatModal(
+  table,
+  seat
+){
+
+  const date =
+    $('seat-search-date').value ||
+    localDateString();
+
+  const existing =
+    getSeatOccupant(
+      table,
+      seat,
+      date
+    );
+
+  const select =
+    $('s-collab-select');
+
+  select.innerHTML =
+    collaborators.length
+
+    ? collaborators
+        .map(
+          c =>
+            `
+            <option
+              value="${esc(c.name)}"
+            >
+              ${esc(c.name)}
+              (${esc(c.team || '')})
+            </option>
+            `
+        )
+        .join('')
+
+    :
+
+    `
+      <option value="">
+        Cadastre um colaborador primeiro
+      </option>
+    `;
+
+  $('s-table-id').value =
+    table;
+
+  $('s-seat-code').value =
+    seat;
+
+  $('s-existing-id').value =
+    existing?.id || '';
+
+  $('s-start-date').value =
+    existing?.startDate ||
+    date;
+
+  $('s-recurrence').value =
+    existing?.recurrence ||
+    'daily';
+
+  $('s-except-day').value =
+    existing?.exceptDay ||
+    'none';
+
+  $('s-collab-select').value =
+    existing?.collabName ||
+    '';
+
+  $('seat-modal-title')
+    .textContent =
+      `Alocar Assento - ${table} (${seat})`;
+
+  $('btn-remove-seat')
+    .style.display =
+      existing
+      ? 'inline-flex'
+      : 'none';
+
+  $('seat-modal')
+    .style.display =
+      'flex';
+
+}
+
+function closeSeatModal(){
+
+  $('seat-modal')
+    .style.display =
+      'none';
+
+}
+
+function seatConflict(
+  candidate,
+  editingId = ''
+){
+
+  const base =
+    dateFromInput(
+      candidate.startDate
+    );
+
+  for(
+    let i=0;
+    i<366;
+    i++
+  ){
+
+    const day =
+      localDateString(
+        addDays(base,i)
+      );
+
+    if(
+      !seatOccursOnDate(
+        candidate,
+        day
+      )
+    )
+      continue;
+
+    for(
+      const existing of
+      seatAllocations
+    ){
+
+      if(
+        editingId &&
+        String(existing.id) ===
+        String(editingId)
+      )
+        continue;
+
+      if(
+        String(existing.tableId) !==
+        String(candidate.tableId)
+      )
+        continue;
+
+      if(
+        String(existing.seatCode) !==
+        String(candidate.seatCode)
+      )
+        continue;
+
+      if(
+        seatOccursOnDate(
+          existing,
+          day
+        )
+      ){
+
+        return true;
+
+      }
+
+    }
+
+  }
+
+  return false;
+
+}
+
+async function saveSeatAllocation(event){
+
+  event.preventDefault();
+
+  if(!db){
+
+    alert(
+      'Supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  const id =
+    $('s-existing-id').value;
+
+  const data = {
+
+    tableId:
+      $('s-table-id').value,
+
+    seatCode:
+      $('s-seat-code').value,
+
+    collabName:
+      $('s-collab-select').value,
+
+    startDate:
+      $('s-start-date').value,
+
+    recurrence:
+      $('s-recurrence').value,
+
+    exceptDay:
+      $('s-except-day').value
+
+  };
+
+  if(
+    !data.collabName ||
+    !data.startDate
+  ){
+
+    alert(
+      'Preencha colaborador e data.'
+    );
+
+    return;
+
+  }
+
+  if(
+    seatConflict(
+      data,
+      id
+    )
+  ){
+
+    alert(
+      'Este assento já possui uma alocação conflitante.'
+    );
+
+    return;
+
+  }
+
+  try{
+
+    let response;
+
+    if(id){
+
+      response =
+        await db
+          .from('seat_allocations')
+          .update(data)
+          .eq('id',id)
+          .select()
+          .single();
+
+    }else{
+
+      response =
+        await db
+          .from('seat_allocations')
+          .insert([data])
+          .select()
+          .single();
+
+    }
+
+    if(response.error)
+      throw response.error;
+
+    closeSeatModal();
+
+    await loadData();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      'Erro ao salvar assento: ' +
+      error.message
+    );
+
+  }
+
+}
+
+async function removeSeatAllocation(){
+
+  const id =
+    $('s-existing-id').value;
+
+  if(
+    !id ||
+    !confirm(
+      'Deseja remover esta alocação?'
+    )
+  )
+    return;
+
+  if(!db){
+
+    alert(
+      'Supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const {error} =
+      await db
+        .from('seat_allocations')
+        .delete()
+        .eq('id',id);
+
+    if(error)
+      throw error;
+
+    closeSeatModal();
+
+    await loadData();
+
+  }catch(error){
+
+    alert(
+      'Erro ao remover assento: ' +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   COLABORADORES
+========================= */
+
+function openCollabModal(){
+
+  renderCollabList();
+
+  $('collab-modal')
+    .style.display =
+      'flex';
+
+}
+
+function closeCollabModal(){
+
+  $('collab-modal')
+    .style.display =
+      'none';
+
+}
+
+function renderCollabList(){
+
+  const list =
+    $('collab-list');
+
+  if(!collaborators.length){
+
+    list.innerHTML =
+      `
+        <div class="empty-state">
+          Nenhum colaborador cadastrado.
+        </div>
+      `;
+
+    return;
+
+  }
+
+  list.innerHTML =
+    collaborators
+      .slice()
+      .sort(
+        (a,b) =>
+          String(a.name)
+            .localeCompare(
+              String(b.name),
+              'pt-BR'
+            )
+      )
+      .map(
+        c =>
+          `
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              padding:8px 0;
+              border-bottom:1px solid #e5e7eb
+            "
+          >
+
+            <span>
+              ${esc(c.name)}
+              <strong>
+                (${esc(c.team || '')})
+              </strong>
+            </span>
+
+            <button
+              class="btn btn-danger"
+              onclick="
+                deleteCollaborator(
+                  '${c.id}'
+                )
+              "
+            >
+              Excluir
+            </button>
+
+          </div>
+          `
+      )
+      .join('');
+
+}
+
+async function saveCollaborator(event){
+
+  event.preventDefault();
+
+  if(!db){
+
+    alert(
+      'Supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  const name =
+    $('c-name')
+      .value
+      .trim();
+
+  const team =
+    $('c-team')
+      .value
+      .trim();
+
+  if(!name)
+    return;
+
+  if(
+    collaborators.some(
+      c =>
+        String(c.name)
+          .toLowerCase() ===
+        name.toLowerCase()
+    )
+  ){
+
+    alert(
+      'Este colaborador já está cadastrado.'
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const {error} =
+      await db
+        .from('collaborators')
+        .insert([
+          {
+            name,
+            team
+          }
+        ]);
+
+    if(error)
+      throw error;
+
+    $('c-name').value =
+      '';
+
+    $('c-team').value =
+      '';
+
+    await loadData();
+
+    renderCollabList();
+
+  }catch(error){
+
+    alert(
+      'Erro ao cadastrar colaborador: ' +
+      error.message
+    );
+
+  }
+
+}
+
+async function deleteCollaborator(id){
+
+  const collaborator =
+    collaborators.find(
+      c =>
+        String(c.id) ===
+        String(id)
+    );
+
+  if(!collaborator)
+    return;
+
+  const hasMeeting =
+    meetings.some(
+      meeting =>
+        meeting.owner ===
+        collaborator.name
+    );
+
+  const hasSeat =
+    seatAllocations.some(
+      seat =>
+        seat.collabName ===
+        collaborator.name
+    );
+
+  if(hasMeeting || hasSeat){
+
+    alert(
+      'Este colaborador possui reuniões ou assentos vinculados. ' +
+      'Remova os vínculos antes de excluir.'
+    );
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      `Excluir ${collaborator.name}?`
+    )
+  )
+    return;
+
+  if(!db)
+    return;
+
+  try{
+
+    const {error} =
+      await db
+        .from('collaborators')
+        .delete()
+        .eq('id',id);
+
+    if(error)
+      throw error;
+
+    await loadData();
+
+    renderCollabList();
+
+  }catch(error){
+
+    alert(
+      'Erro ao excluir colaborador: ' +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   FECHAR MODAIS
+========================= */
+
+document.addEventListener(
+  'keydown',
+  event => {
+
+    if(event.key === 'Escape'){
+
+      document
+        .querySelectorAll(
+          '.modal-backdrop'
+        )
+        .forEach(
+          modal =>
+            modal.style.display =
+              'none'
+        );
+
+    }
+
+  }
+);
+
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+
+    document
+      .querySelectorAll(
+        '.modal-backdrop'
+      )
+      .forEach(modal => {
+
+        modal.addEventListener(
+          'click',
+          event => {
+
+            if(
+              event.target ===
+              modal
+            ){
+
+              modal.style.display =
+                'none';
+
+            }
+
+          }
+        );
+
+      });
+
+  }
+);
+
 </script>
+
 </body>
 </html>
