@@ -1,101 +1,2427 @@
-String(allocation.exceptDay) === String(day)
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOJA CONCEITO BE | Coworking Pro BE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:N27,Inter,Arial,sans-serif;
+  background:#f5f7fa;
+  color:#172033
+}
+button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
+button{cursor:pointer}
+
+.header{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:20
+}
+
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:-1px
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px
+}
+
+.status{
+  padding:7px 12px;
+  border-radius:20px;
+  background:#dcfce7;
+  color:#15803d;
+  font-size:12px;
+  font-weight:800
+}
+
+.status.offline{
+  background:#fff7ed;
+  color:#c2410c
+}
+
+.container{
+  max-width:1500px;
+  margin:auto;
+  padding:24px
+}
+
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+  flex-wrap:wrap
+}
+
+.tabs{
+  display:flex;
+  gap:8px
+}
+
+.tab{
+  border:0;
+  background:#e9edf3;
+  padding:10px 18px;
+  border-radius:9px;
+  font-weight:700
+}
+
+.tab.active{
+  background:#172033;
+  color:#fff
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.btn{
+  border:1px solid #d7dce4;
+  background:#fff;
+  padding:9px 14px;
+  border-radius:8px;
+  font-weight:700
+}
+
+.btn:hover{background:#f1f5f9}
+
+.btn-primary{
+  background:#172033;
+  color:#fff;
+  border-color:#172033
+}
+
+.btn-danger{
+  color:#dc2626;
+  border-color:#fecaca
+}
+
+.week-controls{
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+
+.week-controls input,
+.date-input{
+  padding:9px 11px;
+  border:1px solid #d7dce4;
+  border-radius:8px;
+  background:#fff
+}
+
+/* CALENDÁRIO */
+
+.calendar-wrapper{
+  background:#fff;
+  border:1px solid #e1e5eb;
+  border-radius:14px;
+  overflow:auto;
+  box-shadow:0 3px 15px rgba(15,23,42,.04)
+}
+
+.calendar{
+  min-width:950px;
+  display:grid;
+  grid-template-columns:75px repeat(5,1fr)
+}
+
+.grid-header{
+  background:#f8fafc;
+  border-right:1px solid #e5e7eb;
+  border-bottom:1px solid #e5e7eb;
+  padding:12px;
+  text-align:center;
+  font-weight:800;
+  min-height:55px
+}
+
+.grid-header small{
+  font-weight:500;
+  color:#64748b
+}
+
+.time-slot{
+  min-height:82px;
+  padding:12px 8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  color:#64748b;
+  border-right:1px solid #e5e7eb;
+  border-bottom:1px solid #e5e7eb
+}
+
+.day-cell{
+  min-height:82px;
+  padding:5px;
+  border-right:1px solid #e5e7eb;
+  border-bottom:1px solid #e5e7eb;
+  background:#fff
+}
+
+.day-cell:hover{
+  background:#fafafa
+}
+
+.event-card{
+  background:#172033;
+  color:#fff;
+  border-radius:8px;
+  padding:8px;
+  margin-bottom:4px;
+  cursor:pointer;
+  font-size:11px
+}
+
+.event-card:hover{
+  opacity:.88
+}
+
+.event-title{
+  font-weight:800;
+  margin-bottom:3px
+}
+
+.event-time{
+  opacity:.8
+}
+
+.event-owner{
+  margin-top:3px;
+  font-size:10px;
+  opacity:.75
+}
+
+/* ASSENTOS */
+
+.seats-view{
+  display:none
+}
+
+.seat-toolbar{
+  background:#fff;
+  border:1px solid #e1e5eb;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap
+}
+
+.rooms{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+  gap:20px
+}
+
+.room{
+  background:#fff;
+  border:1px solid #e1e5eb;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 3px 15px rgba(15,23,42,.04)
+}
+
+.room h3{
+  margin:0 0 18px
+}
+
+.table{
+  background:#dbe3ec;
+  border-radius:10px;
+  padding:12px;
+  margin-bottom:22px
+}
+
+.table-name{
+  text-align:center;
+  font-weight:800;
+  font-size:12px;
+  margin-bottom:8px
+}
+
+.seats-row{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:8px 0
+}
+
+.seat-chair{
+  width:115px;
+  min-height:55px;
+  border:2px solid #cbd5e1;
+  border-radius:8px;
+  background:#f8fafc;
+  padding:7px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  transition:.15s
+}
+
+.seat-chair:hover{
+  transform:translateY(-2px);
+  border-color:#64748b
+}
+
+.seat-chair.occupied{
+  background:#172033;
+  color:#fff;
+  border-color:#172033
+}
+
+.seat-status{
+  font-size:10px;
+  margin-top:3px;
+  text-align:center;
+  max-width:100px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
+/* MODAIS */
+
+.modal-backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.55);
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:20px
+}
+
+.modal{
+  background:#fff;
+  width:100%;
+  max-width:600px;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:15px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2)
+}
+
+.modal-header{
+  padding:20px;
+  border-bottom:1px solid #e5e7eb;
+  display:flex;
+  justify-content:space-between;
+  align-items:center
+}
+
+.modal-header h2{
+  margin:0;
+  font-size:19px
+}
+
+.close{
+  border:0;
+  background:none;
+  font-size:25px;
+  color:#64748b
+}
+
+.modal-body{
+  padding:20px
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px
+}
+
+.form-group.full{
+  grid-column:1/-1
+}
+
+.form-group label{
+  font-size:12px;
+  font-weight:800;
+  color:#475569
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  border:1px solid #d7dce4;
+  border-radius:8px;
+  padding:10px;
+  background:#fff
+}
+
+.form-group textarea{
+  min-height:80px;
+  resize:vertical
+}
+
+.modal-footer{
+  padding:15px 20px;
+  border-top:1px solid #e5e7eb;
+  display:flex;
+  justify-content:space-between;
+  gap:8px
+}
+
+.footer-right{
+  display:flex;
+  gap:8px
+}
+
+.empty-state{
+  text-align:center;
+  padding:30px;
+  color:#64748b
+}
+
+
+.brand-area{display:flex;align-items:center;gap:12px}
+.logo-upload{width:42px;height:42px;border:1.5px dashed #94a3b8;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#f8fafc;flex:none}
+.logo-upload input{display:none}
+.logo-upload img{width:100%;height:100%;object-fit:contain}
+.logo-upload span{font-size:24px;color:#64748b;font-weight:500}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1px}
+.daily-calendar{min-width:650px;display:grid;grid-template-columns:75px 1fr}
+.daily-calendar .day-cell{min-height:82px}
+@media(max-width:700px){.brand-area{gap:8px}.logo{font-size:18px}.logo-upload{width:36px;height:36px}}
+
+@media(max-width:700px){
+  .container{padding:12px}
+  .header{padding:0 14px}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:auto}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="brand-area">
+    <label class="logo-upload" title="Adicionar logo">
+      <input id="logo-input" type="file" accept="image/*" onchange="handleLogoUpload(event)">
+      <img id="brand-logo" alt="Logo" style="display:none">
+      <span id="logo-placeholder">+</span>
+    </label>
+    <div class="logo">LOJA CONCEITO BE</div>
+  </div>
+
+  <div class="header-right">
+    <span id="connection-status" class="status offline">
+      ● Carregando...
+    </span>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="toolbar">
+
+    <div class="tabs">
+      <button id="btn-tab-coworking"
+              class="tab active"
+              onclick="switchTab('coworking')">
+        Coworking Pro BE
+      </button>
+
+      <button id="btn-tab-seats"
+              class="tab"
+              onclick="switchTab('seats')">
+        Mapeamento de lugares
+      </button>
+    </div>
+
+    <div class="actions">
+
+      <button class="btn"
+              onclick="openCollabModal()">
+        Colaboradores
+      </button>
+
+      <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">
+        Visualização: Semanal
+      </button>
+
+      <button class="btn" onclick="exportAgendaPNG()">
+        Exportar PNG
+      </button>
+
+      <button class="btn btn-primary"
+              onclick="openMeetingModal()">
+        + Nova reunião
+      </button>
+
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+
+  <section id="view-coworking">
+
+    <div class="toolbar">
+
+      <div class="week-controls">
+
+        <button class="btn"
+                onclick="changePeriod(-1)">
+          ←
+        </button>
+
+        <input id="week-picker"
+               type="date"
+               onchange="renderDashboard()">
+
+        <button class="btn"
+                onclick="changePeriod(1)">
+          →
+        </button>
+
+      </div>
+
+      <strong id="week-label"></strong>
+
+    </div>
+
+    <div class="calendar-wrapper">
+
+      <div id="weekly-table"
+           class="calendar agenda-export-area">
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- MESAS -->
+
+  <section id="view-seats"
+           class="seats-view">
+
+    <div class="seat-toolbar">
+
+      <div>
+        <strong>Mapa de mesas</strong>
+        <div style="font-size:12px;color:#64748b">
+          Clique em um assento para alocar ou editar.
+        </div>
+      </div>
+
+      <input id="seat-search-date"
+             class="date-input"
+             type="date"
+             onchange="renderSeats()">
+
+    </div>
+
+    <div class="rooms">
+
+      <!-- SALA 1 -->
+
+      <div class="room">
+
+        <h3>Meeting 01</h3>
+
+        <div class="table">
+
+          <div class="table-name">
+            MESA 01
+          </div>
+
+          <div id="m1-top"
+               class="seats-row">
+          </div>
+
+          <div id="m1-bottom"
+               class="seats-row">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SALA 2 -->
+
+      <div class="room">
+
+        <h3>Meeting 02</h3>
+
+        <div class="table">
+
+          <div class="table-name">
+            MESA 02
+          </div>
+
+          <div id="m2-top"
+               class="seats-row">
+          </div>
+
+          <div id="m2-bottom"
+               class="seats-row">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- MARKETING -->
+
+      <div class="room">
+
+        <h3>Mesa Marketing</h3>
+
+        <div class="table">
+
+          <div class="table-name">
+            MARKETING
+          </div>
+
+          <div id="m3-top"
+               class="seats-row">
+          </div>
+
+          <div id="m3-bottom"
+               class="seats-row">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<!-- MODAL REUNIÃO -->
+
+<div id="meeting-modal"
+     class="modal-backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2 id="modal-title-text">
+        Agendar Reunião
+      </h2>
+
+      <button class="close"
+              onclick="closeMeetingModal()">
+        ×
+      </button>
+
+    </div>
+
+    <form id="meeting-form"
+          onsubmit="saveMeeting(event)">
+
+      <div class="modal-body">
+
+        <input id="m-id"
+               type="hidden">
+
+        <div class="form-grid">
+
+          <div class="form-group full">
+            <label>Título da reunião</label>
+            <input id="m-title"
+                   required
+                   placeholder="Ex.: Reunião Comercial">
+          </div>
+
+          <div class="form-group">
+            <label>Responsável</label>
+
+            <select id="m-owner-select"
+                    required>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Nº de pessoas</label>
+
+            <input id="m-attendees"
+                   type="number"
+                   min="1"
+                   value="1">
+          </div>
+
+          <div class="form-group">
+            <label>Data</label>
+
+            <input id="m-date"
+                   type="date"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>Recorrência</label>
+
+            <select id="m-recurrence">
+
+              <option value="none">
+                Sem recorrência
+              </option>
+
+              <option value="daily">
+                Diária
+              </option>
+
+              <option value="weekly">
+                Semanal
+              </option>
+
+              <option value="biweekly">
+                Quinzenal
+              </option>
+
+              <option value="monthly">
+                Mensal
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group">
+            <label>Início</label>
+
+            <input id="m-start"
+                   type="time"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>Fim</label>
+
+            <input id="m-end"
+                   type="time"
+                   required>
+          </div>
+
+          <div class="form-group full">
+            <label>Participantes / observações</label>
+
+            <textarea id="m-participants"
+                      placeholder="Participantes, observações ou informações adicionais"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button"
+                id="btn-delete-meeting"
+                class="btn btn-danger"
+                style="display:none"
+                onclick="deleteMeeting()">
+          Excluir
+        </button>
+
+        <div class="footer-right">
+
+          <button type="button"
+                  class="btn"
+                  onclick="closeMeetingModal()">
+            Cancelar
+          </button>
+
+          <button type="submit"
+                  class="btn btn-primary">
+            Salvar
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- MODAL ASSENTO -->
+
+<div id="seat-modal"
+     class="modal-backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2 id="seat-modal-title">
+        Alocar Assento
+      </h2>
+
+      <button class="close"
+              onclick="closeSeatModal()">
+        ×
+      </button>
+
+    </div>
+
+    <form onsubmit="saveSeatAllocation(event)">
+
+      <div class="modal-body">
+
+        <input id="s-table-id"
+               type="hidden">
+
+        <input id="s-seat-code"
+               type="hidden">
+
+        <input id="s-existing-id"
+               type="hidden">
+
+        <div class="form-grid">
+
+          <div class="form-group full">
+
+            <label>Colaborador</label>
+
+            <select id="s-collab-select"
+                    required>
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Data inicial</label>
+
+            <input id="s-start-date"
+                   type="date"
+                   required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Recorrência</label>
+
+            <select id="s-recurrence">
+
+              <option value="single">
+                Apenas este dia
+              </option>
+
+              <option value="daily">
+                Todos os dias úteis
+              </option>
+
+              <option value="weekly">
+                Semanal
+              </option>
+
+              <option value="biweekly">
+                Quinzenal
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label>Dia de exceção</label>
+
+            <select id="s-except-day">
+
+              <option value="none">
+                Sem exceção
+              </option>
+
+              <option value="1">
+                Segunda-feira
+              </option>
+
+              <option value="2">
+                Terça-feira
+              </option>
+
+              <option value="3">
+                Quarta-feira
+              </option>
+
+              <option value="4">
+                Quinta-feira
+              </option>
+
+              <option value="5">
+                Sexta-feira
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button"
+                id="btn-remove-seat"
+                class="btn btn-danger"
+                style="display:none"
+                onclick="removeSeatAllocation()">
+          Remover
+        </button>
+
+        <div class="footer-right">
+
+          <button type="button"
+                  class="btn"
+                  onclick="closeSeatModal()">
+            Cancelar
+          </button>
+
+          <button type="submit"
+                  class="btn btn-primary">
+            Salvar
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- MODAL COLABORADORES -->
+
+<div id="collab-modal"
+     class="modal-backdrop">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h2>Colaboradores</h2>
+
+      <button class="close"
+              onclick="closeCollabModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <form onsubmit="saveCollaborator(event)">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Nome</label>
+
+            <input id="c-name"
+                   required
+                   placeholder="Nome do colaborador">
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Equipe</label>
+
+            <input id="c-team"
+                   placeholder="Ex.: Marketing">
+
+          </div>
+
+        </div>
+
+        <br>
+
+        <button class="btn btn-primary"
+                type="submit">
+          + Adicionar colaborador
+        </button>
+
+      </form>
+
+      <hr style="border:0;border-top:1px solid #e5e7eb;margin:20px 0">
+
+      <div id="collab-list"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+  'https://twrtjqqaaiyleefbhdlz.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
+
+let db = null;
+
+let collaborators = [];
+let meetings = [];
+let seatAllocations = [];
+
+let realtimeChannels = [];
+
+const hours = [
+  '08:00','09:00','10:00','11:00','12:00',
+  '13:00','14:00','15:00','16:00','17:00','18:00'
+];
+
+const $ = id => document.getElementById(id);
+
+const pad = n => String(n).padStart(2,'0');
+
+function localDateString(date = new Date()) {
+
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+
+}
+
+function dateFromInput(value) {
+
+  return new Date(`${value}T00:00:00`);
+
+}
+
+function addDays(date,amount) {
+
+  const d = new Date(date);
+
+  d.setDate(d.getDate()+amount);
+
+  return d;
+
+}
+
+function startOfWeek(date) {
+
+  const d = new Date(date);
+
+  const day = d.getDay();
+
+  d.setDate(
+    d.getDate() +
+    (day === 0 ? -6 : 1-day)
+  );
+
+  d.setHours(0,0,0,0);
+
+  return d;
+
+}
+
+function minutes(time) {
+
+  const [h,m] =
+    String(time || '')
+      .slice(0,5)
+      .split(':')
+      .map(Number);
+
+  return (h || 0)*60 + (m || 0);
+
+}
+
+function esc(value) {
+
+  return String(value ?? '')
+    .replace(/[&<>"']/g,char => ({
+
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+
+    }[char]));
+
+}
+
+function setStatus(text,connected) {
+
+  const element =
+    $('connection-status');
+
+  if(!element) return;
+
+  element.textContent = text;
+
+  element.classList.toggle(
+    'offline',
+    !connected
+  );
+
+}
+
+
+/* =========================
+   INICIALIZAÇÃO
+========================= */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  init
+);
+
+async function init(){
+
+  const today =
+    localDateString();
+
+  $('week-picker').value =
+    today;
+
+  $('seat-search-date').value =
+    today;
+
+  loadSavedLogo();
+
+  /*
+    IMPORTANTE:
+    A interface é criada ANTES
+    da tentativa de conexão.
+  */
+
+  renderDashboard();
+  renderSeats();
+
+  if(!window.supabase){
+
+    setStatus(
+      '● Modo local',
+      false
+    );
+
+    return;
+
+  }
+
+  try{
+
+    db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    setStatus(
+      '● Conectando...',
+      false
+    );
+
+    await Promise.race([
+
+      loadData(),
+
+      new Promise(
+        (_,reject) =>
+          setTimeout(
+            () => reject(
+              new Error(
+                'Timeout de conexão'
+              )
+            ),
+            7000
+          )
+      )
+
+    ]);
+
+    setStatus(
+      '● Sincronizado',
+      true
+    );
+
+    setupRealtime();
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      '● Sem conexão',
+      false
+    );
+
+    /*
+      A agenda continua funcionando
+      visualmente mesmo sem banco.
+    */
+
+    renderDashboard();
+    renderSeats();
+
+  }
+
+}
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+async function loadData(){
+
+  if(!db) return;
+
+  const [
+    collaboratorsResult,
+    meetingsResult,
+    seatsResult
+  ] = await Promise.all([
+
+    db
+      .from('collaborators')
+      .select('*')
+      .order('name'),
+
+    db
+      .from('meetings')
+      .select('*')
+      .order('date')
+      .order('start'),
+
+    db
+      .from('seat_allocations')
+      .select('*')
+      .order('startDate')
+
+  ]);
+
+  if(collaboratorsResult.error)
+    throw collaboratorsResult.error;
+
+  if(meetingsResult.error)
+    throw meetingsResult.error;
+
+  if(seatsResult.error)
+    throw seatsResult.error;
+
+  collaborators =
+    collaboratorsResult.data || [];
+
+  meetings =
+    meetingsResult.data || [];
+
+  seatAllocations =
+    seatsResult.data || [];
+
+  renderDashboard();
+  renderSeats();
+
+}
+
+function setupRealtime(){
+
+  if(
+    !db ||
+    realtimeChannels.length
+  ) return;
+
+  [
+    'collaborators',
+    'meetings',
+    'seat_allocations'
+
+  ].forEach(table => {
+
+    const channel =
+      db
+        .channel(
+          `be-${table}-${Date.now()}`
+        )
+        .on(
+          'postgres_changes',
+          {
+            event:'*',
+            schema:'public',
+            table
+          },
+          async () => {
+
+            try{
+
+              await loadData();
+
+              setStatus(
+                '● Sincronizado',
+                true
+              );
+
+            }catch(error){
+
+              console.error(error);
+
+              setStatus(
+                '● Sem conexão',
+                false
+              );
+
+            }
+
+          }
+        )
+        .subscribe();
+
+    realtimeChannels.push(channel);
+
+  });
+
+}
+
+
+/* =========================
+   ABAS
+========================= */
+
+function switchTab(tab){
+
+  const coworking =
+    tab === 'coworking';
+
+  $('btn-tab-coworking')
+    .classList.toggle(
+      'active',
+      coworking
+    );
+
+  $('btn-tab-seats')
+    .classList.toggle(
+      'active',
+      !coworking
+    );
+
+  $('view-coworking')
+    .style.display =
+      coworking
+      ? 'block'
+      : 'none';
+
+  $('view-seats')
+    .style.display =
+      coworking
+      ? 'none'
+      : 'block';
+
+  if(coworking)
+    renderDashboard();
+  else
+    renderSeats();
+
+}
+
+
+/* =========================
+   CALENDÁRIO
+========================= */
+
+let agendaView = 'weekly';
+
+function toggleAgendaView(){
+  agendaView = agendaView === 'weekly' ? 'daily' : 'weekly';
+  $('view-toggle-btn').textContent =
+    agendaView === 'weekly' ? 'Visualização: Semanal' : 'Visualização: Diária';
+  renderDashboard();
+}
+
+function changePeriod(amount){
+  const input = $('week-picker');
+  const date = dateFromInput(input.value || localDateString());
+  date.setDate(date.getDate() + amount * (agendaView === 'weekly' ? 7 : 1));
+  input.value = localDateString(date);
+  renderDashboard();
+}
+
+function changeWeek(amount){ changePeriod(amount); }
+
+function meetingOccursOnDate(
+  meeting,
+  targetDate
+){
+
+  if(
+    !meeting ||
+    !meeting.date
   ) return false;
 
-  switch(allocation.recurrence || 'single'){
+  const start =
+    dateFromInput(
+      meeting.date
+    );
 
-    case 'single':
-      return allocation.startDate === targetDate;
+  const target =
+    dateFromInput(
+      targetDate
+    );
+
+  if(target < start)
+    return false;
+
+  switch(
+    meeting.recurrence ||
+    'none'
+  ){
+
+    case 'none':
+
+      return (
+        meeting.date ===
+        targetDate
+      );
 
     case 'daily':
-      return day >= 1 && day <= 5;
+
+      return (
+        target.getDay() >= 1 &&
+        target.getDay() <= 5
+      );
 
     case 'weekly':
-      return day === start.getDay();
+
+      return (
+        target.getDay() ===
+        start.getDay()
+      );
 
     case 'biweekly':{
-      const difference = Math.floor((target - start) / 86400000);
-      return difference >= 0 && difference % 14 === 0;
+
+      const difference =
+        Math.floor(
+          (target-start) /
+          86400000
+        );
+
+      return (
+        difference >= 0 &&
+        difference % 14 === 0
+      );
+
+    }
+
+    case 'monthly':
+
+      return (
+        target.getDate() ===
+        start.getDate()
+      );
+
+    default:
+
+      return false;
+
+  }
+
+}
+
+function renderDashboard(){
+
+  const container = $('weekly-table');
+  if(!container) return;
+
+  const selected = $('week-picker').value || localDateString();
+  const selectedDate = dateFromInput(selected);
+
+  if(agendaView === 'daily'){
+    const target = localDateString(selectedDate);
+    const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][selectedDate.getDay()];
+    $('week-label').textContent = `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
+
+    let html = '<div class="grid-header">Hora</div>';
+    html += `<div class="grid-header">${dayName}<br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
+
+    hours.forEach(hour => {
+      html += `<div class="time-slot">${hour}</div>`;
+      const events = meetings
+        .filter(m => meetingOccursOnDate(m,target))
+        .filter(m => String(m.start || '').slice(0,5) === hour)
+        .sort((a,b) => String(a.start).localeCompare(String(b.start)));
+
+      html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
+      events.forEach(meeting => {
+        const encoded = encodeURIComponent(JSON.stringify(meeting));
+        html += `<div class="event-card" onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
+          <div class="event-title">${esc(meeting.title)}</div>
+          <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
+          <div class="event-owner">${esc(meeting.owner || '')}</div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+
+    container.className = 'calendar agenda-export-area daily-calendar';
+    container.innerHTML = html;
+    return;
+  }
+
+  const monday = startOfWeek(selectedDate);
+  const days = Array.from({length:5},(_,index)=>addDays(monday,index));
+
+  $('week-label').textContent = `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[4].getDate())}/${pad(days[4].getMonth()+1)}`;
+
+  let html = '<div class="grid-header">Hora</div>';
+  const names = ['Seg','Ter','Qua','Qui','Sex'];
+
+  days.forEach((day,index) => {
+    html += `<div class="grid-header">${names[index]}<br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
+  });
+
+  hours.forEach(hour => {
+    html += `<div class="time-slot">${hour}</div>`;
+    days.forEach(day => {
+      const target = localDateString(day);
+      const events = meetings
+        .filter(meeting => meetingOccursOnDate(meeting,target))
+        .filter(meeting => String(meeting.start || '').slice(0,5) === hour)
+        .sort((a,b) => String(a.start).localeCompare(String(b.start)));
+
+      html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
+      events.forEach(meeting => {
+        const encoded = encodeURIComponent(JSON.stringify(meeting));
+        html += `<div class="event-card" onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
+          <div class="event-title">${esc(meeting.title)}</div>
+          <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
+          <div class="event-owner">${esc(meeting.owner || '')}</div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+  });
+
+  container.className = 'calendar agenda-export-area';
+  container.innerHTML = html;
+}
+
+function exportAgendaPNG(){
+  if(!window.html2canvas){
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    script.onload=()=>exportAgendaPNG();
+    script.onerror=()=>alert('Não foi possível carregar o exportador PNG.');
+    document.head.appendChild(script);
+    return;
+  }
+  const area=document.querySelector('.agenda-export-area');
+  if(!area) return;
+  html2canvas(area,{backgroundColor:'#ffffff',scale:2,useCORS:true}).then(canvas=>{
+    const link=document.createElement('a');
+    const date=$('week-picker').value || localDateString();
+    link.download=`coworking-pro-be-${date}-${agendaView}.png`;
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+  }).catch(error=>{
+    console.error(error);
+    alert('Não foi possível exportar a agenda em PNG.');
+  });
+}
+
+function handleLogoUpload(event){
+  const file=event.target.files?.[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    localStorage.setItem('be_logo',reader.result);
+    applySavedLogo(reader.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+function applySavedLogo(src){
+  const img=$('brand-logo');
+  const placeholder=$('logo-placeholder');
+  if(!img) return;
+  img.src=src;
+  img.style.display='block';
+  if(placeholder) placeholder.style.display='none';
+}
+
+function loadSavedLogo(){
+  const src=localStorage.getItem('be_logo');
+  if(src) applySavedLogo(src);
+}
+
+function handleSlotClick(
+  date,
+  hour
+){
+
+  const next =
+    parseInt(
+      hour.slice(0,2),
+      10
+    ) + 1;
+
+  if(next > 19)
+    return;
+
+  openMeetingModal({
+
+    date,
+
+    start:hour,
+
+    end:
+      `${pad(next)}:00`
+
+  });
+
+}
+
+
+/* =========================
+   REUNIÕES
+========================= */
+
+function fillOwnerSelect(){
+
+  const select =
+    $('m-owner-select');
+
+  select.innerHTML =
+    '';
+
+  if(!collaborators.length){
+
+    select.innerHTML =
+      `
+      <option value="">
+        Cadastre um colaborador primeiro
+      </option>
+      `;
+
+    return;
+
+  }
+
+  collaborators.forEach(
+    collaborator => {
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        collaborator.name;
+
+      option.textContent =
+        `${collaborator.name}
+         (${collaborator.team || ''})`;
+
+      select.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+function openMeetingModal(
+  data = null
+){
+
+  fillOwnerSelect();
+
+  $('meeting-form')
+    .reset();
+
+  $('m-id').value =
+    data?.id || '';
+
+  $('m-title').value =
+    data?.title || '';
+
+  $('m-owner-select').value =
+    data?.owner ||
+    collaborators[0]?.name ||
+    '';
+
+  $('m-attendees').value =
+    data?.attendees_count ||
+    1;
+
+  $('m-participants').value =
+    data?.participants ||
+    '';
+
+  $('m-date').value =
+    data?.date ||
+    $('week-picker').value ||
+    localDateString();
+
+  $('m-start').value =
+    data?.start
+      ? String(data.start).slice(0,5)
+      : '';
+
+  $('m-end').value =
+    data?.end
+      ? String(data.end).slice(0,5)
+      : '';
+
+  $('m-recurrence').value =
+    data?.recurrence ||
+    'none';
+
+  $('modal-title-text')
+    .textContent =
+      data?.id
+      ? 'Editar Reunião / Evento'
+      : 'Agendar Reunião';
+
+  $('btn-delete-meeting')
+    .style.display =
+      data?.id
+      ? 'inline-flex'
+      : 'none';
+
+  $('meeting-modal')
+    .style.display =
+      'flex';
+
+}
+
+function openMeetingModalFromEncoded(
+  encoded
+){
+
+  try{
+
+    openMeetingModal(
+      JSON.parse(
+        decodeURIComponent(encoded)
+      )
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      'Não foi possível abrir a reunião.'
+    );
+
+  }
+
+}
+
+function closeMeetingModal(){
+
+  $('meeting-modal')
+    .style.display =
+      'none';
+
+}
+
+function meetingConflict(
+  candidate,
+  editingId = ''
+){
+
+  const start =
+    minutes(
+      candidate.start
+    );
+
+  const end =
+    minutes(
+      candidate.end
+    );
+
+  if(end <= start){
+
+    return (
+      'O horário final deve ser maior ' +
+      'que o horário inicial.'
+    );
+
+  }
+
+  /*
+    Verifica 1 ano para frente.
+    Assim uma recorrência não consegue
+    colidir com outra recorrência.
+  */
+
+  const base =
+    dateFromInput(
+      candidate.date
+    );
+
+  for(
+    let i=0;
+    i<366;
+    i++
+  ){
+
+    const day =
+      localDateString(
+        addDays(base,i)
+      );
+
+    if(
+      !meetingOccursOnDate(
+        candidate,
+        day
+      )
+    ) continue;
+
+    for(
+      const existing of meetings
+    ){
+
+      if(
+        editingId &&
+        String(existing.id) ===
+        String(editingId)
+      )
+        continue;
+
+      if(
+        !meetingOccursOnDate(
+          existing,
+          day
+        )
+      )
+        continue;
+
+      if(
+        start <
+        minutes(existing.end) &&
+
+        end >
+        minutes(existing.start)
+      ){
+
+        return `
+          Conflito com "${existing.title}"
+          em
+          ${day.split('-').reverse().join('/')}
+          (
+          ${String(existing.start).slice(0,5)}
+          -
+          ${String(existing.end).slice(0,5)}
+          ).
+        `;
+
+      }
+
+    }
+
+  }
+
+  return null;
+
+}
+
+async function saveMeeting(event){
+
+  event.preventDefault();
+
+  if(!db){
+
+    alert(
+      'O Supabase está indisponível. ' +
+      'A agenda continua visível, mas a reunião ' +
+      'não pode ser salva neste momento.'
+    );
+
+    return;
+
+  }
+
+  const id =
+    $('m-id').value;
+
+  const owner =
+    $('m-owner-select').value;
+
+  const collaborator =
+    collaborators.find(
+      c => c.name === owner
+    );
+
+  const data = {
+
+    title:
+      $('m-title').value.trim(),
+
+    owner,
+
+    team:
+      collaborator?.team || '',
+
+    attendees_count:
+      parseInt(
+        $('m-attendees').value,
+        10
+      ) || 1,
+
+    participants:
+      $('m-participants').value.trim(),
+
+    date:
+      $('m-date').value,
+
+    start:
+      $('m-start').value,
+
+    end:
+      $('m-end').value,
+
+    recurrence:
+      $('m-recurrence').value
+
+  };
+
+  if(
+    !data.title ||
+    !data.owner ||
+    !data.date ||
+    !data.start ||
+    !data.end
+  ){
+
+    alert(
+      'Preencha todos os campos obrigatórios.'
+    );
+
+    return;
+
+  }
+
+  const conflict =
+    meetingConflict(
+      data,
+      id
+    );
+
+  if(conflict){
+
+    alert(conflict);
+
+    return;
+
+  }
+
+  try{
+
+    let response;
+
+    if(id){
+
+      response =
+        await db
+          .from('meetings')
+          .update(data)
+          .eq('id',id)
+          .select()
+          .single();
+
+    }else{
+
+      response =
+        await db
+          .from('meetings')
+          .insert([data])
+          .select()
+          .single();
+
+    }
+
+    if(response.error)
+      throw response.error;
+
+    closeMeetingModal();
+
+    await loadData();
+
+    setStatus(
+      '● Sincronizado',
+      true
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      '● Sem conexão',
+      false
+    );
+
+    alert(
+      'Erro ao salvar reunião: ' +
+      error.message
+    );
+
+  }
+
+}
+
+async function deleteMeeting(){
+
+  const id =
+    $('m-id').value;
+
+  if(
+    !id ||
+    !confirm(
+      'Tem certeza que deseja excluir esta reunião?'
+    )
+  )
+    return;
+
+  if(!db){
+
+    alert(
+      'Supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  try{
+
+    const {error} =
+      await db
+        .from('meetings')
+        .delete()
+        .eq('id',id);
+
+    if(error)
+      throw error;
+
+    closeMeetingModal();
+
+    await loadData();
+
+  }catch(error){
+
+    alert(
+      'Erro ao excluir reunião: ' +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   ASSENTOS
+========================= */
+
+function seatOccursOnDate(
+  allocation,
+  targetDate
+){
+
+  const start =
+    dateFromInput(
+      allocation.startDate
+    );
+
+  const target =
+    dateFromInput(
+      targetDate
+    );
+
+  if(target < start)
+    return false;
+
+  const day =
+    target.getDay();
+
+  if(
+    allocation.exceptDay &&
+    allocation.exceptDay !== 'none' &&
+    Number(
+      allocation.exceptDay
+    ) === day
+  ){
+
+    return false;
+
+  }
+
+  switch(
+    allocation.recurrence ||
+    'daily'
+  ){
+
+    case 'single':
+
+      return (
+        allocation.startDate ===
+        targetDate
+      );
+
+    case 'daily':
+
+      return (
+        day >= 1 &&
+        day <= 5
+      );
+
+    case 'weekly':
+
+      return (
+        day === start.getDay()
+      );
+
+    case 'biweekly':{
+
+      const difference =
+        Math.floor(
+          (target-start) /
+          86400000
+        );
+
+      return (
+        difference >= 0 &&
+        difference % 14 === 0
+      );
+
     }
 
     default:
+
       return false;
+
   }
+
+}
+
+function getSeatOccupant(
+  table,
+  seat,
+  date
+){
+
+  return seatAllocations
+    .filter(
+      allocation =>
+
+        String(
+          allocation.tableId
+        ) === String(table) &&
+
+        String(
+          allocation.seatCode
+        ) === String(seat) &&
+
+        seatOccursOnDate(
+          allocation,
+          date
+        )
+
+    )
+    .sort(
+      (a,b) =>
+        String(
+          b.startDate
+        ).localeCompare(
+          String(
+            a.startDate
+          )
+        )
+    )[0] || null;
 
 }
 
 function renderSeats(){
 
-  const targetDate = $('seat-search-date').value || localDateString();
+  const date =
+    $('seat-search-date').value ||
+    localDateString();
 
-  // Definição das posições e seus IDs no DOM
-  const layout = {
-    'm1-top': ['S1-1','S1-2','S1-3'],
-    'm1-bottom': ['S1-4','S1-5','S1-6'],
-    'm2-top': ['S2-1','S2-2','S2-3'],
-    'm2-bottom': ['S2-4','S2-5','S2-6'],
-    'm3-top': ['MKT-1','MKT-2','MKT-3'],
-    'm3-bottom': ['MKT-4','MKT-5','MKT-6']
-  };
+  function chair(
+    table,
+    code
+  ){
 
-  for(const [containerId, seats] of Object.entries(layout)){
-    const container = $(containerId);
-    if(!container) continue;
-
-    let html = '';
-    
-    seats.forEach(code => {
-      const allocation = seatAllocations.find(a => 
-        a.seatCode === code && seatOccursOnDate(a, targetDate)
+    const allocation =
+      getSeatOccupant(
+        table,
+        code,
+        date
       );
 
-      const occupied = !!allocation;
-      const name = allocation ? esc(allocation.collabName) : 'Livre';
-      const encoded = allocation ? encodeURIComponent(JSON.stringify(allocation)) : '';
+    return `
 
-      html += `
-        <div class="seat-chair ${occupied ? 'occupied' : ''}"
-             onclick="openSeatModal('${containerId}', '${code}', '${encoded}')">
-          <strong>${code}</strong>
-          <div class="seat-status">${name}</div>
-        </div>
-      `;
-    });
-    
-    container.innerHTML = html;
+      <div
+        class="
+          seat-chair
+          ${allocation ? 'occupied' : ''}
+        "
+        onclick="
+          openSeatModal(
+            '${table}',
+            '${code}'
+          )
+        "
+      >
+
+        <span>
+          ${code}
+        </span>
+
+        <span class="seat-status">
+          ${esc(
+            allocation?.collabName ||
+            'Livre'
+          )}
+        </span>
+
+      </div>
+
+    `;
+
   }
+
+  $('m1-top').innerHTML =
+    chair('Meeting01','C1') +
+    chair('Meeting01','C2');
+
+  $('m1-bottom').innerHTML =
+    chair('Meeting01','C3') +
+    chair('Meeting01','C4');
+
+  $('m2-top').innerHTML =
+    chair('Meeting02','C1') +
+    chair('Meeting02','C2');
+
+  $('m2-bottom').innerHTML =
+    chair('Meeting02','C3') +
+    chair('Meeting02','C4');
+
+  $('m3-top').innerHTML =
+    chair('Marketing','C1') +
+    chair('Marketing','C2') +
+    chair('Marketing','C3');
+
+  $('m3-bottom').innerHTML =
+    chair('Marketing','C4') +
+    chair('Marketing','C5') +
+    chair('Marketing','C6');
 
 }
 
-function openSeatModal(tableId, seatCode, encodedAlloc = ''){
+function openSeatModal(
+  table,
+  seat
+){
 
-  $('s-table-id').value = tableId;
-  $('s-seat-code').value = seatCode;
+  const date =
+    $('seat-search-date').value ||
+    localDateString();
 
-  const select = $('s-collab-select');
-  select.innerHTML = collaborators.length
-    ? collaborators.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')
-    : '<option value="">Cadastre um colaborador primeiro</option>';
+  const existing =
+    getSeatOccupant(
+      table,
+      seat,
+      date
+    );
 
-  let alloc = null;
-  if(encodedAlloc){
-    try{ alloc = JSON.parse(decodeURIComponent(encodedAlloc)); }catch(e){}
-  }
+  const select =
+    $('s-collab-select');
 
-  $('s-existing-id').value = alloc?.id || '';
-  $('s-collab-select').value = alloc?.collabName || (collaborators[0]?.name || '');
-  $('s-start-date').value = alloc?.startDate || $('seat-search-date').value || localDateString();
-  $('s-recurrence').value = alloc?.recurrence || 'single';
-  $('s-except-day').value = alloc?.exceptDay || 'none';
+  select.innerHTML =
+    collaborators.length
 
-  $('seat-modal-title').textContent = alloc ? `Editar Assento ${seatCode}` : `Alocar Assento ${seatCode}`;
-  $('btn-remove-seat').style.display = alloc ? 'inline-block' : 'none';
+    ? collaborators
+        .map(
+          c =>
+            `
+            <option
+              value="${esc(c.name)}"
+            >
+              ${esc(c.name)}
+              (${esc(c.team || '')})
+            </option>
+            `
+        )
+        .join('')
 
-  $('seat-modal').style.display = 'flex';
+    :
+
+    `
+      <option value="">
+        Cadastre um colaborador primeiro
+      </option>
+    `;
+
+  $('s-table-id').value =
+    table;
+
+  $('s-seat-code').value =
+    seat;
+
+  $('s-existing-id').value =
+    existing?.id || '';
+
+  $('s-start-date').value =
+    existing?.startDate ||
+    date;
+
+  $('s-recurrence').value =
+    existing?.recurrence ||
+    'daily';
+
+  $('s-except-day').value =
+    existing?.exceptDay ||
+    'none';
+
+  $('s-collab-select').value =
+    existing?.collabName ||
+    '';
+
+  $('seat-modal-title')
+    .textContent =
+      `Alocar Assento - ${table} (${seat})`;
+
+  $('btn-remove-seat')
+    .style.display =
+      existing
+      ? 'inline-flex'
+      : 'none';
+
+  $('seat-modal')
+    .style.display =
+      'flex';
 
 }
 
 function closeSeatModal(){
-  $('seat-modal').style.display = 'none';
+
+  $('seat-modal')
+    .style.display =
+      'none';
+
+}
+
+function seatConflict(
+  candidate,
+  editingId = ''
+){
+
+  const base =
+    dateFromInput(
+      candidate.startDate
+    );
+
+  for(
+    let i=0;
+    i<366;
+    i++
+  ){
+
+    const day =
+      localDateString(
+        addDays(base,i)
+      );
+
+    if(
+      !seatOccursOnDate(
+        candidate,
+        day
+      )
+    )
+      continue;
+
+    for(
+      const existing of
+      seatAllocations
+    ){
+
+      if(
+        editingId &&
+        String(existing.id) ===
+        String(editingId)
+      )
+        continue;
+
+      if(
+        String(existing.tableId) !==
+        String(candidate.tableId)
+      )
+        continue;
+
+      if(
+        String(existing.seatCode) !==
+        String(candidate.seatCode)
+      )
+        continue;
+
+      if(
+        seatOccursOnDate(
+          existing,
+          day
+        )
+      ){
+
+        return true;
+
+      }
+
+    }
+
+  }
+
+  return false;
+
 }
 
 async function saveSeatAllocation(event){
@@ -103,61 +2429,158 @@ async function saveSeatAllocation(event){
   event.preventDefault();
 
   if(!db){
-    alert('O banco de dados não está conectado.');
+
+    alert(
+      'Supabase indisponível.'
+    );
+
     return;
+
   }
 
-  const id = $('s-existing-id').value;
+  const id =
+    $('s-existing-id').value;
+
   const data = {
-    seatCode: $('s-seat-code').value,
-    collabName: $('s-collab-select').value,
-    startDate: $('s-start-date').value,
-    recurrence: $('s-recurrence').value,
-    exceptDay: $('s-except-day').value
+
+    tableId:
+      $('s-table-id').value,
+
+    seatCode:
+      $('s-seat-code').value,
+
+    collabName:
+      $('s-collab-select').value,
+
+    startDate:
+      $('s-start-date').value,
+
+    recurrence:
+      $('s-recurrence').value,
+
+    exceptDay:
+      $('s-except-day').value
+
   };
 
-  if(!data.collabName || !data.startDate){
-    alert('Preencha os campos obrigatórios.');
+  if(
+    !data.collabName ||
+    !data.startDate
+  ){
+
+    alert(
+      'Preencha colaborador e data.'
+    );
+
     return;
+
+  }
+
+  if(
+    seatConflict(
+      data,
+      id
+    )
+  ){
+
+    alert(
+      'Este assento já possui uma alocação conflitante.'
+    );
+
+    return;
+
   }
 
   try{
+
     let response;
 
     if(id){
-      response = await db.from('seat_allocations').update(data).eq('id', id);
-    } else {
-      response = await db.from('seat_allocations').insert([data]);
+
+      response =
+        await db
+          .from('seat_allocations')
+          .update(data)
+          .eq('id',id)
+          .select()
+          .single();
+
+    }else{
+
+      response =
+        await db
+          .from('seat_allocations')
+          .insert([data])
+          .select()
+          .single();
+
     }
 
-    if(response?.error) throw response.error;
+    if(response.error)
+      throw response.error;
 
     closeSeatModal();
+
     await loadData();
-    setStatus('● Sincronizado', true);
 
   }catch(error){
-    alert('Erro ao salvar assento: ' + error.message);
+
+    console.error(error);
+
+    alert(
+      'Erro ao salvar assento: ' +
+      error.message
+    );
+
   }
 
 }
 
 async function removeSeatAllocation(){
 
-  const id = $('s-existing-id').value;
+  const id =
+    $('s-existing-id').value;
 
-  if(!id || !confirm('Remover esta alocação de assento?')) return;
+  if(
+    !id ||
+    !confirm(
+      'Deseja remover esta alocação?'
+    )
+  )
+    return;
 
-  if(!db) return;
+  if(!db){
+
+    alert(
+      'Supabase indisponível.'
+    );
+
+    return;
+
+  }
 
   try{
-    const {error} = await db.from('seat_allocations').delete().eq('id', id);
-    if(error) throw error;
-    
+
+    const {error} =
+      await db
+        .from('seat_allocations')
+        .delete()
+        .eq('id',id);
+
+    if(error)
+      throw error;
+
     closeSeatModal();
+
     await loadData();
+
   }catch(error){
-    alert('Erro ao remover assento: ' + error.message);
+
+    alert(
+      'Erro ao remover assento: ' +
+      error.message
+    );
+
   }
 
 }
@@ -168,12 +2591,88 @@ async function removeSeatAllocation(){
 ========================= */
 
 function openCollabModal(){
+
   renderCollabList();
-  $('collab-modal').style.display = 'flex';
+
+  $('collab-modal')
+    .style.display =
+      'flex';
+
 }
 
 function closeCollabModal(){
-  $('collab-modal').style.display = 'none';
+
+  $('collab-modal')
+    .style.display =
+      'none';
+
+}
+
+function renderCollabList(){
+
+  const list =
+    $('collab-list');
+
+  if(!collaborators.length){
+
+    list.innerHTML =
+      `
+        <div class="empty-state">
+          Nenhum colaborador cadastrado.
+        </div>
+      `;
+
+    return;
+
+  }
+
+  list.innerHTML =
+    collaborators
+      .slice()
+      .sort(
+        (a,b) =>
+          String(a.name)
+            .localeCompare(
+              String(b.name),
+              'pt-BR'
+            )
+      )
+      .map(
+        c =>
+          `
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              padding:8px 0;
+              border-bottom:1px solid #e5e7eb
+            "
+          >
+
+            <span>
+              ${esc(c.name)}
+              <strong>
+                (${esc(c.team || '')})
+              </strong>
+            </span>
+
+            <button
+              class="btn btn-danger"
+              onclick="
+                deleteCollaborator(
+                  '${c.id}'
+                )
+              "
+            >
+              Excluir
+            </button>
+
+          </div>
+          `
+      )
+      .join('');
+
 }
 
 async function saveCollaborator(event){
@@ -181,71 +2680,213 @@ async function saveCollaborator(event){
   event.preventDefault();
 
   if(!db){
-    alert('O banco de dados não está conectado.');
+
+    alert(
+      'Supabase indisponível.'
+    );
+
     return;
+
   }
 
-  const data = {
-    name: $('c-name').value.trim(),
-    team: $('c-team').value.trim()
-  };
+  const name =
+    $('c-name')
+      .value
+      .trim();
 
-  if(!data.name) return;
+  const team =
+    $('c-team')
+      .value
+      .trim();
+
+  if(!name)
+    return;
+
+  if(
+    collaborators.some(
+      c =>
+        String(c.name)
+          .toLowerCase() ===
+        name.toLowerCase()
+    )
+  ){
+
+    alert(
+      'Este colaborador já está cadastrado.'
+    );
+
+    return;
+
+  }
 
   try{
-    const {error} = await db.from('collaborators').insert([data]);
-    if(error) throw error;
-    
-    $('c-name').value = '';
-    $('c-team').value = '';
-    
+
+    const {error} =
+      await db
+        .from('collaborators')
+        .insert([
+          {
+            name,
+            team
+          }
+        ]);
+
+    if(error)
+      throw error;
+
+    $('c-name').value =
+      '';
+
+    $('c-team').value =
+      '';
+
     await loadData();
+
     renderCollabList();
+
   }catch(error){
-    alert('Erro ao salvar colaborador: ' + error.message);
+
+    alert(
+      'Erro ao cadastrar colaborador: ' +
+      error.message
+    );
+
   }
-
-}
-
-function renderCollabList(){
-
-  const list = $('collab-list');
-
-  if(!collaborators.length){
-    list.innerHTML = '<div class="empty-state">Nenhum colaborador cadastrado ainda.</div>';
-    return;
-  }
-
-  list.innerHTML = collaborators.map(c => `
-    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #e5e7eb;">
-      <div>
-        <strong>${esc(c.name)}</strong>
-        <div style="font-size:12px; color:#64748b;">Equipe: ${esc(c.team || 'Não informada')}</div>
-      </div>
-      <button class="btn btn-danger" style="padding:5px 10px; font-size:11px;" onclick="deleteCollaborator('${c.id}')">Excluir</button>
-    </div>
-  `).join('');
 
 }
 
 async function deleteCollaborator(id){
 
-  if(!confirm('Excluir este colaborador? Todas as alocações e reuniões ligadas ao nome dele podem ficar órfãs.')) return;
+  const collaborator =
+    collaborators.find(
+      c =>
+        String(c.id) ===
+        String(id)
+    );
 
-  if(!db) return;
+  if(!collaborator)
+    return;
+
+  const hasMeeting =
+    meetings.some(
+      meeting =>
+        meeting.owner ===
+        collaborator.name
+    );
+
+  const hasSeat =
+    seatAllocations.some(
+      seat =>
+        seat.collabName ===
+        collaborator.name
+    );
+
+  if(hasMeeting || hasSeat){
+
+    alert(
+      'Este colaborador possui reuniões ou assentos vinculados. ' +
+      'Remova os vínculos antes de excluir.'
+    );
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      `Excluir ${collaborator.name}?`
+    )
+  )
+    return;
+
+  if(!db)
+    return;
 
   try{
-    const {error} = await db.from('collaborators').delete().eq('id', id);
-    if(error) throw error;
-    
+
+    const {error} =
+      await db
+        .from('collaborators')
+        .delete()
+        .eq('id',id);
+
+    if(error)
+      throw error;
+
     await loadData();
+
     renderCollabList();
+
   }catch(error){
-    alert('Erro ao excluir colaborador: ' + error.message);
+
+    alert(
+      'Erro ao excluir colaborador: ' +
+      error.message
+    );
+
   }
 
 }
 
+
+/* =========================
+   FECHAR MODAIS
+========================= */
+
+document.addEventListener(
+  'keydown',
+  event => {
+
+    if(event.key === 'Escape'){
+
+      document
+        .querySelectorAll(
+          '.modal-backdrop'
+        )
+        .forEach(
+          modal =>
+            modal.style.display =
+              'none'
+        );
+
+    }
+
+  }
+);
+
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+
+    document
+      .querySelectorAll(
+        '.modal-backdrop'
+      )
+      .forEach(modal => {
+
+        modal.addEventListener(
+          'click',
+          event => {
+
+            if(
+              event.target ===
+              modal
+            ){
+
+              modal.style.display =
+                'none';
+
+            }
+
+          }
+        );
+
+      });
+
+  }
+);
+
 </script>
+
 </body>
 </html>
