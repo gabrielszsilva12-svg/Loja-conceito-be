@@ -144,7 +144,7 @@ button{cursor:pointer}
 .calendar{
   min-width:950px;
   display:grid;
-  grid-template-columns:75px repeat(5,1fr)
+  grid-template-columns:75px repeat(7,1fr)
 }
 
 .grid-header{
@@ -429,12 +429,48 @@ button{cursor:pointer}
 }
 
 /* Layout das mesas */
-.room-layout{position:relative;min-height:190px;padding:55px 8px 8px}
-.room-table-shape{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:145px;height:90px;border:2px solid #000;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;font-weight:900;z-index:0}
+.room-layout{
+  min-height:255px;
+  padding:12px 6px;
+  display:grid;
+  grid-template-columns:1fr;
+  grid-template-rows:78px 92px 78px;
+  align-items:center;
+  justify-items:center;
+  gap:0;
+}
+.room-table-shape{
+  grid-column:1;
+  grid-row:2;
+  position:static;
+  transform:none;
+  width:150px;
+  height:88px;
+  border:2px solid #000;
+  border-radius:6px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:12px;
+  font-weight:900;
+  z-index:1;
+}
 .room-table-shape span{color:#000}
-.marketing-table{width:165px}
-.seats-row{position:relative;z-index:2}
-@media(min-width:900px){.header{height:62px}.container{padding:12px 24px}.toolbar{margin-bottom:10px}.calendar-wrapper{max-height:calc(100vh - 145px)}.grid-header{min-height:42px;padding:7px}.time-slot,.day-cell{min-height:62px}.time-slot{padding:7px}.day-cell{padding:4px}.event-card{padding:5px;font-size:10px}.event-owner{font-size:9px}}
+.marketing-table{width:175px}
+.seats-row{
+  position:relative;
+  z-index:3;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  width:100%;
+}
+.room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
+.room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
+@media(min-width:900px){.header{height:62px}.container{padding:12px 24px}.toolbar{margin-bottom:10px}.calendar-wrapper{max-height:calc(100vh - 145px)}.grid-header{min-height:36px;padding:5px}.time-slot,.day-cell{min-height:50px}.time-slot{padding:5px}.day-cell{padding:3px}.event-card{padding:4px;font-size:9px}.event-owner{font-size:8px}}
 </style>
 </head>
 
@@ -1470,22 +1506,36 @@ function renderDashboard(){
   const selected = $('week-picker').value || localDateString();
   const selectedDate = dateFromInput(selected);
 
+  // Exibe o dia inteiro quando a visualização diária estiver selecionada.
   if(agendaView === 'daily'){
+
     const target = localDateString(selectedDate);
     const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][selectedDate.getDay()];
-    $('week-label').textContent = `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
+
+    $('week-label').textContent =
+      `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
 
     let html = '<div class="grid-header">Hora</div>';
     html += `<div class="grid-header">${dayName}<br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
 
     hours.forEach(hour => {
+
+      const hourStart = minutes(hour);
+      const hourEnd = hourStart + 60;
+
       html += `<div class="time-slot">${hour}</div>`;
+
+      // A reunião aparece na célula da hora em que começa, inclusive 14:30, 15:15 etc.
       const events = meetings
         .filter(m => meetingOccursOnDate(m,target))
-        .filter(m => String(m.start || '').slice(0,5) === hour)
-        .sort((a,b) => String(a.start).localeCompare(String(b.start)));
+        .filter(m => {
+          const start = minutes(m.start);
+          return start >= hourStart && start < hourEnd;
+        })
+        .sort((a,b) => minutes(a.start) - minutes(b.start));
 
       html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
+
       events.forEach(meeting => {
         const encoded = encodeURIComponent(JSON.stringify(meeting));
         html += `<div class="event-card" onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
@@ -1494,6 +1544,7 @@ function renderDashboard(){
           <div class="event-owner">${esc(meeting.owner || '')}</div>
         </div>`;
       });
+
       html += '</div>';
     });
 
@@ -1502,28 +1553,43 @@ function renderDashboard(){
     return;
   }
 
+  // Semana de segunda a domingo.
   const monday = startOfWeek(selectedDate);
-  const days = Array.from({length:5},(_,index)=>addDays(monday,index));
+  const days = Array.from({length:7},(_,index)=>addDays(monday,index));
 
-  $('week-label').textContent = `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[4].getDate())}/${pad(days[4].getMonth()+1)}`;
+  $('week-label').textContent =
+    `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
 
   let html = '<div class="grid-header">Hora</div>';
-  const names = ['Seg','Ter','Qua','Qui','Sex'];
+  const names = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
 
   days.forEach((day,index) => {
     html += `<div class="grid-header">${names[index]}<br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
   });
 
   hours.forEach(hour => {
+
+    const hourStart = minutes(hour);
+    const hourEnd = hourStart + 60;
+
     html += `<div class="time-slot">${hour}</div>`;
+
     days.forEach(day => {
+
       const target = localDateString(day);
+
+      // Antes era comparado com igualdade (ex.: 14:30 !== 14:00).
+      // Agora qualquer horário iniciado dentro daquela hora aparece na célula.
       const events = meetings
         .filter(meeting => meetingOccursOnDate(meeting,target))
-        .filter(meeting => String(meeting.start || '').slice(0,5) === hour)
-        .sort((a,b) => String(a.start).localeCompare(String(b.start)));
+        .filter(meeting => {
+          const start = minutes(meeting.start);
+          return start >= hourStart && start < hourEnd;
+        })
+        .sort((a,b) => minutes(a.start) - minutes(b.start));
 
       html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
+
       events.forEach(meeting => {
         const encoded = encodeURIComponent(JSON.stringify(meeting));
         html += `<div class="event-card" onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
@@ -1532,6 +1598,7 @@ function renderDashboard(){
           <div class="event-owner">${esc(meeting.owner || '')}</div>
         </div>`;
       });
+
       html += '</div>';
     });
   });
