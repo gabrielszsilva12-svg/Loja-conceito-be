@@ -13,7 +13,7 @@ body{
   margin:0;
   font-family:N27,Inter,Arial,sans-serif;
   background:#f5f7fa;
-  color:#172033
+  color:#000000
 }
 button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
 button{cursor:pointer}
@@ -86,7 +86,7 @@ button{cursor:pointer}
 }
 
 .tab.active{
-  background:#172033;
+  background:#000000;
   color:#fff
 }
 
@@ -107,9 +107,9 @@ button{cursor:pointer}
 .btn:hover{background:#f1f5f9}
 
 .btn-primary{
-  background:#172033;
+  background:#000000;
   color:#fff;
-  border-color:#172033
+  border-color:#000000
 }
 
 .btn-danger{
@@ -186,7 +186,7 @@ button{cursor:pointer}
 }
 
 .event-card{
-  background:#172033;
+  background:#000000;
   color:#fff;
   border-radius:8px;
   padding:8px;
@@ -293,9 +293,9 @@ button{cursor:pointer}
 }
 
 .seat-chair.occupied{
-  background:#172033;
+  background:#000000;
   color:#fff;
-  border-color:#172033
+  border-color:#000000
 }
 
 .seat-status{
@@ -427,6 +427,14 @@ button{cursor:pointer}
   .form-grid{grid-template-columns:1fr}
   .form-group.full{grid-column:auto}
 }
+
+/* Layout das mesas */
+.room-layout{position:relative;min-height:190px;padding:55px 8px 8px}
+.room-table-shape{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:145px;height:90px;border:2px solid #000;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;font-weight:900;z-index:0}
+.room-table-shape span{color:#000}
+.marketing-table{width:165px}
+.seats-row{position:relative;z-index:2}
+@media(min-width:900px){.header{height:62px}.container{padding:12px 24px}.toolbar{margin-bottom:10px}.calendar-wrapper{max-height:calc(100vh - 145px)}.grid-header{min-height:42px;padding:7px}.time-slot,.day-cell{min-height:62px}.time-slot{padding:7px}.day-cell{padding:4px}.event-card{padding:5px;font-size:10px}.event-owner{font-size:9px}}
 </style>
 </head>
 
@@ -557,11 +565,8 @@ button{cursor:pointer}
 
         <h3>Meeting 01</h3>
 
-        <div class="table">
-
-          <div class="table-name">
-            MESA 01
-          </div>
+        <div class="room-layout">
+          <div class="room-table-shape"><span>MEETING 01</span></div>
 
           <div id="m1-top"
                class="seats-row">
@@ -581,11 +586,8 @@ button{cursor:pointer}
 
         <h3>Meeting 02</h3>
 
-        <div class="table">
-
-          <div class="table-name">
-            MESA 02
-          </div>
+        <div class="room-layout">
+          <div class="room-table-shape"><span>MEETING 02</span></div>
 
           <div id="m2-top"
                class="seats-row">
@@ -605,11 +607,8 @@ button{cursor:pointer}
 
         <h3>Mesa Marketing</h3>
 
-        <div class="table">
-
-          <div class="table-name">
-            MARKETING
-          </div>
+        <div class="room-layout">
+          <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
 
           <div id="m3-top"
                class="seats-row">
@@ -2781,20 +2780,10 @@ async function deleteCollaborator(id){
         collaborator.name
     );
 
-  if(hasMeeting || hasSeat){
-
-    alert(
-      'Este colaborador possui reuniões ou assentos vinculados. ' +
-      'Remova os vínculos antes de excluir.'
-    );
-
-    return;
-
-  }
-
   if(
     !confirm(
-      `Excluir ${collaborator.name}?`
+      `Excluir ${collaborator.name}?\n\n` +
+      `Os lugares ocupados por este colaborador também serão liberados.`
     )
   )
     return;
@@ -2803,6 +2792,15 @@ async function deleteCollaborator(id){
     return;
 
   try{
+
+    const {error: seatError} =
+      await db
+        .from('seat_allocations')
+        .delete()
+        .eq('collabName', collaborator.name);
+
+    if(seatError)
+      throw seatError;
 
     const {error} =
       await db
@@ -2816,6 +2814,7 @@ async function deleteCollaborator(id){
     await loadData();
 
     renderCollabList();
+    renderSeats();
 
   }catch(error){
 
