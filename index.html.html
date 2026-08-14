@@ -183,7 +183,7 @@ button{cursor:pointer}
   background:#fff;
   position:relative;
   overflow:visible;
-  z-index:1
+  /* z-index removido para o card sobrescrever as linhas de baixo corretamente */
 }
 
 .day-cell:hover{
@@ -197,7 +197,8 @@ button{cursor:pointer}
   padding:8px;
   margin-bottom:4px;
   cursor:pointer;
-  font-size:11px
+  font-size:12px;
+  white-space:normal; /* Permite que o texto quebre melhor */
 }
 
 .event-card:hover{
@@ -206,17 +207,20 @@ button{cursor:pointer}
 
 .event-title{
   font-weight:800;
-  margin-bottom:3px
+  font-size:13px;
+  margin-bottom:3px;
+  line-height:1.2;
 }
 
 .event-time{
-  opacity:.8
+  opacity:.8;
+  font-size:11px;
 }
 
 .event-owner{
   margin-top:3px;
-  font-size:10px;
-  opacity:.75
+  font-size:11px;
+  opacity:.75;
 }
 
 /* ASSENTOS */
@@ -475,7 +479,22 @@ button{cursor:pointer}
 }
 .room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
 .room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
-@media(min-width:900px){:root{--slot-height:50px}.header{height:62px}.container{padding:12px 24px}.toolbar{margin-bottom:10px}.calendar-wrapper{max-height:calc(100vh - 145px)}.grid-header{min-height:36px;padding:5px}.time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}.time-slot{padding:5px}.day-cell{padding:3px}.event-card{padding:4px;font-size:9px}.event-owner{font-size:8px}}
+
+/* Ajustes de escala para Monitores Maiores */
+@media(min-width:900px){
+  :root{--slot-height:60px} /* Levemente maior para acomodar melhor os textos */
+  .header{height:62px}
+  .container{padding:12px 24px}
+  .toolbar{margin-bottom:10px}
+  .calendar-wrapper{max-height:calc(100vh - 145px)}
+  .grid-header{min-height:36px;padding:5px}
+  .time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}
+  .time-slot{padding:5px}
+  .day-cell{padding:3px}
+  .event-card{padding:6px;font-size:11px}
+  .event-title{font-size:12px}
+  .event-owner{font-size:10px}
+}
 
 :root{--slot-height:82px}
 .event-card{
@@ -633,6 +652,11 @@ button{cursor:pointer}
         </div>
       </div>
 
+      <div class="tabs" style="margin: 0 auto;">
+         <button id="btn-shift-morning" class="tab active" onclick="toggleSeatShift('morning')">Manhã</button>
+         <button id="btn-shift-afternoon" class="tab" onclick="toggleSeatShift('afternoon')">Tarde</button>
+      </div>
+
       <input id="seat-search-date"
              class="date-input"
              type="date"
@@ -744,16 +768,27 @@ button{cursor:pointer}
 
         <div class="form-grid">
 
-          <div class="form-group full">
-            <label>Título da reunião</label>
-            <input id="m-title"
-                   required
-                   placeholder="Ex.: Reunião Comercial">
+          <div class="form-group full" style="display:flex; gap:14px; flex-wrap:wrap;">
+            <div class="form-group" style="flex:1; min-width:120px;">
+               <label>Time</label>
+               <select id="m-team-select"></select>
+            </div>
+            <div class="form-group" style="flex:3; min-width:200px;">
+               <label>Título da reunião</label>
+               <input id="m-title" required placeholder="Ex.: Sprint Comercial">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo de Reunião</label>
+            <select id="m-type">
+               <option value="Interna">Com o time (Interna)</option>
+               <option value="Externa">Com externos (Externa)</option>
+            </select>
           </div>
 
           <div class="form-group">
             <label>Responsável</label>
-
             <select id="m-owner-select"
                     required>
             </select>
@@ -1142,10 +1177,7 @@ function startOfWeek(date) {
 
   const day = d.getDay();
 
-  d.setDate(
-    d.getDate() +
-    (day === 0 ? -6 : 1-day)
-  );
+  d.setDate(d.getDate() - day);
 
   d.setHours(0,0,0,0);
 
@@ -1218,6 +1250,8 @@ async function init(){
     today;
 
   loadSavedLogo();
+
+  toggleSeatShift('morning');
 
   /*
     IMPORTANTE:
@@ -1453,6 +1487,20 @@ function switchTab(tab){
 
 }
 
+function toggleSeatShift(shift) {
+  $('btn-shift-morning').classList.toggle('active', shift === 'morning');
+  $('btn-shift-afternoon').classList.toggle('active', shift === 'afternoon');
+
+  document.querySelectorAll('.shift-panel').forEach(panel => {
+    const isMorning = panel.querySelector('.shift-title').textContent.includes('MANHÃ');
+    if ((shift === 'morning' && isMorning) || (shift === 'afternoon' && !isMorning)) {
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+    }
+  });
+}
+
 
 /* =========================
    CALENDÁRIO
@@ -1571,11 +1619,13 @@ function renderDashboard(){
     const durationHours = (safeEnd - start) / 60;
     const offsetPercent = ((start - hourStart) / 60) * 100;
     const encoded = encodeURIComponent(JSON.stringify(meeting));
+    const typeBadge = meeting.type === 'Externa' ? '<span style="color:#fca5a5">[Ext]</span> ' : '';
+    const teamBadge = meeting.team ? `${esc(meeting.team)} | ` : '';
 
     return `<div class="event-card"
       style="top:${Math.max(0,offsetPercent)}%;--event-duration-hours:${durationHours};"
       onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
-      <div class="event-title">${esc(meeting.title)}</div>
+      <div class="event-title">${typeBadge}${teamBadge}${esc(meeting.title)}</div>
       <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
       <div class="event-owner">${esc(meeting.owner || '')}</div>
     </div>`;
@@ -1617,14 +1667,14 @@ function renderDashboard(){
     return;
   }
 
-  const monday = startOfWeek(selectedDate);
-  const days = Array.from({length:7},(_,index)=>addDays(monday,index));
+  const sunday = startOfWeek(selectedDate);
+  const days = Array.from({length:7},(_,index)=>addDays(sunday,index));
 
   $('week-label').textContent =
     `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
 
   let html = '<div class="grid-header">Hora</div>';
-  const names = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  const names = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
   days.forEach((day,index) => {
     html += `<div class="grid-header">${names[index]}<br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
@@ -1784,11 +1834,22 @@ function fillOwnerSelect(){
 
 }
 
+function fillTeamSelect() {
+  const select = $('m-team-select');
+  const defaultTeams = ['CSUM', 'EDFE', 'MKT', 'UAU', 'COMERCIAL', 'DIRETORIA', 'PRO'];
+  const collTeams = collaborators.map(c => c.team).filter(Boolean);
+  const allTeams = [...new Set([...defaultTeams, ...collTeams])];
+
+  select.innerHTML = '<option value="">Sem time</option>' +
+    allTeams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+}
+
 function openMeetingModal(
   data = null
 ){
 
   fillOwnerSelect();
+  fillTeamSelect();
 
   $('meeting-form')
     .reset();
@@ -1798,6 +1859,12 @@ function openMeetingModal(
 
   $('m-title').value =
     data?.title || '';
+
+  $('m-team-select').value =
+    data?.team || '';
+
+  $('m-type').value =
+    data?.type || 'Interna';
 
   $('m-owner-select').value =
     data?.owner ||
@@ -2017,7 +2084,10 @@ async function saveMeeting(event){
     owner,
 
     team:
-      collaborator?.team || '',
+      $('m-team-select').value,
+
+    type:
+      $('m-type').value,
 
     attendees_count:
       parseInt(
@@ -2112,6 +2182,52 @@ async function saveMeeting(event){
   }catch(error){
 
     console.error(error);
+
+    // Compatibilidade: garante que salvar não quebre se não for criado nova coluna no seu banco Supabase.
+    const message = String(error?.message || '').toLowerCase();
+
+    if(message.includes('column') || message.includes('schema cache')){
+
+      try {
+        const fallbackData = {...data};
+        delete fallbackData.type;
+
+        if(data.type) {
+            fallbackData.participants = `[${data.type}] ` + fallbackData.participants;
+        }
+
+        let fallback;
+
+        if(id){
+          fallback = await db
+            .from('meetings')
+            .update(fallbackData)
+            .eq('id',id)
+            .select()
+            .single();
+        }else{
+          fallback = await db
+            .from('meetings')
+            .insert([fallbackData])
+            .select()
+            .single();
+        }
+
+        if(fallback.error)
+          throw fallback.error;
+
+        closeMeetingModal();
+        await loadData();
+        return;
+
+      } catch(fallbackError){
+        alert(
+          'Erro ao salvar reunião: ' +
+          fallbackError.message
+        );
+        return;
+      }
+    }
 
     setStatus(
       '● Sem conexão',
