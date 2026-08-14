@@ -163,7 +163,8 @@ button{cursor:pointer}
 }
 
 .time-slot{
-  min-height:82px;
+  min-height:var(--slot-height,82px);
+  height:var(--slot-height,82px);
   padding:12px 8px;
   text-align:center;
   font-size:12px;
@@ -174,11 +175,15 @@ button{cursor:pointer}
 }
 
 .day-cell{
-  min-height:82px;
+  min-height:var(--slot-height,82px);
+  height:var(--slot-height,82px);
   padding:5px;
   border-right:1px solid #e5e7eb;
   border-bottom:1px solid #e5e7eb;
-  background:#fff
+  background:#fff;
+  position:relative;
+  overflow:visible;
+  z-index:1
 }
 
 .day-cell:hover{
@@ -470,7 +475,49 @@ button{cursor:pointer}
 }
 .room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
 .room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
-@media(min-width:900px){.header{height:62px}.container{padding:12px 24px}.toolbar{margin-bottom:10px}.calendar-wrapper{max-height:calc(100vh - 145px)}.grid-header{min-height:36px;padding:5px}.time-slot,.day-cell{min-height:50px}.time-slot{padding:5px}.day-cell{padding:3px}.event-card{padding:4px;font-size:9px}.event-owner{font-size:8px}}
+@media(min-width:900px){:root{--slot-height:50px}.header{height:62px}.container{padding:12px 24px}.toolbar{margin-bottom:10px}.calendar-wrapper{max-height:calc(100vh - 145px)}.grid-header{min-height:36px;padding:5px}.time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}.time-slot{padding:5px}.day-cell{padding:3px}.event-card{padding:4px;font-size:9px}.event-owner{font-size:8px}}
+
+:root{--slot-height:82px}
+.event-card{
+  position:absolute;
+  left:4px;
+  right:4px;
+  margin:0;
+  top:4px;
+  min-height:28px;
+  height:calc(var(--event-duration-hours, 1) * var(--slot-height) - 8px);
+  z-index:20;
+  overflow:hidden;
+  box-shadow:0 2px 5px rgba(0,0,0,.12);
+}
+
+
+.shift-panel{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:10px;
+  margin-top:12px;
+  background:#fafafa;
+}
+.shift-title{
+  text-align:center;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.8px;
+  margin-bottom:4px;
+}
+.shift-layout{
+  min-height:210px;
+  grid-template-rows:64px 82px 64px;
+}
+.shift-layout .seat-chair{
+  width:105px;
+  min-height:50px;
+  font-size:11px;
+}
+.shift-layout .seat-status{font-size:9px}
+@media(max-width:700px){.shift-layout .seat-chair{width:90px}}
+
 </style>
 </head>
 
@@ -595,67 +642,70 @@ button{cursor:pointer}
 
     <div class="rooms">
 
-      <!-- SALA 1 -->
-
       <div class="room">
-
         <h3>Meeting 01</h3>
 
-        <div class="room-layout">
-          <div class="room-table-shape"><span>MEETING 01</span></div>
-
-          <div id="m1-top"
-               class="seats-row">
+        <div class="shift-panel">
+          <div class="shift-title">MANHÃ</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 01</span></div>
+            <div id="m1-morning-top" class="seats-row"></div>
+            <div id="m1-morning-bottom" class="seats-row"></div>
           </div>
-
-          <div id="m1-bottom"
-               class="seats-row">
-          </div>
-
         </div>
 
+        <div class="shift-panel">
+          <div class="shift-title">TARDE</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 01</span></div>
+            <div id="m1-afternoon-top" class="seats-row"></div>
+            <div id="m1-afternoon-bottom" class="seats-row"></div>
+          </div>
+        </div>
       </div>
 
-      <!-- SALA 2 -->
-
       <div class="room">
-
         <h3>Meeting 02</h3>
 
-        <div class="room-layout">
-          <div class="room-table-shape"><span>MEETING 02</span></div>
-
-          <div id="m2-top"
-               class="seats-row">
+        <div class="shift-panel">
+          <div class="shift-title">MANHÃ</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 02</span></div>
+            <div id="m2-morning-top" class="seats-row"></div>
+            <div id="m2-morning-bottom" class="seats-row"></div>
           </div>
-
-          <div id="m2-bottom"
-               class="seats-row">
-          </div>
-
         </div>
 
+        <div class="shift-panel">
+          <div class="shift-title">TARDE</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 02</span></div>
+            <div id="m2-afternoon-top" class="seats-row"></div>
+            <div id="m2-afternoon-bottom" class="seats-row"></div>
+          </div>
+        </div>
       </div>
 
-      <!-- MARKETING -->
-
       <div class="room">
-
         <h3>Mesa Marketing</h3>
 
-        <div class="room-layout">
-          <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
-
-          <div id="m3-top"
-               class="seats-row">
+        <div class="shift-panel">
+          <div class="shift-title">MANHÃ</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
+            <div id="m3-morning-top" class="seats-row"></div>
+            <div id="m3-morning-bottom" class="seats-row"></div>
           </div>
-
-          <div id="m3-bottom"
-               class="seats-row">
-          </div>
-
         </div>
 
+        <div class="shift-panel">
+          <div class="shift-title">TARDE</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
+            <div id="m3-afternoon-top" class="seats-row"></div>
+            <div id="m3-afternoon-bottom" class="seats-row"></div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -860,7 +910,7 @@ button{cursor:pointer}
 
           </div>
 
-          <div class="form-group">
+                    <div class="form-group">
 
             <label>Data inicial</label>
 
@@ -868,6 +918,14 @@ button{cursor:pointer}
                    type="date"
                    required>
 
+          </div>
+
+          <div class="form-group">
+            <label>Período</label>
+            <select id="s-period">
+              <option value="morning">Manhã</option>
+              <option value="afternoon">Tarde</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -1506,7 +1564,23 @@ function renderDashboard(){
   const selected = $('week-picker').value || localDateString();
   const selectedDate = dateFromInput(selected);
 
-  // Exibe o dia inteiro quando a visualização diária estiver selecionada.
+  function eventMarkup(meeting, hourStart){
+    const start = minutes(meeting.start);
+    const end = minutes(meeting.end);
+    const safeEnd = Math.max(end, start + 15);
+    const durationHours = (safeEnd - start) / 60;
+    const offsetPercent = ((start - hourStart) / 60) * 100;
+    const encoded = encodeURIComponent(JSON.stringify(meeting));
+
+    return `<div class="event-card"
+      style="top:${Math.max(0,offsetPercent)}%;--event-duration-hours:${durationHours};"
+      onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
+      <div class="event-title">${esc(meeting.title)}</div>
+      <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
+      <div class="event-owner">${esc(meeting.owner || '')}</div>
+    </div>`;
+  }
+
   if(agendaView === 'daily'){
 
     const target = localDateString(selectedDate);
@@ -1525,7 +1599,6 @@ function renderDashboard(){
 
       html += `<div class="time-slot">${hour}</div>`;
 
-      // A reunião aparece na célula da hora em que começa, inclusive 14:30, 15:15 etc.
       const events = meetings
         .filter(m => meetingOccursOnDate(m,target))
         .filter(m => {
@@ -1535,16 +1608,7 @@ function renderDashboard(){
         .sort((a,b) => minutes(a.start) - minutes(b.start));
 
       html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
-
-      events.forEach(meeting => {
-        const encoded = encodeURIComponent(JSON.stringify(meeting));
-        html += `<div class="event-card" onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
-          <div class="event-title">${esc(meeting.title)}</div>
-          <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
-          <div class="event-owner">${esc(meeting.owner || '')}</div>
-        </div>`;
-      });
-
+      events.forEach(meeting => html += eventMarkup(meeting, hourStart));
       html += '</div>';
     });
 
@@ -1553,7 +1617,6 @@ function renderDashboard(){
     return;
   }
 
-  // Semana de segunda a domingo.
   const monday = startOfWeek(selectedDate);
   const days = Array.from({length:7},(_,index)=>addDays(monday,index));
 
@@ -1578,8 +1641,6 @@ function renderDashboard(){
 
       const target = localDateString(day);
 
-      // Antes era comparado com igualdade (ex.: 14:30 !== 14:00).
-      // Agora qualquer horário iniciado dentro daquela hora aparece na célula.
       const events = meetings
         .filter(meeting => meetingOccursOnDate(meeting,target))
         .filter(meeting => {
@@ -1589,16 +1650,7 @@ function renderDashboard(){
         .sort((a,b) => minutes(a.start) - minutes(b.start));
 
       html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
-
-      events.forEach(meeting => {
-        const encoded = encodeURIComponent(JSON.stringify(meeting));
-        html += `<div class="event-card" onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
-          <div class="event-title">${esc(meeting.title)}</div>
-          <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
-          <div class="event-owner">${esc(meeting.owner || '')}</div>
-        </div>`;
-      });
-
+      events.forEach(meeting => html += eventMarkup(meeting, hourStart));
       html += '</div>';
     });
   });
@@ -2210,204 +2262,113 @@ function seatOccursOnDate(
 
 }
 
+function storageTableId(table, period){
+  return `${table}__${period}`;
+}
+
 function getSeatOccupant(
   table,
   seat,
-  date
+  date,
+  period = 'morning'
 ){
 
+  const currentTableId = storageTableId(table, period);
+
   return seatAllocations
-    .filter(
-      allocation =>
-
-        String(
-          allocation.tableId
-        ) === String(table) &&
-
-        String(
-          allocation.seatCode
-        ) === String(seat) &&
-
-        seatOccursOnDate(
-          allocation,
-          date
-        )
-
+    .filter(allocation =>
+      String(allocation.seatCode) === String(seat) &&
+      (
+        String(allocation.tableId) === currentTableId ||
+        (period === 'morning' && String(allocation.tableId) === String(table))
+      ) &&
+      seatOccursOnDate(allocation,date)
     )
-    .sort(
-      (a,b) =>
-        String(
-          b.startDate
-        ).localeCompare(
-          String(
-            a.startDate
-          )
-        )
+    .sort((a,b) =>
+      String(b.startDate).localeCompare(String(a.startDate))
     )[0] || null;
-
 }
 
 function renderSeats(){
 
-  const date =
-    $('seat-search-date').value ||
-    localDateString();
+  const date = $('seat-search-date').value || localDateString();
 
-  function chair(
-    table,
-    code
-  ){
+  function chair(table, code, period){
 
-    const allocation =
-      getSeatOccupant(
-        table,
-        code,
-        date
-      );
+    const allocation = getSeatOccupant(table,code,date,period);
 
     return `
-
-      <div
-        class="
-          seat-chair
-          ${allocation ? 'occupied' : ''}
-        "
-        onclick="
-          openSeatModal(
-            '${table}',
-            '${code}'
-          )
-        "
-      >
-
-        <span>
-          ${code}
-        </span>
-
-        <span class="seat-status">
-          ${esc(
-            allocation?.collabName ||
-            'Livre'
-          )}
-        </span>
-
+      <div class="seat-chair ${allocation ? 'occupied' : ''}"
+           onclick="openSeatModal('${table}','${code}','${period}')">
+        <span>${code}</span>
+        <span class="seat-status">${esc(allocation?.collabName || 'Livre')}</span>
       </div>
-
     `;
-
   }
 
-  $('m1-top').innerHTML =
-    chair('Meeting01','C1') +
-    chair('Meeting01','C2');
+  $('m1-morning-top').innerHTML =
+    chair('Meeting01','C1','morning') + chair('Meeting01','C2','morning');
+  $('m1-morning-bottom').innerHTML =
+    chair('Meeting01','C3','morning') + chair('Meeting01','C4','morning');
 
-  $('m1-bottom').innerHTML =
-    chair('Meeting01','C3') +
-    chair('Meeting01','C4');
+  $('m1-afternoon-top').innerHTML =
+    chair('Meeting01','C1','afternoon') + chair('Meeting01','C2','afternoon');
+  $('m1-afternoon-bottom').innerHTML =
+    chair('Meeting01','C3','afternoon') + chair('Meeting01','C4','afternoon');
 
-  $('m2-top').innerHTML =
-    chair('Meeting02','C1') +
-    chair('Meeting02','C2');
+  $('m2-morning-top').innerHTML =
+    chair('Meeting02','C1','morning') + chair('Meeting02','C2','morning');
+  $('m2-morning-bottom').innerHTML =
+    chair('Meeting02','C3','morning') + chair('Meeting02','C4','morning');
 
-  $('m2-bottom').innerHTML =
-    chair('Meeting02','C3') +
-    chair('Meeting02','C4');
+  $('m2-afternoon-top').innerHTML =
+    chair('Meeting02','C1','afternoon') + chair('Meeting02','C2','afternoon');
+  $('m2-afternoon-bottom').innerHTML =
+    chair('Meeting02','C3','afternoon') + chair('Meeting02','C4','afternoon');
 
-  $('m3-top').innerHTML =
-    chair('Marketing','C1') +
-    chair('Marketing','C2') +
-    chair('Marketing','C3');
+  $('m3-morning-top').innerHTML =
+    chair('Marketing','C1','morning') + chair('Marketing','C2','morning') + chair('Marketing','C3','morning');
+  $('m3-morning-bottom').innerHTML =
+    chair('Marketing','C4','morning') + chair('Marketing','C5','morning') + chair('Marketing','C6','morning');
 
-  $('m3-bottom').innerHTML =
-    chair('Marketing','C4') +
-    chair('Marketing','C5') +
-    chair('Marketing','C6');
-
+  $('m3-afternoon-top').innerHTML =
+    chair('Marketing','C1','afternoon') + chair('Marketing','C2','afternoon') + chair('Marketing','C3','afternoon');
+  $('m3-afternoon-bottom').innerHTML =
+    chair('Marketing','C4','afternoon') + chair('Marketing','C5','afternoon') + chair('Marketing','C6','afternoon');
 }
 
 function openSeatModal(
   table,
-  seat
+  seat,
+  period = 'morning'
 ){
 
-  const date =
-    $('seat-search-date').value ||
-    localDateString();
+  const date = $('seat-search-date').value || localDateString();
+  const existing = getSeatOccupant(table,seat,date,period);
+  const select = $('s-collab-select');
 
-  const existing =
-    getSeatOccupant(
-      table,
-      seat,
-      date
-    );
+  select.innerHTML = collaborators.length
+    ? collaborators.map(c => `
+        <option value="${esc(c.name)}">
+          ${esc(c.name)} (${esc(c.team || '')})
+        </option>
+      `).join('')
+    : `<option value="">Cadastre um colaborador primeiro</option>`;
 
-  const select =
-    $('s-collab-select');
+  $('s-table-id').value = table;
+  $('s-seat-code').value = seat;
+  $('s-existing-id').value = existing?.id || '';
+  $('s-period').value = existing?.period || period;
+  $('s-start-date').value = existing?.startDate || date;
+  $('s-recurrence').value = existing?.recurrence || 'daily';
+  $('s-except-day').value = existing?.exceptDay || 'none';
+  $('s-collab-select').value = existing?.collabName || '';
 
-  select.innerHTML =
-    collaborators.length
+  $('seat-modal-title').textContent =
+    `Alocar Assento - ${table} (${seat}) - ${period === 'morning' ? 'Manhã' : 'Tarde'}`;
 
-    ? collaborators
-        .map(
-          c =>
-            `
-            <option
-              value="${esc(c.name)}"
-            >
-              ${esc(c.name)}
-              (${esc(c.team || '')})
-            </option>
-            `
-        )
-        .join('')
-
-    :
-
-    `
-      <option value="">
-        Cadastre um colaborador primeiro
-      </option>
-    `;
-
-  $('s-table-id').value =
-    table;
-
-  $('s-seat-code').value =
-    seat;
-
-  $('s-existing-id').value =
-    existing?.id || '';
-
-  $('s-start-date').value =
-    existing?.startDate ||
-    date;
-
-  $('s-recurrence').value =
-    existing?.recurrence ||
-    'daily';
-
-  $('s-except-day').value =
-    existing?.exceptDay ||
-    'none';
-
-  $('s-collab-select').value =
-    existing?.collabName ||
-    '';
-
-  $('seat-modal-title')
-    .textContent =
-      `Alocar Assento - ${table} (${seat})`;
-
-  $('btn-remove-seat')
-    .style.display =
-      existing
-      ? 'inline-flex'
-      : 'none';
-
-  $('seat-modal')
-    .style.display =
-      'flex';
-
+  $('btn-remove-seat').style.display = existing ? 'inline-flex' : 'none';
+  $('seat-modal').style.display = 'flex';
 }
 
 function closeSeatModal(){
@@ -2418,76 +2379,37 @@ function closeSeatModal(){
 
 }
 
-function seatConflict(
-  candidate,
-  editingId = ''
-){
+function seatConflict(candidate, editingId = ''){
 
-  const base =
-    dateFromInput(
-      candidate.startDate
-    );
+  const base = dateFromInput(candidate.startDate);
 
-  for(
-    let i=0;
-    i<366;
-    i++
-  ){
+  for(let i=0;i<366;i++){
 
-    const day =
-      localDateString(
-        addDays(base,i)
-      );
+    const day = localDateString(addDays(base,i));
 
-    if(
-      !seatOccursOnDate(
-        candidate,
-        day
-      )
-    )
+    if(!seatOccursOnDate(candidate,day))
       continue;
 
-    for(
-      const existing of
-      seatAllocations
-    ){
+    for(const existing of seatAllocations){
 
-      if(
-        editingId &&
-        String(existing.id) ===
-        String(editingId)
-      )
+      if(editingId && String(existing.id) === String(editingId))
         continue;
 
-      if(
-        String(existing.tableId) !==
-        String(candidate.tableId)
-      )
+      if(String(existing.tableId) !== String(candidate.tableId))
         continue;
 
-      if(
-        String(existing.seatCode) !==
-        String(candidate.seatCode)
-      )
+      if(String(existing.seatCode) !== String(candidate.seatCode))
         continue;
 
-      if(
-        seatOccursOnDate(
-          existing,
-          day
-        )
-      ){
+      if(String(existing.period || 'morning') !== String(candidate.period || 'morning'))
+        continue;
 
+      if(seatOccursOnDate(existing,day))
         return true;
-
-      }
-
     }
-
   }
 
   return false;
-
 }
 
 async function saveSeatAllocation(event){
@@ -2495,66 +2417,34 @@ async function saveSeatAllocation(event){
   event.preventDefault();
 
   if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
+    alert('Supabase indisponível.');
     return;
-
   }
 
-  const id =
-    $('s-existing-id').value;
+  const id = $('s-existing-id').value;
+  const table = $('s-table-id').value;
+  const period = $('s-period').value || 'morning';
 
   const data = {
-
-    tableId:
-      $('s-table-id').value,
-
-    seatCode:
-      $('s-seat-code').value,
-
-    collabName:
-      $('s-collab-select').value,
-
-    startDate:
-      $('s-start-date').value,
-
-    recurrence:
-      $('s-recurrence').value,
-
-    exceptDay:
-      $('s-except-day').value
-
+    tableId: storageTableId(table, period),
+    seatCode: $('s-seat-code').value,
+    collabName: $('s-collab-select').value,
+    startDate: $('s-start-date').value,
+    recurrence: $('s-recurrence').value,
+    exceptDay: $('s-except-day').value,
+    period
   };
 
-  if(
-    !data.collabName ||
-    !data.startDate
-  ){
-
-    alert(
-      'Preencha colaborador e data.'
-    );
-
+  if(!data.collabName || !data.startDate){
+    alert('Preencha colaborador e data.');
     return;
-
   }
 
-  if(
-    seatConflict(
-      data,
-      id
-    )
-  ){
-
+  if(seatConflict(data,id)){
     alert(
-      'Este assento já possui uma alocação conflitante.'
+      `Este assento já possui uma alocação conflitante no período da ${period === 'morning' ? 'manhã' : 'tarde'}.`
     );
-
     return;
-
   }
 
   try{
@@ -2562,44 +2452,81 @@ async function saveSeatAllocation(event){
     let response;
 
     if(id){
-
-      response =
-        await db
-          .from('seat_allocations')
-          .update(data)
-          .eq('id',id)
-          .select()
-          .single();
-
+      response = await db
+        .from('seat_allocations')
+        .update(data)
+        .eq('id',id)
+        .select()
+        .single();
     }else{
-
-      response =
-        await db
-          .from('seat_allocations')
-          .insert([data])
-          .select()
-          .single();
-
+      response = await db
+        .from('seat_allocations')
+        .insert([data])
+        .select()
+        .single();
     }
 
     if(response.error)
       throw response.error;
 
     closeSeatModal();
-
     await loadData();
 
   }catch(error){
 
     console.error(error);
 
+    // Compatibilidade: a separação também está no tableId,
+    // portanto o sistema continua funcionando sem a coluna "period".
+    const message = String(error?.message || '').toLowerCase();
+
+    if(message.includes('period') || message.includes('column') || message.includes('schema cache')){
+
+      try{
+
+        const fallbackData = {...data};
+        delete fallbackData.period;
+
+        let fallback;
+
+        if(id){
+          fallback = await db
+            .from('seat_allocations')
+            .update(fallbackData)
+            .eq('id',id)
+            .select()
+            .single();
+        }else{
+          fallback = await db
+            .from('seat_allocations')
+            .insert([fallbackData])
+            .select()
+            .single();
+        }
+
+        if(fallback.error)
+          throw fallback.error;
+
+        closeSeatModal();
+        await loadData();
+        return;
+
+      }catch(fallbackError){
+
+        alert(
+          'Erro ao salvar assento: ' +
+          fallbackError.message
+        );
+
+        return;
+      }
+    }
+
     alert(
       'Erro ao salvar assento: ' +
       error.message
     );
-
   }
-
 }
 
 async function removeSeatAllocation(){
