@@ -1,768 +1,1333 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOJA CONCEITO BE | Coworking Pro BE</title>
+
+<title>DBVO | COWORKING PRO</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+
+/* =========================================================
+   DBVO — IDENTIDADE VISUAL
+========================================================= */
+
+*,
+*::before,
+*::after{
+  box-sizing:border-box;
+  font-family:N27,sans-serif;
+}
+
 :root{
-  --bg:#f7f7f6;
-  --surface:#ffffff;
-  --surface-soft:#fafafa;
-  --line:#e8e8e6;
-  --line-strong:#dededb;
+  --dbvo-black:#111111;
+  --dbvo-gray:#646464;
+  --dbvo-light:#C8C8C8;
+
+  --bg:#C8C8C8;
+  --surface:#C8C8C8;
+  --surface-soft:#C8C8C8;
+  --line:#646464;
+  --line-soft:#C8C8C8;
   --text:#111111;
-  --muted:#737373;
-  --black:#111111;
-  --hover:#f3f3f1;
+  --muted:#646464;
+
   --radius:12px;
 }
+
+html,
 body{
   margin:0;
-  font-family:N27,Inter,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  letter-spacing:-.01em;
+  width:100%;
+  height:100%;
 }
-button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
-button{cursor:pointer}
-button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
-button{cursor:pointer}
+
+body{
+  font-family:N27,sans-serif;
+  background:var(--dbvo-light);
+  color:var(--dbvo-black);
+  letter-spacing:-.01em;
+  overflow:hidden;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+  font-family:N27,sans-serif;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header{
-  height:68px;
-  background:#fff;
-  border-bottom:1px solid var(--line);
+  height:64px;
+  background:var(--dbvo-black);
+  color:var(--dbvo-light);
+  border-bottom:2px solid var(--dbvo-gray);
+
   display:flex;
   align-items:center;
   justify-content:space-between;
+
   padding:0 30px;
+
   position:sticky;
   top:0;
-  z-index:20
+  z-index:20;
+}
+
+.brand-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-upload{
+  width:42px;
+  height:42px;
+
+  border:1.5px dashed var(--dbvo-light);
+  border-radius:9px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+  cursor:pointer;
+
+  background:var(--dbvo-gray);
+}
+
+.logo-upload input{
+  display:none;
+}
+
+.logo-upload img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.logo-upload span{
+  font-size:23px;
+  color:var(--dbvo-light);
+  font-weight:700;
 }
 
 .logo{
-  font-size:25px;
+  font-size:19px;
   font-weight:900;
-  letter-spacing:-1px
+  letter-spacing:.03em;
+  text-transform:uppercase;
 }
 
 .header-right{
   display:flex;
   align-items:center;
-  gap:12px
+  gap:10px;
 }
 
 .status{
-  padding:7px 12px;
+  padding:6px 11px;
   border-radius:20px;
-  background:#dcfce7;
-  color:#15803d;
-  font-size:12px;
-  font-weight:800
+
+  background:var(--dbvo-light);
+  color:var(--dbvo-black);
+
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
 }
 
 .status.offline{
-  background:#fff7ed;
-  color:#c2410c
+  background:var(--dbvo-gray);
+  color:var(--dbvo-light);
 }
 
+.auth-user{
+  font-size:10px;
+  color:var(--dbvo-light);
+
+  max-width:190px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.header .btn{
+  background:transparent;
+  color:var(--dbvo-light);
+  border-color:var(--dbvo-gray);
+}
+
+.header .btn:hover{
+  background:var(--dbvo-gray);
+  border-color:var(--dbvo-light);
+  color:var(--dbvo-light);
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
 .container{
-  max-width:1500px;
+  max-width:1540px;
   margin:auto;
-  padding:20px 24px
+  padding:16px 20px;
 }
 
 .toolbar{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:15px;
-  margin-bottom:20px;
-  flex-wrap:wrap
+
+  gap:12px;
+  margin-bottom:12px;
+
+  flex-wrap:wrap;
 }
 
 .tabs{
   display:flex;
-  gap:6px
+  gap:4px;
+
+  background:var(--dbvo-light);
+
+  padding:4px;
+
+  border-radius:10px;
+  border:1px solid var(--dbvo-gray);
 }
 
 .tab{
   border:0;
-  background:#eeeeec;
-  padding:9px 16px;
-  border-radius:10px;
-  font-weight:700
+  background:transparent;
+
+  color:var(--dbvo-gray);
+
+  padding:8px 13px;
+
+  border-radius:8px;
+
+  font-size:10px;
+  font-weight:900;
+
+  text-transform:uppercase;
+
+  transition:.18s ease;
+}
+
+.tab:hover{
+  background:var(--dbvo-gray);
+  color:var(--dbvo-light);
 }
 
 .tab.active{
-  background:#111;
-  color:#fff
+  background:var(--dbvo-black);
+  color:var(--dbvo-light);
 }
 
 .actions{
   display:flex;
-  gap:8px;
-  flex-wrap:wrap
+  gap:7px;
+  flex-wrap:wrap;
 }
 
 .btn{
-  border:1px solid var(--line-strong);
-  background:#fff;
-  padding:9px 14px;
-  border-radius:10px;
-  font-weight:700
+  border:1px solid var(--dbvo-gray);
+
+  background:var(--dbvo-light);
+  color:var(--dbvo-black);
+
+  padding:8px 12px;
+
+  border-radius:8px;
+
+  font-size:10px;
+  font-weight:900;
+
+  text-transform:uppercase;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    transform .18s ease;
 }
 
-.btn{transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease}
-.btn:hover{background:#f3f3f1;border-color:#d4d4d1;transform:translateY(-1px)}
-.btn:active{transform:translateY(0)}
+.btn:hover{
+  background:var(--dbvo-gray);
+  border-color:var(--dbvo-black);
+  color:var(--dbvo-light);
+  transform:translateY(-1px);
+}
+
+.btn:active{
+  transform:translateY(0);
+}
 
 .btn-primary{
-  background:#111;
-  color:#fff;
-  border-color:#000000
+  background:var(--dbvo-black);
+  color:var(--dbvo-light);
+  border-color:var(--dbvo-black);
+}
+
+.btn-primary:hover{
+  background:var(--dbvo-gray);
+  border-color:var(--dbvo-black);
+  color:var(--dbvo-light);
 }
 
 .btn-danger{
-  color:#dc2626;
-  border-color:#fecaca
+  color:var(--dbvo-black);
+  border-color:var(--dbvo-gray);
 }
+
+.btn-success{
+  color:var(--dbvo-black);
+  border-color:var(--dbvo-gray);
+}
+
+.auth-btn{
+  min-width:100px;
+}
+
+/* =========================================================
+   CONTROLES DA AGENDA
+========================================================= */
 
 .week-controls{
   display:flex;
   align-items:center;
-  gap:8px
+  gap:7px;
 }
 
 .week-controls input,
 .date-input{
-  padding:9px 11px;
-  border:1px solid var(--line-strong);
-  border-radius:10px;
-  background:#fff
+  padding:8px 10px;
+
+  border:1px solid var(--dbvo-gray);
+  border-radius:8px;
+
+  background:var(--dbvo-light);
+  color:var(--dbvo-black);
+
+  font-size:10px;
 }
 
-/* CALENDÁRIO */
-.calendar-wrapper{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 2px 12px rgba(0,0,0,.035);
+.week-controls strong,
+#week-label{
+  text-transform:uppercase;
+  font-size:11px;
+  font-weight:900;
 }
+
+/* =========================================================
+   CALENDÁRIO
+========================================================= */
+
+.calendar-wrapper{
+  background:var(--dbvo-light);
+
+  border:1px solid var(--dbvo-gray);
+  border-radius:14px;
+
+  overflow:hidden;
+
+  box-shadow:0 8px 24px rgba(17,17,17,.10);
+}
+
 .calendar{
   width:100%;
+
   display:grid;
-  grid-template-columns:64px repeat(7,minmax(0,1fr));
-  grid-template-rows:44px minmax(0,1fr);
+
+  grid-template-columns:
+    64px
+    repeat(7,minmax(0,1fr));
+
+  grid-template-rows:
+    44px
+    minmax(0,1fr);
+
+  height:100%;
 }
+
 .daily-calendar{
   width:100%;
+
   display:grid;
-  grid-template-columns:64px minmax(0,1fr);
-  grid-template-rows:44px minmax(0,1fr);
+
+  grid-template-columns:
+    64px
+    minmax(0,1fr);
+
+  grid-template-rows:
+    44px
+    minmax(0,1fr);
+
+  height:100%;
 }
+
 .grid-header{
-  background:#fbfbfa;
-  border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line);
+  background:var(--dbvo-gray);
+
+  color:var(--dbvo-light);
+
+  border-right:1px solid var(--dbvo-light);
+  border-bottom:1px solid var(--dbvo-light);
+
   padding:6px 5px;
+
   text-align:center;
-  font-weight:800;
+
+  font-weight:900;
+
   min-height:44px;
+
   display:flex;
   flex-direction:column;
   justify-content:center;
+
   line-height:1.05;
+
   position:relative;
   z-index:4;
+
+  text-transform:uppercase;
 }
+
 .grid-header small{
   font-weight:500;
-  color:#777;
-  font-size:10px;
+  color:var(--dbvo-light);
+  font-size:9px;
   margin-top:3px;
+  text-transform:none;
 }
+
 .time-axis{
   position:relative;
+
   height:100%;
-  border-right:1px solid var(--line);
-  background:#fcfcfb;
+
+  border-right:1px solid var(--dbvo-gray);
+
+  background:var(--dbvo-light);
+
   overflow:hidden;
 }
+
 .time-label{
   position:absolute;
+
   left:0;
   right:0;
+
   transform:translateY(-50%);
+
   text-align:center;
-  font-size:10px;
-  font-weight:700;
-  color:#8a8a87;
+
+  font-size:9px;
+  font-weight:900;
+
+  color:var(--dbvo-gray);
+
   pointer-events:none;
 }
-.time-label:first-child{transform:none}
+
+.time-label:first-child{
+  transform:none;
+}
+
 .day-timeline{
   position:relative;
+
   min-width:0;
   height:100%;
-  border-right:1px solid var(--line);
+
+  border-right:1px solid var(--dbvo-gray);
+
   background:
     repeating-linear-gradient(
       to bottom,
       transparent 0,
-      transparent calc(9.0909% - 1px),
-      var(--line) calc(9.0909% - 1px),
-      var(--line) 9.0909%
+      transparent calc(4.54545% - 1px),
+      var(--dbvo-gray) calc(4.54545% - 1px),
+      var(--dbvo-gray) 4.54545%
     ),
-    #fff;
+    var(--dbvo-light);
+
   overflow:visible;
 }
-.day-timeline:hover{background-color:#fcfcfb}
+
+.day-timeline:hover{
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(4.54545% - 1px),
+      var(--dbvo-gray) calc(4.54545% - 1px),
+      var(--dbvo-gray) 4.54545%
+    ),
+    var(--dbvo-light);
+}
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
 .event-card{
   position:absolute;
-  left:5px;
-  right:5px;
+
+  left:6px;
+  right:6px;
+
   top:var(--event-top,0%);
   height:var(--event-height,50px);
+
   min-height:24px;
+
   margin:0;
-  background:#111;
-  color:#fff;
-  border-radius:10px;
-  padding:6px 8px;
+
+  background:var(--dbvo-gray);
+  color:var(--dbvo-light);
+
+  border:1px solid var(--dbvo-black);
+  border-left:4px solid var(--dbvo-black);
+
+  border-radius:8px;
+
+  padding:5px 7px;
+
   cursor:pointer;
-  font-size:10px;
-  line-height:1.15;
+
+  font-size:9px;
+  line-height:1.12;
+
   white-space:normal;
-  overflow:auto;
-  scrollbar-width:none;
+
+  overflow:hidden;
+
   z-index:10;
-  box-shadow:0 2px 8px rgba(0,0,0,.10);
-  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
+
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+
+  box-shadow:0 3px 9px rgba(17,17,17,.16);
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease;
 }
+
 .event-card:hover{
   transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  box-shadow:0 6px 14px rgba(17,17,17,.22);
 }
-.event-card.pending{
-  background:rgba(17,17,17,.38);
-  backdrop-filter:blur(5px);
-  -webkit-backdrop-filter:blur(5px);
-  border:1px dashed rgba(255,255,255,.75);
-}
+
 .event-title{
-  font-weight:800;
-  font-size:10px;
-  margin-bottom:3px;
-  line-height:1.15;
+  font-weight:900;
+  font-size:9px;
+
+  line-height:1.08;
+
+  margin:0;
+
+  text-transform:uppercase;
+
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
+
 .event-time{
-  opacity:.85;
-  font-size:9px;
+  opacity:.9;
+
+  font-size:8px;
+
+  color:var(--dbvo-light);
+
+  line-height:1.1;
 }
+
 .event-owner{
-  margin-top:3px;
-  font-size:9px;
-  opacity:.78;
+  margin-top:auto;
+
+  font-size:8px;
+
+  color:var(--dbvo-light);
+
+  line-height:1.1;
 }
+
+.event-card.pending{
+  background:var(--dbvo-light);
+  color:var(--dbvo-gray);
+
+  border:1px dashed var(--dbvo-gray);
+
+  backdrop-filter:blur(5px);
+}
+
 .event-card.pending .event-title,
 .event-card.pending .event-owner{
-  filter:blur(4px);
-  user-select:none;
+  filter:blur(3px);
 }
-@media(max-width:899px){
-  .calendar-wrapper{overflow:auto}
-  .calendar{min-width:900px}
-  .daily-calendar{min-width:650px}
+
+.event-card.pending .event-time{
+  color:var(--dbvo-gray);
 }
-/* ASSENTOS */
+
+/* =========================================================
+   ASSENTOS
+========================================================= */
 
 .seats-view{
-  display:none
+  display:none;
 }
 
 .seat-toolbar{
-  background:#fff;
-  border:1px solid var(--line);
+  background:var(--dbvo-light);
+
+  border:1px solid var(--dbvo-gray);
   border-radius:12px;
-  padding:15px;
-  margin-bottom:20px;
+
+  padding:14px;
+
+  margin-bottom:18px;
+
   display:flex;
+
   justify-content:space-between;
   align-items:center;
+
   gap:15px;
-  flex-wrap:wrap
+
+  flex-wrap:wrap;
+
+  box-shadow:0 5px 16px rgba(17,17,17,.08);
 }
 
 .rooms{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
-  gap:20px
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(330px,1fr));
+
+  gap:18px;
 }
 
 .room{
-  background:#fff;
-  border:1px solid var(--line);
+  background:var(--dbvo-light);
+
+  border:1px solid var(--dbvo-gray);
+
   border-radius:14px;
-  padding:20px;
-  box-shadow:0 2px 12px rgba(0,0,0,.035)
+
+  padding:18px;
+
+  box-shadow:0 6px 20px rgba(17,17,17,.08);
 }
 
 .room h3{
-  margin:0 0 18px
+  margin:0 0 18px;
+
+  font-size:13px;
+  font-weight:900;
+
+  text-transform:uppercase;
 }
 
-.table{
-  background:#ececea;;
-  border-radius:10px;
-  padding:12px;
-  margin-bottom:22px
+.shift-title{
+  color:var(--dbvo-gray);
+
+  font-size:9px;
+  font-weight:900;
+
+  text-transform:uppercase;
 }
 
-.table-name{
+.room-layout{
+  min-height:255px;
+
+  padding:12px 6px;
+
+  display:grid;
+
+  grid-template-columns:1fr;
+
+  grid-template-rows:
+    78px
+    92px
+    78px;
+
+  align-items:center;
+  justify-items:center;
+
+  gap:0;
+}
+
+.room-table-shape{
+  grid-column:1;
+  grid-row:2;
+
+  width:150px;
+  height:88px;
+
+  border:2px solid var(--dbvo-black);
+  border-radius:6px;
+
+  background:var(--dbvo-light);
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
   text-align:center;
-  font-weight:800;
-  font-size:12px;
-  margin-bottom:8px
+
+  font-size:11px;
+  font-weight:900;
+
+  color:var(--dbvo-black);
+
+  z-index:1;
+}
+
+.marketing-table{
+  width:175px;
 }
 
 .seats-row{
+  position:relative;
+
+  z-index:3;
+
   display:flex;
+
   justify-content:center;
+  align-items:center;
+
   gap:8px;
-  margin:8px 0
+
+  width:100%;
+}
+
+.room-layout > .seats-row:nth-of-type(2){
+  grid-column:1;
+  grid-row:1;
+}
+
+.room-layout > .seats-row:nth-of-type(3){
+  grid-column:1;
+  grid-row:3;
 }
 
 .seat-chair{
   width:115px;
   min-height:55px;
-  border:1.5px solid #d7d7d4;
-  border-radius:10px;
-  background:#fbfbfa;
+
+  border:1.5px solid var(--dbvo-gray);
+  border-radius:9px;
+
+  background:var(--dbvo-light);
+
+  color:var(--dbvo-black);
+
   padding:7px;
+
   display:flex;
+
   flex-direction:column;
+
   justify-content:center;
   align-items:center;
+
   cursor:pointer;
-  transition:.15s
+
+  transition:.15s;
 }
 
 .seat-chair:hover{
   transform:translateY(-2px);
-  border-color:#777
+
+  border-color:var(--dbvo-black);
 }
 
 .seat-chair.occupied{
-  background:#111;
-  color:#fff;
-  border-color:#000000
+  background:var(--dbvo-gray);
+  color:var(--dbvo-light);
+
+  border-color:var(--dbvo-black);
 }
 
 .seat-status{
-  font-size:10px;
+  font-size:9px;
+
   margin-top:3px;
+
   text-align:center;
+
   max-width:100px;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
-  white-space:nowrap
+
+  white-space:nowrap;
 }
 
-/* MODAIS */
+/* =========================================================
+   MODAIS
+========================================================= */
 
 .modal-backdrop{
   display:none;
+
   position:fixed;
+
   inset:0;
-  background:rgba(15,23,42,.55);
+
+  background:rgba(17,17,17,.72);
+
   z-index:100;
+
   align-items:center;
   justify-content:center;
-  padding:20px
+
+  padding:20px;
 }
 
 .modal{
-  background:#fff;
+  background:var(--dbvo-light);
+
+  color:var(--dbvo-black);
+
   width:100%;
   max-width:600px;
+
   max-height:90vh;
+
   overflow:auto;
+
   border-radius:15px;
-  box-shadow:0 20px 60px rgba(0,0,0,.2)
+
+  border:1px solid var(--dbvo-gray);
+
+  box-shadow:0 20px 60px rgba(17,17,17,.30);
 }
 
 .modal-header{
-  padding:20px;
-  border-bottom:1px solid var(--line);
+  padding:17px 20px;
+
+  border-bottom:1px solid var(--dbvo-gray);
+
+  background:var(--dbvo-black);
+
+  color:var(--dbvo-light);
+
   display:flex;
+
   justify-content:space-between;
-  align-items:center
+  align-items:center;
 }
 
 .modal-header h2{
   margin:0;
-  font-size:19px
+
+  font-size:15px;
+  font-weight:900;
+
+  text-transform:uppercase;
+}
+
+.modal-subtitle{
+  font-size:9px;
+
+  color:var(--dbvo-light);
+
+  margin-top:3px;
 }
 
 .close{
   border:0;
-  background:none;
+
+  background:transparent;
+
   font-size:25px;
-  color:#777
+
+  color:var(--dbvo-light);
 }
 
 .modal-body{
-  padding:20px
+  padding:20px;
 }
 
 .form-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:14px;
 }
 
 .form-group{
   display:flex;
+
   flex-direction:column;
-  gap:6px
+
+  gap:6px;
 }
 
 .form-group.full{
-  grid-column:1/-1
+  grid-column:1/-1;
 }
 
 .form-group label{
-  font-size:12px;
-  font-weight:800;
-  color:#475569
+  font-size:9px;
+
+  font-weight:900;
+
+  color:var(--dbvo-gray);
+
+  text-transform:uppercase;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea{
-  border:1px solid var(--line-strong);
-  border-radius:10px;
+  border:1px solid var(--dbvo-gray);
+
+  border-radius:9px;
+
   padding:10px;
-  background:#fff
+
+  background:var(--dbvo-light);
+
+  color:var(--dbvo-black);
+
+  font-size:11px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder{
+  color:var(--dbvo-gray);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.date-input:focus,
+.week-controls input:focus{
+  outline:none;
+
+  border-color:var(--dbvo-black);
+
+  box-shadow:
+    0 0 0 2px
+    rgba(17,17,17,.15);
 }
 
 .form-group textarea{
   min-height:80px;
-  resize:vertical
+  resize:vertical;
 }
 
 .modal-footer{
   padding:15px 20px;
-  border-top:1px solid #e5e7eb;
+
+  border-top:1px solid var(--dbvo-gray);
+
   display:flex;
+
   justify-content:space-between;
-  gap:8px
+
+  gap:8px;
 }
 
 .footer-right{
   display:flex;
-  gap:8px
+  gap:8px;
+}
+
+/* =========================================================
+   HORÁRIOS
+========================================================= */
+
+.time-picker-wrap{
+  grid-column:1/-1;
+
+  border:1px solid var(--dbvo-gray);
+
+  border-radius:11px;
+
+  padding:12px;
+
+  background:var(--dbvo-gray);
+}
+
+.time-picker-head{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:9px;
+}
+
+.time-picker-title{
+  font-size:10px;
+
+  font-weight:900;
+
+  color:var(--dbvo-light);
+
+  text-transform:uppercase;
+}
+
+.time-picker-duration{
+  font-size:9px;
+
+  color:var(--dbvo-light);
+
+  font-weight:700;
+}
+
+.time-selects{
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:10px;
+}
+
+.time-select{
+  width:100%;
+
+  border:1px solid var(--dbvo-gray);
+
+  border-radius:9px;
+
+  background:var(--dbvo-light);
+
+  color:var(--dbvo-black);
+
+  padding:10px 12px;
+
+  font-weight:800;
+}
+
+.duration-chips{
+  display:flex;
+
+  gap:6px;
+
+  flex-wrap:wrap;
+
+  margin-top:8px;
+}
+
+.duration-chip{
+  border:1px solid var(--dbvo-light);
+
+  background:var(--dbvo-light);
+
+  color:var(--dbvo-black);
+
+  border-radius:999px;
+
+  padding:6px 10px;
+
+  font-size:9px;
+
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+.duration-chip:hover,
+.duration-chip.active{
+  background:var(--dbvo-black);
+
+  color:var(--dbvo-light);
+
+  border-color:var(--dbvo-black);
+}
+
+/* =========================================================
+   SOLICITAÇÃO / ADMIN
+========================================================= */
+
+.requester-box{
+  grid-column:1/-1;
+
+  padding:11px 12px;
+
+  border-radius:10px;
+
+  background:var(--dbvo-gray);
+
+  border:1px solid var(--dbvo-black);
+
+  font-size:10px;
+
+  color:var(--dbvo-light);
+}
+
+.approvals-modal .modal{
+  max-width:820px;
+}
+
+.request-item{
+  display:grid;
+
+  grid-template-columns:
+    1fr auto;
+
+  gap:14px;
+
+  align-items:center;
+
+  padding:14px 0;
+
+  border-bottom:1px solid var(--dbvo-gray);
+}
+
+.request-main strong{
+  display:block;
+
+  font-size:12px;
+
+  margin-bottom:4px;
+
+  text-transform:uppercase;
+}
+
+.request-meta{
+  font-size:9px;
+
+  color:var(--dbvo-gray);
+
+  line-height:1.5;
+}
+
+.request-actions{
+  display:flex;
+  gap:6px;
+}
+
+.approval-badge{
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  min-width:20px;
+  height:20px;
+
+  padding:0 6px;
+
+  border-radius:999px;
+
+  background:var(--dbvo-light);
+
+  color:var(--dbvo-black);
+
+  font-size:9px;
+
+  font-weight:900;
+}
+
+.admin-only{
+  display:none;
+}
+
+body.is-admin .admin-only{
+  display:inline-flex;
+}
+
+body.is-admin .request-only{
+  display:none;
+}
+
+body:not(.is-admin) .admin-only-block{
+  display:none!important;
+}
+
+.admin-add-form{
+  display:grid;
+
+  grid-template-columns:
+    1fr auto;
+
+  gap:10px;
+
+  align-items:end;
+}
+
+.admin-note{
+  font-size:9px;
+
+  color:var(--dbvo-gray);
+
+  margin:10px 0 14px;
+
+  padding:9px 10px;
+
+  border-radius:9px;
+
+  background:var(--dbvo-gray);
+}
+
+.admin-row{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  gap:12px;
+
+  padding:11px 0;
+
+  border-bottom:1px solid var(--dbvo-gray);
+}
+
+.admin-row strong{
+  font-size:10px;
+
+  text-transform:lowercase;
+}
+
+.admin-primary{
+  font-size:8px;
+
+  padding:4px 7px;
+
+  border-radius:999px;
+
+  background:var(--dbvo-black);
+
+  border:1px solid var(--dbvo-black);
+
+  color:var(--dbvo-light);
 }
 
 .empty-state{
   text-align:center;
+
   padding:30px;
-  color:#777
+
+  color:var(--dbvo-gray);
+
+  font-size:10px;
 }
 
-
-.brand-area{display:flex;align-items:center;gap:12px}
-.logo-upload{width:42px;height:42px;border:1.5px dashed #94a3b8;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#fbfbfa;flex:none}
-.logo-upload input{display:none}
-.logo-upload img{width:100%;height:100%;object-fit:contain}
-.logo-upload span{font-size:24px;color:#777;font-weight:500}
-.logo{font-size:25px;font-weight:900;letter-spacing:-1px}
-.daily-calendar{min-width:650px;display:grid;grid-template-columns:75px 1fr}
-.daily-calendar .day-cell{min-height:82px}
-@media(max-width:700px){.brand-area{gap:8px}.logo{font-size:18px}.logo-upload{width:36px;height:36px}}
-
-@media(max-width:700px){
-  .container{padding:12px}
-  .header{padding:0 14px}
-  .form-grid{grid-template-columns:1fr}
-  .form-group.full{grid-column:auto}
-}
-
-/* Layout das mesas */
-.room-layout{
-  min-height:255px;
-  padding:12px 6px;
-  display:grid;
-  grid-template-columns:1fr;
-  grid-template-rows:78px 92px 78px;
-  align-items:center;
-  justify-items:center;
-  gap:0;
-}
-.room-table-shape{
-  grid-column:1;
-  grid-row:2;
-  position:static;
-  transform:none;
-  width:150px;
-  height:88px;
-  border:2px solid #000;
-  border-radius:6px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:12px;
-  font-weight:900;
-  z-index:1;
-}
-.room-table-shape span{color:#000}
-.marketing-table{width:175px}
-.seats-row{
-  position:relative;
-  z-index:3;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  width:100%;
-}
-.room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
-.room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
-
-.tab,.btn,.date-input,.week-controls input,select,input,textarea{
-  transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;
-}
-.tab:not(.active):hover{background:#e8e8e5}
-.tab.active{box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus,
-.date-input:focus,.week-controls input:focus{
-  outline:none;
-  border-color:#aaa;
-  box-shadow:0 0 0 3px rgba(0,0,0,.045);
-}
-
-
-/* AJUSTES VISUAIS SOLICITADOS */
-*, *::before, *::after{font-family:N27,Inter,Arial,sans-serif}
-body{overflow:hidden}
-@media(max-width:899px){body{overflow:auto}}
-.auth-btn{min-width:104px}
-.auth-user{font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.approval-badge{
-  display:none;align-items:center;justify-content:center;min-width:20px;height:20px;
-  padding:0 6px;border-radius:999px;background:#111;color:#fff;font-size:10px;font-weight:900;
-}
-.time-picker-wrap{
-  grid-column:1/-1;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px;
-  background:#fbfbfa;
-}
-.time-picker-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
-.time-picker-title{font-size:12px;font-weight:900}
-.time-picker-duration{font-size:10px;color:#777;font-weight:700}
-.time-selects{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.time-select{
-  width:100%;border:1px solid var(--line-strong);border-radius:10px;background:#fff;
-  padding:10px 12px;font-weight:800;appearance:auto;
-}
-.duration-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.duration-chip{
-  border:1px solid var(--line-strong);background:#fff;border-radius:999px;padding:6px 10px;
-  font-size:10px;font-weight:800;cursor:pointer;
-}
-.duration-chip:hover,.duration-chip.active{background:#111;color:#fff;border-color:#111}
-.requester-box{
-  grid-column:1/-1;padding:11px 12px;border-radius:11px;background:#f3f3f1;
-  border:1px solid var(--line);font-size:11px;color:#555;
-}
-.approvals-modal .modal{max-width:820px}
-.request-item{
-  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
-  padding:14px 0;border-bottom:1px solid var(--line);
-}
-.request-main strong{display:block;font-size:13px;margin-bottom:4px}
-.request-meta{font-size:10px;color:#737373;line-height:1.5}
-.request-actions{display:flex;gap:6px}
-.btn-success{color:#15803d;border-color:#bbf7d0}
-.admin-only{display:none}
-body.is-admin .admin-only{display:inline-flex}
-body.is-admin .request-only{display:none}
-body:not(.is-admin) .admin-only-block{display:none!important}
-@media(max-width:700px){
-  .time-selects{grid-template-columns:1fr}
-  .request-item{grid-template-columns:1fr}
-  .request-actions{justify-content:flex-end}
-}
-
+/* =========================================================
+   RESPONSIVO
+========================================================= */
 
 @media(min-width:900px){
-  .calendar-wrapper{height:calc(100vh - 145px);max-height:none}
-  .calendar,.daily-calendar{height:100%}
-  .event-card{overflow:auto;scrollbar-width:none}
-  .event-card::-webkit-scrollbar{display:none}
+
+  .calendar-wrapper{
+    height:calc(100vh - 150px)!important;
+  }
+
+  .calendar,
+  .daily-calendar{
+    height:100%!important;
+  }
+
+  .day-timeline{
+    overflow:visible;
+  }
+
 }
 
+@media(max-width:899px){
 
-/* =========================
-   NOVA DIREÇÃO VISUAL BE
-   ========================= */
-:root{
-  --be-green:#b7d43b;
-  --be-green-soft:#eef5cf;
-  --be-ink:#101010;
-  --be-paper:#f5f5f2;
-  --be-line:#e4e4df;
+  body{
+    overflow:auto;
+  }
+
+  .calendar-wrapper{
+    overflow:auto;
+  }
+
+  .calendar{
+    min-width:900px;
+  }
+
+  .daily-calendar{
+    min-width:650px;
+  }
+
 }
-body{
-  background:var(--be-paper);
-  font-size:13px;
-}
-.header{
-  height:72px;
-  background:rgba(255,255,255,.94);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--be-line);
-  padding:0 34px;
-}
-.logo{
-  font-size:20px;
-  letter-spacing:-.7px;
-}
-.brand-area:after{
-  content:'A MORADIA DO FUTURO';
-  display:block;
-  font-size:8px;
-  font-weight:800;
-  letter-spacing:.16em;
-  color:#777;
-  margin-left:2px;
-}
-.brand-area{gap:10px}
-.logo-upload{
-  width:38px;height:38px;border:0;border-radius:11px;background:var(--be-ink);color:#fff;
-}
-.logo-upload span{color:var(--be-green);font-size:22px}
-.status{
-  background:var(--be-green-soft);
-  color:#4e6410;
-  border:1px solid #dbe9a4;
-}
-.container{max-width:1540px;padding:22px 28px}
-.toolbar{margin-bottom:14px}
-.tabs{
-  background:#e9e9e5;
-  border-radius:12px;
-  padding:3px;
-}
-.tab{
-  background:transparent;
-  padding:8px 14px;
-  border-radius:9px;
-  font-size:12px;
-}
-.tab.active{
-  background:#fff;
-  color:#111;
-  box-shadow:0 1px 5px rgba(0,0,0,.08);
-}
-.btn{
-  border-color:#deded9;
-  border-radius:9px;
-  background:#fff;
-  padding:8px 12px;
-  font-size:12px;
-}
-.btn-primary{
-  background:var(--be-ink);
-  border-color:var(--be-ink);
-  color:#fff;
-}
-.btn-primary:hover{background:#242424;color:#fff}
-.week-controls{gap:6px}
-.week-controls .btn{width:34px;height:34px;padding:0}
-.week-controls input,.date-input{height:34px;border-radius:9px}
-#week-label{font-size:13px;letter-spacing:-.02em}
-.calendar-wrapper{
-  border:1px solid var(--be-line);
-  border-radius:16px;
-  box-shadow:0 8px 30px rgba(0,0,0,.055);
-}
-.grid-header{
-  background:#fbfbf9;
-  border-color:var(--be-line);
-  font-size:11px;
-}
-.grid-header strong{font-size:12px}
-.grid-header small{font-size:9px}
-.time-axis{background:#fafaf8;border-color:var(--be-line)}
-.time-label{font-size:9px;color:#92928d}
-.day-timeline{
-  background:
-    repeating-linear-gradient(to bottom,transparent 0,transparent calc(9.0909% - 1px),#ededeb calc(9.0909% - 1px),#ededeb 9.0909%),
-    #fff;
-}
-.day-timeline:hover{background-color:#fcfcfa}
-.event-card{
-  left:4px;right:4px;
-  border-radius:8px;
-  padding:7px 8px;
-  background:#111;
-  border-left:3px solid var(--be-green);
-  box-shadow:0 3px 10px rgba(0,0,0,.12);
-  font-size:10px;
-}
-.event-title{
-  font-size:10px;
-  line-height:1.2;
-  margin:0 0 4px;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-.event-time{font-size:9px;opacity:.78}
-.event-owner{font-size:9px;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.event-card.pending{border-left-color:#b9b9b5;background:rgba(30,30,30,.46)}
-.room,.seat-toolbar{
-  border-color:var(--be-line);
-  box-shadow:0 5px 20px rgba(0,0,0,.035);
-}
-.room h3{font-size:15px;letter-spacing:-.03em}
-.room-table-shape{border-color:#111;box-shadow:inset 0 0 0 4px #fff, inset 0 0 0 6px #111}
-.shift-title{font-size:9px;font-weight:900;letter-spacing:.12em;color:#777;margin:4px 0}
-.seat-chair.occupied{background:#111;border-color:#111}
-.modal{border-radius:18px}
-.modal-header{padding:18px 20px}
-.modal-header h2{font-size:17px;letter-spacing:-.03em}
-.modal-subtitle{font-size:10px;color:#888;margin-top:3px}
-.form-group label{font-size:11px;color:#60605c}
-.form-group input,.form-group select,.form-group textarea{border-radius:9px}
-.admin-add-row{display:grid;grid-template-columns:1fr auto;gap:8px}
-.admin-add-row input{border:1px solid var(--line-strong);border-radius:9px;padding:10px}
-.admins-list{margin-top:18px}
-.admin-row{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--be-line);
-}
-.admin-email{font-size:12px;font-weight:800}
-.admin-role{font-size:9px;color:#777;margin-top:2px}
-.admin-note{margin-top:16px;padding:10px 12px;border-radius:10px;background:var(--be-green-soft);font-size:10px;color:#56611e}
+
 @media(max-width:700px){
-  .header{padding:0 14px}
-  .brand-area:after{display:none}
-  .admin-add-row{grid-template-columns:1fr}
+
+  .header{
+    padding:0 14px;
+  }
+
+  .logo{
+    font-size:15px;
+  }
+
+  .logo-upload{
+    width:36px;
+    height:36px;
+  }
+
+  .container{
+    padding:12px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-group.full{
+    grid-column:auto;
+  }
+
+  .time-selects{
+    grid-template-columns:1fr;
+  }
+
+  .request-item{
+    grid-template-columns:1fr;
+  }
+
+  .request-actions{
+    justify-content:flex-end;
+  }
+
+  .admin-add-form{
+    grid-template-columns:1fr;
+  }
+
+}
+
+/* =========================================================
+   ESTADO ADMINISTRADOR
+========================================================= */
+
+body.is-admin #auth-btn{
+  border-color:var(--dbvo-light);
 }
 
 </style>
@@ -771,21 +1336,61 @@ body{
 <body>
 
 <header class="header">
+
   <div class="brand-area">
-    <label class="logo-upload" title="Adicionar logo">
-      <input id="logo-input" type="file" accept="image/*" onchange="handleLogoUpload(event)">
-      <img id="brand-logo" alt="Logo" style="display:none">
+
+    <label class="logo-upload" title="ADICIONAR LOGO">
+
+      <input
+        id="logo-input"
+        type="file"
+        accept="image/*"
+        onchange="handleLogoUpload(event)"
+      >
+
+      <img
+        id="brand-logo"
+        alt="LOGO"
+        style="display:none"
+      >
+
       <span id="logo-placeholder">+</span>
+
     </label>
-    <div class="logo">LOJA CONCEITO BE</div>
+
+    <div class="logo">
+      DBVO
+    </div>
+
   </div>
 
   <div class="header-right">
-    <span id="connection-status" class="status offline">● Carregando...</span>
-    <span id="auth-user" class="auth-user"></span>
-    <span id="approval-badge" class="approval-badge"></span>
-    <button id="auth-btn" class="btn auth-btn" onclick="openAuthModal()">Entrar</button>
+
+    <span
+      id="connection-status"
+      class="status offline">
+      ● CARREGANDO...
+    </span>
+
+    <span
+      id="auth-user"
+      class="auth-user">
+    </span>
+
+    <span
+      id="approval-badge"
+      class="approval-badge">
+    </span>
+
+    <button
+      id="auth-btn"
+      class="btn auth-btn"
+      onclick="openAuthModal()">
+      ENTRAR
+    </button>
+
   </div>
+
 </header>
 
 <main class="container">
@@ -793,51 +1398,78 @@ body{
   <div class="toolbar">
 
     <div class="tabs">
-      <button id="btn-tab-coworking"
-              class="tab active"
-              onclick="switchTab('coworking')">
-        Coworking Pro BE
+
+      <button
+        id="btn-tab-coworking"
+        class="tab active"
+        onclick="switchTab('coworking')">
+        COWORKING PRO DBVO
       </button>
 
-      <button id="btn-tab-seats"
-              class="tab"
-              onclick="switchTab('seats')">
-        Mapeamento de lugares
+      <button
+        id="btn-tab-seats"
+        class="tab"
+        onclick="switchTab('seats')">
+        MAPEAMENTO DE LUGARES
       </button>
+
     </div>
 
     <div class="actions">
 
-      <button class="btn"
-              onclick="openCollabModal()">
-        Colaboradores
+      <button
+        class="btn"
+        onclick="openCollabModal()">
+        COLABORADORES
       </button>
 
-      <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">
-        Visualização: Semanal
+      <button
+        class="btn"
+        onclick="toggleAgendaView()"
+        id="view-toggle-btn">
+        VISUALIZAÇÃO: SEMANAL
       </button>
 
-      <button class="btn" onclick="exportAgendaPNG()">
-        Exportar PNG
+      <button
+        class="btn"
+        onclick="exportAgendaPNG()">
+        EXPORTAR PNG
       </button>
 
-      <button id="approvals-btn" class="btn admin-only" onclick="openApprovalsModal()">
-        Aprovações <span id="approvals-inline-badge" class="approval-badge" style="display:inline-flex;margin-left:5px">0</span>
+      <button
+        id="approvals-btn"
+        class="btn admin-only"
+        onclick="openApprovalsModal()">
+        APROVAÇÕES
+        <span
+          id="approvals-inline-badge"
+          class="approval-badge"
+          style="display:inline-flex;margin-left:5px">
+          0
+        </span>
       </button>
 
-      <button id="admins-btn" class="btn admin-only" onclick="openAdminsModal()">
-        Administradores
+      <button
+        id="admins-btn"
+        class="btn admin-only"
+        onclick="openAdminsModal()">
+        ADMINISTRADORES
       </button>
 
-      <button id="meeting-action-btn" class="btn btn-primary"
-              onclick="openMeetingModal()">
-        + Nova reunião
+      <button
+        id="meeting-action-btn"
+        class="btn btn-primary"
+        onclick="openMeetingModal()">
+        + SOLICITAR REUNIÃO
       </button>
 
     </div>
+
   </div>
 
-  <!-- AGENDA -->
+  <!-- =====================================================
+       AGENDA
+  ====================================================== -->
 
   <section id="view-coworking">
 
@@ -845,17 +1477,20 @@ body{
 
       <div class="week-controls">
 
-        <button class="btn"
-                onclick="changePeriod(-1)">
+        <button
+          class="btn"
+          onclick="changePeriod(-1)">
           ←
         </button>
 
-        <input id="week-picker"
-               type="date"
-               onchange="renderDashboard()">
+        <input
+          id="week-picker"
+          type="date"
+          onchange="renderDashboard()">
 
-        <button class="btn"
-                onclick="changePeriod(1)">
+        <button
+          class="btn"
+          onclick="changePeriod(1)">
           →
         </button>
 
@@ -867,106 +1502,247 @@ body{
 
     <div class="calendar-wrapper">
 
-      <div id="weekly-table"
-           class="calendar agenda-export-area">
+      <div
+        id="weekly-table"
+        class="calendar agenda-export-area">
       </div>
 
     </div>
 
   </section>
 
-  <!-- MESAS -->
+  <!-- =====================================================
+       MESAS
+  ====================================================== -->
 
-  <section id="view-seats"
-           class="seats-view">
+  <section
+    id="view-seats"
+    class="seats-view">
 
     <div class="seat-toolbar">
 
       <div>
-        <strong>Mapa de mesas</strong>
-        <div style="font-size:12px;color:#777">
-          Clique em um assento para alocar ou editar.
+
+        <strong>MAPA DE MESAS</strong>
+
+        <div style="
+          font-size:10px;
+          color:var(--dbvo-gray);
+          margin-top:3px;
+        ">
+          clique em um assento para alocar ou editar.
         </div>
+
       </div>
 
-      <div class="tabs" style="margin: 0 auto;">
-         <button id="btn-shift-morning" class="tab active" onclick="toggleSeatShift('morning')">Manhã</button>
-         <button id="btn-shift-afternoon" class="tab" onclick="toggleSeatShift('afternoon')">Tarde</button>
+      <div
+        class="tabs"
+        style="margin:0 auto;">
+
+        <button
+          id="btn-shift-morning"
+          class="tab active"
+          onclick="toggleSeatShift('morning')">
+          MANHÃ
+        </button>
+
+        <button
+          id="btn-shift-afternoon"
+          class="tab"
+          onclick="toggleSeatShift('afternoon')">
+          TARDE
+        </button>
+
       </div>
 
-      <input id="seat-search-date"
-             class="date-input"
-             type="date"
-             onchange="renderSeats()">
+      <input
+        id="seat-search-date"
+        class="date-input"
+        type="date"
+        onchange="renderSeats()">
 
     </div>
 
     <div class="rooms">
 
+      <!-- MEETING 01 -->
+
       <div class="room">
-        <h3>Meeting 01</h3>
+
+        <h3>MEETING 01</h3>
 
         <div class="shift-panel">
-          <div class="shift-title">MANHÃ</div>
-          <div class="room-layout shift-layout">
-            <div class="room-table-shape"><span>MEETING 01</span></div>
-            <div id="m1-morning-top" class="seats-row"></div>
-            <div id="m1-morning-bottom" class="seats-row"></div>
+
+          <div class="shift-title">
+            MANHÃ
           </div>
+
+          <div class="room-layout">
+
+            <div class="room-table-shape">
+              <span>MEETING 01</span>
+            </div>
+
+            <div
+              id="m1-morning-top"
+              class="seats-row">
+            </div>
+
+            <div
+              id="m1-morning-bottom"
+              class="seats-row">
+            </div>
+
+          </div>
+
         </div>
 
         <div class="shift-panel">
-          <div class="shift-title">TARDE</div>
-          <div class="room-layout shift-layout">
-            <div class="room-table-shape"><span>MEETING 01</span></div>
-            <div id="m1-afternoon-top" class="seats-row"></div>
-            <div id="m1-afternoon-bottom" class="seats-row"></div>
+
+          <div class="shift-title">
+            TARDE
           </div>
+
+          <div class="room-layout">
+
+            <div class="room-table-shape">
+              <span>MEETING 01</span>
+            </div>
+
+            <div
+              id="m1-afternoon-top"
+              class="seats-row">
+            </div>
+
+            <div
+              id="m1-afternoon-bottom"
+              class="seats-row">
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
+      <!-- MEETING 02 -->
+
       <div class="room">
-        <h3>Meeting 02</h3>
+
+        <h3>MEETING 02</h3>
 
         <div class="shift-panel">
-          <div class="shift-title">MANHÃ</div>
-          <div class="room-layout shift-layout">
-            <div class="room-table-shape"><span>MEETING 02</span></div>
-            <div id="m2-morning-top" class="seats-row"></div>
-            <div id="m2-morning-bottom" class="seats-row"></div>
+
+          <div class="shift-title">
+            MANHÃ
           </div>
+
+          <div class="room-layout">
+
+            <div class="room-table-shape">
+              <span>MEETING 02</span>
+            </div>
+
+            <div
+              id="m2-morning-top"
+              class="seats-row">
+            </div>
+
+            <div
+              id="m2-morning-bottom"
+              class="seats-row">
+            </div>
+
+          </div>
+
         </div>
 
         <div class="shift-panel">
-          <div class="shift-title">TARDE</div>
-          <div class="room-layout shift-layout">
-            <div class="room-table-shape"><span>MEETING 02</span></div>
-            <div id="m2-afternoon-top" class="seats-row"></div>
-            <div id="m2-afternoon-bottom" class="seats-row"></div>
+
+          <div class="shift-title">
+            TARDE
           </div>
+
+          <div class="room-layout">
+
+            <div class="room-table-shape">
+              <span>MEETING 02</span>
+            </div>
+
+            <div
+              id="m2-afternoon-top"
+              class="seats-row">
+            </div>
+
+            <div
+              id="m2-afternoon-bottom"
+              class="seats-row">
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
+      <!-- MARKETING -->
+
       <div class="room">
-        <h3>Mesa Marketing</h3>
+
+        <h3>MESA MARKETING</h3>
 
         <div class="shift-panel">
-          <div class="shift-title">MANHÃ</div>
-          <div class="room-layout shift-layout">
-            <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
-            <div id="m3-morning-top" class="seats-row"></div>
-            <div id="m3-morning-bottom" class="seats-row"></div>
+
+          <div class="shift-title">
+            MANHÃ
           </div>
+
+          <div class="room-layout">
+
+            <div class="room-table-shape marketing-table">
+              <span>MARKETING</span>
+            </div>
+
+            <div
+              id="m3-morning-top"
+              class="seats-row">
+            </div>
+
+            <div
+              id="m3-morning-bottom"
+              class="seats-row">
+            </div>
+
+          </div>
+
         </div>
 
         <div class="shift-panel">
-          <div class="shift-title">TARDE</div>
-          <div class="room-layout shift-layout">
-            <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
-            <div id="m3-afternoon-top" class="seats-row"></div>
-            <div id="m3-afternoon-bottom" class="seats-row"></div>
+
+          <div class="shift-title">
+            TARDE
           </div>
+
+          <div class="room-layout">
+
+            <div class="room-table-shape marketing-table">
+              <span>MARKETING</span>
+            </div>
+
+            <div
+              id="m3-afternoon-top"
+              class="seats-row">
+            </div>
+
+            <div
+              id="m3-afternoon-bottom"
+              class="seats-row">
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
     </div>
@@ -975,104 +1751,180 @@ body{
 
 </main>
 
-<!-- MODAL REUNIÃO -->
 
-<div id="meeting-modal"
-     class="modal-backdrop">
+<!-- =======================================================
+     MODAL REUNIÃO
+======================================================== -->
+
+<div
+  id="meeting-modal"
+  class="modal-backdrop">
 
   <div class="modal">
 
     <div class="modal-header">
 
       <h2 id="modal-title-text">
-        Agendar Reunião
+        AGENDAR REUNIÃO
       </h2>
 
-      <button class="close"
-              onclick="closeMeetingModal()">
+      <button
+        class="close"
+        onclick="closeMeetingModal()">
         ×
       </button>
 
     </div>
 
-    <form id="meeting-form"
-          onsubmit="saveMeeting(event)">
+    <form
+      id="meeting-form"
+      onsubmit="saveMeeting(event)">
 
       <div class="modal-body">
 
-        <input id="m-id"
-               type="hidden">
+        <input
+          id="m-id"
+          type="hidden">
 
         <div class="form-grid">
 
-          <div id="requester-box" class="requester-box" style="display:none"></div>
+          <div
+            id="requester-box"
+            class="requester-box"
+            style="display:none">
+          </div>
 
-          <div class="form-group full" style="display:flex; gap:14px; flex-wrap:wrap;">
-            <div class="form-group" style="flex:1; min-width:120px;">
-               <label>Time</label>
-               <select id="m-team-select"></select>
+          <div
+            class="form-group full"
+            style="
+              display:flex;
+              gap:14px;
+              flex-wrap:wrap;
+            ">
+
+            <div
+              class="form-group"
+              style="
+                flex:1;
+                min-width:120px;
+              ">
+
+              <label>
+                TIME
+              </label>
+
+              <select id="m-team-select"></select>
+
             </div>
-            <div class="form-group" style="flex:3; min-width:200px;">
-               <label>Título da reunião</label>
-               <input id="m-title" required placeholder="Ex.: Sprint Comercial">
+
+            <div
+              class="form-group"
+              style="
+                flex:3;
+                min-width:200px;
+              ">
+
+              <label>
+                TÍTULO DA REUNIÃO
+              </label>
+
+              <input
+                id="m-title"
+                required
+                placeholder="ex.: reunião comercial">
+
             </div>
+
           </div>
 
           <div class="form-group">
-            <label>Tipo de Reunião</label>
+
+            <label>
+              TIPO DE REUNIÃO
+            </label>
+
             <select id="m-type">
-               <option value="Interna">Com o time (Interna)</option>
-               <option value="Externa">Com externos (Externa)</option>
+
+              <option value="Interna">
+                COM O TIME (INTERNA)
+              </option>
+
+              <option value="Externa">
+                COM EXTERNOS (EXTERNA)
+              </option>
+
             </select>
+
           </div>
 
-          <div class="form-group">
-            <label>Responsável</label>
-            <select id="m-owner-select"
-                    required>
+          <div
+            class="form-group"
+            id="owner-group">
+
+            <label>
+              RESPONSÁVEL
+            </label>
+
+            <select
+              id="m-owner-select"
+              required>
             </select>
+
           </div>
 
           <div class="form-group">
-            <label>Nº de pessoas</label>
 
-            <input id="m-attendees"
-                   type="number"
-                   min="1"
-                   value="1">
+            <label>
+              Nº DE PESSOAS
+            </label>
+
+            <input
+              id="m-attendees"
+              type="number"
+              min="1"
+              value="1">
+
           </div>
 
           <div class="form-group">
-            <label>Data</label>
 
-            <input id="m-date"
-                   type="date"
-                   required>
+            <label>
+              DATA
+            </label>
+
+            <input
+              id="m-date"
+              type="date"
+              required>
+
           </div>
 
           <div class="form-group">
-            <label>Recorrência</label>
+
+            <label>
+              RECORRÊNCIA
+            </label>
 
             <select id="m-recurrence">
 
               <option value="none">
-                Sem recorrência
+                SEM RECORRÊNCIA
               </option>
 
               <option value="daily">
-                Diária
+                DIÁRIA
               </option>
 
               <option value="weekly">
-                Semanal
+                SEMANAL
               </option>
 
               <option value="biweekly">
-                Quinzenal
+                QUINZENAL
               </option>
 
               <option value="monthly">
-                Mensal
+                MENSAL
               </option>
 
             </select>
@@ -1080,27 +1932,82 @@ body{
           </div>
 
           <div class="time-picker-wrap">
+
             <div class="time-picker-head">
-              <span class="time-picker-title">Horário</span>
-              <span id="m-duration-label" class="time-picker-duration">Selecione início e fim</span>
+
+              <span class="time-picker-title">
+                HORÁRIO
+              </span>
+
+              <span
+                id="m-duration-label"
+                class="time-picker-duration">
+                selecione início e fim
+              </span>
+
             </div>
+
             <div class="time-selects">
-              <select id="m-start" class="time-select" required aria-label="Horário de início"></select>
-              <select id="m-end" class="time-select" required aria-label="Horário de fim"></select>
+
+              <select
+                id="m-start"
+                class="time-select"
+                required>
+              </select>
+
+              <select
+                id="m-end"
+                class="time-select"
+                required>
+              </select>
+
             </div>
+
             <div class="duration-chips">
-              <button type="button" class="duration-chip" onclick="setMeetingDuration(30)">30 min</button>
-              <button type="button" class="duration-chip" onclick="setMeetingDuration(60)">1 h</button>
-              <button type="button" class="duration-chip" onclick="setMeetingDuration(90)">1h30</button>
-              <button type="button" class="duration-chip" onclick="setMeetingDuration(120)">2 h</button>
+
+              <button
+                type="button"
+                class="duration-chip"
+                onclick="setMeetingDuration(30)">
+                30 MIN
+              </button>
+
+              <button
+                type="button"
+                class="duration-chip"
+                onclick="setMeetingDuration(60)">
+                1 H
+              </button>
+
+              <button
+                type="button"
+                class="duration-chip"
+                onclick="setMeetingDuration(90)">
+                1H30
+              </button>
+
+              <button
+                type="button"
+                class="duration-chip"
+                onclick="setMeetingDuration(120)">
+                2 H
+              </button>
+
             </div>
+
           </div>
 
           <div class="form-group full">
-            <label>Participantes / observações</label>
 
-            <textarea id="m-participants"
-                      placeholder="Participantes, observações ou informações adicionais"></textarea>
+            <label>
+              PARTICIPANTES / OBSERVAÇÕES
+            </label>
+
+            <textarea
+              id="m-participants"
+              placeholder="participantes, observações ou informações adicionais">
+            </textarea>
+
           </div>
 
         </div>
@@ -1109,25 +2016,28 @@ body{
 
       <div class="modal-footer">
 
-        <button type="button"
-                id="btn-delete-meeting"
-                class="btn btn-danger"
-                style="display:none"
-                onclick="deleteMeeting()">
-          Excluir
+        <button
+          type="button"
+          id="btn-delete-meeting"
+          class="btn btn-danger"
+          style="display:none"
+          onclick="deleteMeeting()">
+          EXCLUIR
         </button>
 
         <div class="footer-right">
 
-          <button type="button"
-                  class="btn"
-                  onclick="closeMeetingModal()">
-            Cancelar
+          <button
+            type="button"
+            class="btn"
+            onclick="closeMeetingModal()">
+            CANCELAR
           </button>
 
-          <button type="submit"
-                  class="btn btn-primary">
-            Salvar
+          <button
+            type="submit"
+            class="btn btn-primary">
+            SALVAR
           </button>
 
         </div>
@@ -1141,93 +2051,303 @@ body{
 </div>
 
 
-<!-- MODAL LOGIN -->
-<div id="auth-modal" class="modal-backdrop">
+<!-- =======================================================
+     MODAL LOGIN / CADASTRO
+======================================================== -->
+
+<div
+  id="auth-modal"
+  class="modal-backdrop">
+
   <div class="modal">
+
     <div class="modal-header">
-      <h2 id="auth-title">Entrar</h2>
-      <button class="close" onclick="closeAuthModal()">×</button>
+
+      <h2 id="auth-title">
+        ENTRAR
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeAuthModal()">
+        ×
+      </button>
+
     </div>
+
     <form onsubmit="submitAuth(event)">
+
       <div class="modal-body">
+
         <div class="form-grid">
-          <div class="form-group full">
-            <label>E-mail</label>
-            <input id="auth-email" type="email" required placeholder="seu@email.com" autocomplete="email">
+
+          <!-- CAMPOS DE CADASTRO -->
+
+          <div
+            id="signup-name-group"
+            class="form-group"
+            style="display:none">
+
+            <label>
+              NOME
+            </label>
+
+            <input
+              id="auth-first-name"
+              type="text"
+              placeholder="seu nome"
+              autocomplete="given-name">
+
           </div>
-          <div class="form-group full">
-            <label>Senha</label>
-            <input id="auth-password" type="password" required minlength="6" placeholder="Mínimo de 6 caracteres" autocomplete="current-password">
+
+          <div
+            id="signup-lastname-group"
+            class="form-group"
+            style="display:none">
+
+            <label>
+              SOBRENOME
+            </label>
+
+            <input
+              id="auth-last-name"
+              type="text"
+              placeholder="seu sobrenome"
+              autocomplete="family-name">
+
           </div>
+
+          <div class="form-group full">
+
+            <label>
+              E-MAIL
+            </label>
+
+            <input
+              id="auth-email"
+              type="email"
+              required
+              placeholder="seu@email.com"
+              autocomplete="email">
+
+          </div>
+
+          <div class="form-group">
+
+            <label>
+              SENHA
+            </label>
+
+            <input
+              id="auth-password"
+              type="password"
+              required
+              minlength="6"
+              placeholder="mínimo de 6 caracteres"
+              autocomplete="new-password">
+
+          </div>
+
+          <!-- CONFIRMAÇÃO DE SENHA -->
+
+          <div
+            id="signup-confirm-group"
+            class="form-group"
+            style="display:none">
+
+            <label>
+              CONFIRMAR SENHA
+            </label>
+
+            <input
+              id="auth-password-confirm"
+              type="password"
+              minlength="6"
+              placeholder="repita sua senha"
+              autocomplete="new-password">
+
+          </div>
+
         </div>
-        <div id="auth-help" style="font-size:10px;color:#777;margin-top:10px">
-          Use seu acesso para solicitar reuniões. O administrador terá acesso às aprovações.
+
+        <div
+          id="auth-help"
+          style="
+            font-size:9px;
+            color:var(--dbvo-gray);
+            margin-top:10px;
+          ">
+
+          use seu acesso para solicitar reuniões.
+          o administrador terá acesso às aprovações.
+
         </div>
+
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn" onclick="toggleAuthMode()">Criar acesso</button>
+
+        <button
+          type="button"
+          class="btn"
+          onclick="toggleAuthMode()">
+          CRIAR ACESSO
+        </button>
+
         <div class="footer-right">
-          <button type="button" class="btn" onclick="closeAuthModal()">Cancelar</button>
-          <button id="auth-submit" type="submit" class="btn btn-primary">Entrar</button>
+
+          <button
+            type="button"
+            class="btn"
+            onclick="closeAuthModal()">
+            CANCELAR
+          </button>
+
+          <button
+            id="auth-submit"
+            type="submit"
+            class="btn btn-primary">
+            ENTRAR
+          </button>
+
         </div>
+
       </div>
+
     </form>
+
   </div>
+
 </div>
 
-<!-- MODAL APROVAÇÕES -->
-<div id="approvals-modal" class="modal-backdrop approvals-modal">
+
+<!-- =======================================================
+     MODAL APROVAÇÕES
+======================================================== -->
+
+<div
+  id="approvals-modal"
+  class="modal-backdrop approvals-modal">
+
   <div class="modal">
+
     <div class="modal-header">
-      <h2>Aprovações de reuniões</h2>
-      <button class="close" onclick="closeApprovalsModal()">×</button>
+
+      <h2>
+        APROVAÇÕES DE REUNIÕES
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeApprovalsModal()">
+        ×
+      </button>
+
     </div>
+
     <div class="modal-body">
+
       <div id="approvals-list"></div>
+
     </div>
+
   </div>
+
 </div>
 
-<!-- MODAL ADMINISTRADORES -->
-<div id="admins-modal" class="modal-backdrop admins-modal">
+
+<!-- =======================================================
+     MODAL ADMINISTRADORES
+======================================================== -->
+
+<div
+  id="admins-modal"
+  class="modal-backdrop">
+
   <div class="modal">
+
     <div class="modal-header">
+
       <div>
-        <h2>Administradores</h2>
-        <div class="modal-subtitle">Defina quem pode aprovar e gerenciar a agenda.</div>
-      </div>
-      <button class="close" onclick="closeAdminsModal()">×</button>
-    </div>
-    <div class="modal-body">
-      <form onsubmit="addAdmin(event)">
-        <div class="admin-add-row">
-          <input id="admin-email-input" type="email" required placeholder="email@empresa.com">
-          <button type="submit" class="btn btn-primary">+ Dar acesso de administrador</button>
+
+        <h2>
+          ADMINISTRADORES
+        </h2>
+
+        <div class="modal-subtitle">
+          gerencie quem pode aprovar e editar a agenda.
         </div>
-      </form>
-      <div id="admins-list" class="admins-list"></div>
-      <div class="admin-note">
-        O primeiro administrador é <strong>gabrielsz.silva12@gmail.com</strong>. Ele não pode ser removido.
+
       </div>
+
+      <button
+        class="close"
+        onclick="closeAdminsModal()">
+        ×
+      </button>
+
     </div>
+
+    <div class="modal-body">
+
+      <form
+        onsubmit="addAdmin(event)"
+        class="admin-add-form">
+
+        <div class="form-group">
+
+          <label>
+            E-MAIL DO NOVO ADMINISTRADOR
+          </label>
+
+          <input
+            id="admin-email-input"
+            type="email"
+            required
+            placeholder="nome@empresa.com">
+
+        </div>
+
+        <button
+          class="btn btn-primary"
+          type="submit">
+          + DAR ACESSO
+        </button>
+
+      </form>
+
+      <div class="admin-note">
+        o usuário também precisará criar um acesso na agenda usando este mesmo e-mail.
+      </div>
+
+      <div id="admins-list"></div>
+
+    </div>
+
   </div>
+
 </div>
 
-<!-- MODAL ASSENTO -->
 
-<div id="seat-modal"
-     class="modal-backdrop">
+<!-- =======================================================
+     MODAL ASSENTO
+======================================================== -->
+
+<div
+  id="seat-modal"
+  class="modal-backdrop">
 
   <div class="modal">
 
     <div class="modal-header">
 
       <h2 id="seat-modal-title">
-        Alocar Assento
+        ALOCAR ASSENTO
       </h2>
 
-      <button class="close"
-              onclick="closeSeatModal()">
+      <button
+        class="close"
+        onclick="closeSeatModal()">
         ×
       </button>
 
@@ -1237,65 +2357,88 @@ body{
 
       <div class="modal-body">
 
-        <input id="s-table-id"
-               type="hidden">
+        <input
+          id="s-table-id"
+          type="hidden">
 
-        <input id="s-seat-code"
-               type="hidden">
+        <input
+          id="s-seat-code"
+          type="hidden">
 
-        <input id="s-existing-id"
-               type="hidden">
+        <input
+          id="s-existing-id"
+          type="hidden">
 
         <div class="form-grid">
 
           <div class="form-group full">
 
-            <label>Colaborador</label>
+            <label>
+              COLABORADOR
+            </label>
 
-            <select id="s-collab-select"
-                    required>
+            <select
+              id="s-collab-select"
+              required>
             </select>
 
           </div>
 
-                    <div class="form-group">
+          <div class="form-group">
 
-            <label>Data inicial</label>
+            <label>
+              DATA INICIAL
+            </label>
 
-            <input id="s-start-date"
-                   type="date"
-                   required>
+            <input
+              id="s-start-date"
+              type="date"
+              required>
 
           </div>
 
           <div class="form-group">
-            <label>Período</label>
+
+            <label>
+              PERÍODO
+            </label>
+
             <select id="s-period">
-              <option value="morning">Manhã</option>
-              <option value="afternoon">Tarde</option>
+
+              <option value="morning">
+                MANHÃ
+              </option>
+
+              <option value="afternoon">
+                TARDE
+              </option>
+
             </select>
+
           </div>
 
           <div class="form-group">
 
-            <label>Recorrência</label>
+            <label>
+              RECORRÊNCIA
+            </label>
 
             <select id="s-recurrence">
 
               <option value="single">
-                Apenas este dia
+                APENAS ESTE DIA
               </option>
 
               <option value="daily">
-                Todos os dias úteis
+                TODOS OS DIAS ÚTEIS
               </option>
 
               <option value="weekly">
-                Semanal
+                SEMANAL
               </option>
 
               <option value="biweekly">
-                Quinzenal
+                QUINZENAL
               </option>
 
             </select>
@@ -1304,32 +2447,34 @@ body{
 
           <div class="form-group full">
 
-            <label>Dia de exceção</label>
+            <label>
+              DIA DE EXCEÇÃO
+            </label>
 
             <select id="s-except-day">
 
               <option value="none">
-                Sem exceção
+                SEM EXCEÇÃO
               </option>
 
               <option value="1">
-                Segunda-feira
+                SEGUNDA-FEIRA
               </option>
 
               <option value="2">
-                Terça-feira
+                TERÇA-FEIRA
               </option>
 
               <option value="3">
-                Quarta-feira
+                QUARTA-FEIRA
               </option>
 
               <option value="4">
-                Quinta-feira
+                QUINTA-FEIRA
               </option>
 
               <option value="5">
-                Sexta-feira
+                SEXTA-FEIRA
               </option>
 
             </select>
@@ -1342,25 +2487,28 @@ body{
 
       <div class="modal-footer">
 
-        <button type="button"
-                id="btn-remove-seat"
-                class="btn btn-danger"
-                style="display:none"
-                onclick="removeSeatAllocation()">
-          Remover
+        <button
+          type="button"
+          id="btn-remove-seat"
+          class="btn btn-danger"
+          style="display:none"
+          onclick="removeSeatAllocation()">
+          REMOVER
         </button>
 
         <div class="footer-right">
 
-          <button type="button"
-                  class="btn"
-                  onclick="closeSeatModal()">
-            Cancelar
+          <button
+            type="button"
+            class="btn"
+            onclick="closeSeatModal()">
+            CANCELAR
           </button>
 
-          <button type="submit"
-                  class="btn btn-primary">
-            Salvar
+          <button
+            type="submit"
+            class="btn btn-primary">
+            SALVAR
           </button>
 
         </div>
@@ -1373,19 +2521,26 @@ body{
 
 </div>
 
-<!-- MODAL COLABORADORES -->
 
-<div id="collab-modal"
-     class="modal-backdrop">
+<!-- =======================================================
+     MODAL COLABORADORES
+======================================================== -->
+
+<div
+  id="collab-modal"
+  class="modal-backdrop">
 
   <div class="modal">
 
     <div class="modal-header">
 
-      <h2>Colaboradores</h2>
+      <h2>
+        COLABORADORES
+      </h2>
 
-      <button class="close"
-              onclick="closeCollabModal()">
+      <button
+        class="close"
+        onclick="closeCollabModal()">
         ×
       </button>
 
@@ -1399,26 +2554,55 @@ body{
 
           <div class="form-group">
 
-            <label>Nome</label>
+            <label>
+              NOME
+            </label>
 
-            <input id="c-name"
-                   required
-                   placeholder="Nome do colaborador">
+            <input
+              id="c-name"
+              required
+              placeholder="nome do colaborador">
 
           </div>
 
           <div class="form-group">
 
-            <label>Equipe</label>
+            <label>
+              EQUIPE
+            </label>
 
-            <select id="c-team" required>
-              <option value="">Selecione o time</option>
-              <option value="CSUM">CSUM</option>
-              <option value="CSUA">CSUA</option>
-              <option value="CEO">CEO</option>
-              <option value="EDFE">EDFE</option>
-              <option value="ENGO">ENGO</option>
-              <option value="ENGE">ENGE</option>
+            <select
+              id="c-team"
+              required>
+
+              <option value="">
+                SELECIONE O TIME
+              </option>
+
+              <option value="CSUM">
+                CSUM
+              </option>
+
+              <option value="CSUA">
+                CSUA
+              </option>
+
+              <option value="CEO">
+                CEO
+              </option>
+
+              <option value="EDFE">
+                EDFE
+              </option>
+
+              <option value="ENGO">
+                ENGO
+              </option>
+
+              <option value="ENGE">
+                ENGE
+              </option>
+
             </select>
 
           </div>
@@ -1427,14 +2611,19 @@ body{
 
         <br>
 
-        <button class="btn btn-primary"
-                type="submit">
-          + Adicionar colaborador
+        <button
+          class="btn btn-primary"
+          type="submit">
+          + ADICIONAR COLABORADOR
         </button>
 
       </form>
 
-      <hr style="border:0;border-top:1px solid #e5e7eb;margin:20px 0">
+      <hr style="
+        border:0;
+        border-top:1px solid var(--dbvo-gray);
+        margin:20px 0;
+      ">
 
       <div id="collab-list"></div>
 
@@ -1444,7 +2633,12 @@ body{
 
 </div>
 
+
 <script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
 
 const SUPABASE_URL =
   'https://twrtjqqaaiyleefbhdlz.supabase.co';
@@ -1453,12 +2647,22 @@ const SUPABASE_KEY =
   'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
 
 let db = null;
-const PRIMARY_ADMIN_EMAIL = 'gabrielsz.silva12@gmail.com';
-let adminEmails = new Set([PRIMARY_ADMIN_EMAIL.toLowerCase()]);
+
+/* ADMINISTRADOR PRINCIPAL */
+
+const ADMIN_EMAIL =
+  'gabriel.s@edificabpo.com.br';
+
+const ADMIN_BOOTSTRAP_EMAIL =
+  'gabriel.s@edificabpo.com.br';
+
 let currentUser = null;
 let isAdmin = false;
+
 let authMode = 'login';
+
 let meetingRequests = [];
+let adminUsers = [];
 
 let collaborators = [];
 let meetings = [];
@@ -1467,53 +2671,80 @@ let seatAllocations = [];
 let realtimeChannels = [];
 
 const hours = [
-  '08:00','09:00','10:00','11:00','12:00',
-  '13:00','14:00','15:00','16:00','17:00','18:00'
+  '08:00',
+  '09:00',
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00'
 ];
 
-const $ = id => document.getElementById(id);
+const $ =
+  id => document.getElementById(id);
 
-const pad = n => String(n).padStart(2,'0');
+const pad =
+  n => String(n).padStart(2,'0');
 
-function localDateString(date = new Date()) {
+
+/* =========================================================
+   DATAS
+========================================================= */
+
+function localDateString(
+  date = new Date()
+){
 
   return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
 
 }
 
-function dateFromInput(value) {
+function dateFromInput(value){
 
   return new Date(`${value}T00:00:00`);
 
 }
 
-function addDays(date,amount) {
+function addDays(date,amount){
 
   const d = new Date(date);
 
-  d.setDate(d.getDate()+amount);
+  d.setDate(
+    d.getDate()+amount
+  );
 
   return d;
 
 }
 
-function startOfWeek(date) {
+function startOfWeek(date){
 
   const d = new Date(date);
 
   const day = d.getDay();
 
-  d.setDate(d.getDate() - day);
+  d.setDate(
+    d.getDate()-day
+  );
 
-  d.setHours(0,0,0,0);
+  d.setHours(
+    0,0,0,0
+  );
 
   return d;
 
 }
 
-function minutes(time) {
+function minutes(time){
 
-  const [h,m] =
+  const [
+    h,
+    m
+  ] =
     String(time || '')
       .slice(0,5)
       .split(':')
@@ -1523,29 +2754,47 @@ function minutes(time) {
 
 }
 
-function esc(value) {
+
+/* =========================================================
+   SEGURANÇA HTML
+========================================================= */
+
+function esc(value){
 
   return String(value ?? '')
-    .replace(/[&<>"']/g,char => ({
+    .replace(
+      /[&<>"']/g,
+      char => ({
 
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
 
-    }[char]));
+      }[char])
+    );
 
 }
 
-function setStatus(text,connected) {
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(
+  text,
+  connected
+){
 
   const element =
     $('connection-status');
 
-  if(!element) return;
+  if(!element)
+    return;
 
-  element.textContent = text;
+  element.textContent =
+    text;
 
   element.classList.toggle(
     'offline',
@@ -1555,9 +2804,9 @@ function setStatus(text,connected) {
 }
 
 
-/* =========================
+/* =========================================================
    INICIALIZAÇÃO
-========================= */
+========================================================= */
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -1565,169 +2814,349 @@ document.addEventListener(
 );
 
 async function init(){
-  const today = localDateString();
-  $('week-picker').value = today;
-  $('seat-search-date').value = today;
+
+  const today =
+    localDateString();
+
+  $('week-picker').value =
+    today;
+
+  $('seat-search-date').value =
+    today;
+
   loadSavedLogo();
+
   populateTimeSelects();
-  toggleSeatShift('morning');
+
+  toggleSeatShift(
+    'morning'
+  );
+
   renderDashboard();
+
   renderSeats();
+
   updateAuthUI();
 
   if(!window.supabase){
-    setStatus('● Modo local',false);
+
+    setStatus(
+      '● MODO LOCAL',
+      false
+    );
+
     return;
+
   }
 
   try{
-    db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-    setStatus('● Conectando...',false);
 
-    const {data:{session}} = await db.auth.getSession();
-    currentUser = session?.user || null;
-    await loadAdminUsers();
-    updateAuthUI();
+    db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
 
-    db.auth.onAuthStateChange(async (_event,sessionData)=>{
-      currentUser = sessionData?.user || null;
-      await loadAdminUsers();
-      updateAuthUI();
-      if(currentUser && isAdmin) await loadRequests();
-      else meetingRequests = [];
-      renderDashboard();
-    });
+    setStatus(
+      '● CONECTANDO...',
+      false
+    );
+
+    const {
+      data:{
+        session
+      }
+    } =
+      await db.auth.getSession();
+
+    currentUser =
+      session?.user || null;
+
+    await updateAuthUI();
+
+    db.auth.onAuthStateChange(
+      async (
+        _event,
+        sessionData
+      ) => {
+
+        currentUser =
+          sessionData?.user || null;
+
+        await updateAuthUI();
+
+        if(
+          currentUser &&
+          isAdmin
+        ){
+
+          await loadRequests();
+
+        }else{
+
+          meetingRequests = [];
+
+        }
+
+        renderDashboard();
+
+      }
+    );
 
     await Promise.race([
+
       loadData(),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Timeout de conexão')),7000))
+
+      new Promise(
+        (_,reject) =>
+          setTimeout(
+            () =>
+              reject(
+                new Error(
+                  'TIMEOUT DE CONEXÃO'
+                )
+              ),
+            7000
+          )
+      )
+
     ]);
 
-    setStatus('● Sincronizado',true);
+    setStatus(
+      '● SINCRONIZADO',
+      true
+    );
+
     setupRealtime();
-    if(isAdmin) await loadRequests();
-    updateAuthUI();
+
+    if(isAdmin){
+
+      await loadRequests();
+
+      await loadAdmins();
+
+    }
+
+    await updateAuthUI();
+
   }catch(error){
+
     console.error(error);
-    setStatus('● Sem conexão',false);
+
+    setStatus(
+      '● SEM CONEXÃO',
+      false
+    );
+
     renderDashboard();
+
     renderSeats();
+
   }
+
 }
 
 
-/* =========================
-   SUPABASE
-========================= */
+/* =========================================================
+   CARREGAMENTO SUPABASE
+========================================================= */
 
 async function loadData(){
-  if(!db) return;
+
+  if(!db)
+    return;
 
   const [
     collaboratorsResult,
     meetingsResult,
     seatsResult
-  ] = await Promise.all([
-    db.from('collaborators').select('*').order('name'),
-    db.from('meetings').select('*').order('date').order('start'),
-    db.from('seat_allocations').select('*').order('startDate')
-  ]);
+  ] =
+    await Promise.all([
 
-  if(collaboratorsResult.error) throw collaboratorsResult.error;
-  if(meetingsResult.error) throw meetingsResult.error;
-  if(seatsResult.error) throw seatsResult.error;
+      db
+        .from('collaborators')
+        .select('*')
+        .order('name'),
 
-  collaborators = collaboratorsResult.data || [];
-  meetings = meetingsResult.data || [];
-  seatAllocations = seatsResult.data || [];
+      db
+        .from('meetings')
+        .select('*')
+        .order('date')
+        .order('start'),
+
+      db
+        .from('seat_allocations')
+        .select('*')
+        .order('startDate')
+
+    ]);
+
+  if(collaboratorsResult.error)
+    throw collaboratorsResult.error;
+
+  if(meetingsResult.error)
+    throw meetingsResult.error;
+
+  if(seatsResult.error)
+    throw seatsResult.error;
+
+  collaborators =
+    collaboratorsResult.data || [];
+
+  meetings =
+    meetingsResult.data || [];
+
+  seatAllocations =
+    seatsResult.data || [];
 
   renderDashboard();
+
   renderSeats();
+
 }
 
+
 async function loadRequests(){
-  if(!db || !isAdmin) return;
-  const {data,error} = await db.from('meeting_requests')
-    .select('*')
-    .order('created_at',{ascending:false});
-  if(error){
-    console.warn('A tabela meeting_requests ainda não está configurada:',error.message);
-    meetingRequests = [];
-    updateApprovalBadge();
+
+  if(
+    !db ||
+    !isAdmin
+  )
     return;
+
+  const {
+    data,
+    error
+  } =
+    await db
+      .from('meeting_requests')
+      .select('*')
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
+  if(error){
+
+    console.warn(
+      'A tabela meeting_requests ainda não está configurada:',
+      error.message
+    );
+
+    meetingRequests = [];
+
+    updateApprovalBadge();
+
+    return;
+
   }
-  meetingRequests = data || [];
+
+  meetingRequests =
+    data || [];
+
   updateApprovalBadge();
+
 }
+
+
+/* =========================================================
+   REALTIME
+========================================================= */
 
 function setupRealtime(){
 
   if(
     !db ||
     realtimeChannels.length
-  ) return;
+  )
+    return;
 
   [
     'collaborators',
     'meetings',
-    'seat_allocations'
+    'seat_allocations',
+    'meeting_requests',
+    'admin_users'
 
-  ].forEach(table => {
+  ].forEach(
+    table => {
 
-    const channel =
-      db
-        .channel(
-          `be-${table}-${Date.now()}`
-        )
-        .on(
-          'postgres_changes',
-          {
-            event:'*',
-            schema:'public',
-            table
-          },
-          async () => {
+      const channel =
+        db
+          .channel(
+            `dbvo-${table}-${Date.now()}`
+          )
+          .on(
+            'postgres_changes',
+            {
+              event:'*',
+              schema:'public',
+              table
+            },
+            async () => {
 
-            try{
+              try{
 
-              if(table === 'meeting_requests'){
-                await loadRequests();
-                renderDashboard();
-                if($('approvals-modal').style.display === 'flex') renderApprovals();
-              }else{
-                await loadData();
+                if(
+                  table ===
+                  'meeting_requests'
+                ){
+
+                  await loadRequests();
+
+                  renderDashboard();
+
+                  if(
+                    $('approvals-modal')
+                      .style.display ===
+                    'flex'
+                  ){
+
+                    renderApprovals();
+
+                  }
+
+                }else{
+
+                  await loadData();
+
+                }
+
+                setStatus(
+                  '● SINCRONIZADO',
+                  true
+                );
+
+              }catch(error){
+
+                console.error(error);
+
+                setStatus(
+                  '● SEM CONEXÃO',
+                  false
+                );
+
               }
 
-              setStatus(
-                '● Sincronizado',
-                true
-              );
-
-            }catch(error){
-
-              console.error(error);
-
-              setStatus(
-                '● Sem conexão',
-                false
-              );
-
             }
+          )
+          .subscribe();
 
-          }
-        )
-        .subscribe();
+      realtimeChannels.push(
+        channel
+      );
 
-    realtimeChannels.push(channel);
-
-  });
+    }
+  );
 
 }
 
 
-/* =========================
+/* =========================================================
    ABAS
-========================= */
+========================================================= */
 
 function switchTab(tab){
 
@@ -1765,43 +3194,126 @@ function switchTab(tab){
 
 }
 
-function toggleSeatShift(shift) {
-  $('btn-shift-morning').classList.toggle('active', shift === 'morning');
-  $('btn-shift-afternoon').classList.toggle('active', shift === 'afternoon');
 
-  document.querySelectorAll('.shift-panel').forEach(panel => {
-    const isMorning = panel.querySelector('.shift-title').textContent.includes('MANHÃ');
-    if ((shift === 'morning' && isMorning) || (shift === 'afternoon' && !isMorning)) {
-      panel.style.display = 'block';
-    } else {
-      panel.style.display = 'none';
-    }
-  });
+function toggleSeatShift(shift){
+
+  $('btn-shift-morning')
+    .classList.toggle(
+      'active',
+      shift === 'morning'
+    );
+
+  $('btn-shift-afternoon')
+    .classList.toggle(
+      'active',
+      shift === 'afternoon'
+    );
+
+  document
+    .querySelectorAll(
+      '.shift-panel'
+    )
+    .forEach(
+      panel => {
+
+        const isMorning =
+          panel
+            .querySelector(
+              '.shift-title'
+            )
+            .textContent
+            .includes(
+              'MANHÃ'
+            );
+
+        if(
+          (
+            shift === 'morning' &&
+            isMorning
+          ) ||
+          (
+            shift === 'afternoon' &&
+            !isMorning
+          )
+        ){
+
+          panel.style.display =
+            'block';
+
+        }else{
+
+          panel.style.display =
+            'none';
+
+        }
+
+      }
+    );
+
 }
 
 
-/* =========================
-   CALENDÁRIO
-========================= */
+/* =========================================================
+   AGENDA
+========================================================= */
 
-let agendaView = 'weekly';
+let agendaView =
+  'weekly';
+
 
 function toggleAgendaView(){
-  agendaView = agendaView === 'weekly' ? 'daily' : 'weekly';
-  $('view-toggle-btn').textContent =
-    agendaView === 'weekly' ? 'Visualização: Semanal' : 'Visualização: Diária';
+
+  agendaView =
+    agendaView === 'weekly'
+      ? 'daily'
+      : 'weekly';
+
+  $('view-toggle-btn')
+    .textContent =
+      agendaView === 'weekly'
+      ? 'VISUALIZAÇÃO: SEMANAL'
+      : 'VISUALIZAÇÃO: DIÁRIA';
+
   renderDashboard();
+
 }
+
 
 function changePeriod(amount){
-  const input = $('week-picker');
-  const date = dateFromInput(input.value || localDateString());
-  date.setDate(date.getDate() + amount * (agendaView === 'weekly' ? 7 : 1));
-  input.value = localDateString(date);
+
+  const input =
+    $('week-picker');
+
+  const date =
+    dateFromInput(
+      input.value ||
+      localDateString()
+    );
+
+  date.setDate(
+    date.getDate() +
+    amount *
+    (
+      agendaView === 'weekly'
+      ? 7
+      : 1
+    )
+  );
+
+  input.value =
+    localDateString(date);
+
   renderDashboard();
+
 }
 
-function changeWeek(amount){ changePeriod(amount); }
+
+function changeWeek(amount){
+
+  changePeriod(amount);
+
+}
+
 
 function meetingOccursOnDate(
   meeting,
@@ -1811,7 +3323,8 @@ function meetingOccursOnDate(
   if(
     !meeting ||
     !meeting.date
-  ) return false;
+  )
+    return false;
 
   const start =
     dateFromInput(
@@ -1856,7 +3369,9 @@ function meetingOccursOnDate(
 
       const difference =
         Math.floor(
-          (target-start) /
+          (
+            target-start
+          ) /
           86400000
         );
 
@@ -1882,322 +3397,728 @@ function meetingOccursOnDate(
 
 }
 
-function syncAgendaViewport(){
-  const wrapper=document.querySelector('.calendar-wrapper');
-  const calendar=$('weekly-table');
-  if(!wrapper||!calendar) return;
-
-  if(window.innerWidth>=900){
-    const top=wrapper.getBoundingClientRect().top;
-    const available=Math.max(360,window.innerHeight-top-12);
-    wrapper.style.height=`${available}px`;
-    calendar.style.setProperty('--timeline-height',`${Math.max(260,available-44)}px`);
-  }else{
-    wrapper.style.height='';
-    calendar.style.removeProperty('--timeline-height');
-  }
-}
-window.addEventListener('resize',syncAgendaViewport);
 
 function renderDashboard(){
-  const container = $('weekly-table');
-  if(!container) return;
 
-  const selected = $('week-picker').value || localDateString();
-  const selectedDate = dateFromInput(selected);
+  const container =
+    $('weekly-table');
 
-  const DAY_START = 8 * 60;
-  const DAY_END = 19 * 60;
-  const DAY_SPAN = DAY_END - DAY_START;
+  if(!container)
+    return;
 
-  function eventMarkup(meeting){
-    const start = Math.max(DAY_START, minutes(meeting.start));
-    const end = Math.min(DAY_END, Math.max(minutes(meeting.end), start + 15));
-    const top = ((start - DAY_START) / DAY_SPAN) * 100;
-    const height = ((end - start) / DAY_SPAN) * 100;
-    const encoded = encodeURIComponent(JSON.stringify(meeting));
-    const typeBadge = meeting.type === 'Externa' ? 'Externa' : 'Interna';
-    const meta = meeting.team ? `${esc(meeting.team)} · ${typeBadge}` : typeBadge;
-    return `<div class="event-card"
-      style="--event-top:${top}%;--event-height:${height}%"
-      onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
-      <div class="event-title">${esc(meeting.title)}</div>
-      <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} – ${esc(String(meeting.end || '').slice(0,5))} · ${meta}</div>
-      <div class="event-owner">${esc(meeting.owner || '—')}</div>
-    </div>`;
+  const selected =
+    $('week-picker').value ||
+    localDateString();
+
+  const selectedDate =
+    dateFromInput(selected);
+
+  const DAY_START =
+    8 * 60;
+
+  const DAY_END =
+    19 * 60;
+
+  const DAY_SPAN =
+    DAY_END - DAY_START;
+
+
+  function eventMarkup(
+    meeting
+  ){
+
+    const start =
+      Math.max(
+        DAY_START,
+        minutes(meeting.start)
+      );
+
+    const end =
+      Math.min(
+        DAY_END,
+        Math.max(
+          minutes(meeting.end),
+          start + 15
+        )
+      );
+
+    const top =
+      (
+        (start - DAY_START) /
+        DAY_SPAN
+      ) * 100;
+
+    const height =
+      (
+        (end - start) /
+        DAY_SPAN
+      ) * 100;
+
+    const encoded =
+      encodeURIComponent(
+        JSON.stringify(meeting)
+      );
+
+    const typeBadge =
+      meeting.type === 'Externa'
+      ? '<span>[EXT]</span> '
+      : '';
+
+    const teamBadge =
+      meeting.team
+      ? `${esc(meeting.team)} | `
+      : '';
+
+    return `
+      <div
+        class="event-card"
+        style="
+          --event-top:${top}%;
+          --event-height:${height}%;
+        "
+        onclick="
+          event.stopPropagation();
+          openMeetingModalFromEncoded('${encoded}')
+        "
+      >
+
+        <div class="event-title">
+          ${typeBadge}
+          ${teamBadge}
+          ${esc(meeting.title)}
+        </div>
+
+        <div class="event-time">
+          ${esc(String(meeting.start || '').slice(0,5))}
+          -
+          ${esc(String(meeting.end || '').slice(0,5))}
+        </div>
+
+        <div class="event-owner">
+          ${esc(meeting.owner || '—')}
+        </div>
+
+      </div>
+    `;
+
   }
 
-  function pendingMarkup(request){
-    const start = Math.max(DAY_START, minutes(request.start));
-    const end = Math.min(DAY_END, Math.max(minutes(request.end), start + 15));
-    const top = ((start - DAY_START) / DAY_SPAN) * 100;
-    const height = ((end - start) / DAY_SPAN) * 100;
-    return `<div class="event-card pending"
-      style="--event-top:${top}%;--event-height:${height}%"
-      title="${isAdmin ? 'Clique para revisar esta solicitação' : 'Solicitação aguardando aprovação'}"
-      onclick="event.stopPropagation();${isAdmin ? `openRequestDetails('${request.id}')` : ''}">
-      <div class="event-title">${isAdmin ? 'Solicitação • ' + esc(request.title) : 'Solicitação pendente'}</div>
-      <div class="event-time">${esc(String(request.start || '').slice(0,5))} - ${esc(String(request.end || '').slice(0,5))}</div>
-      <div class="event-owner">${isAdmin ? esc(request.requester_name || request.requester_email || 'Solicitante') : 'Aguardando aprovação'}</div>
-    </div>`;
+
+  function pendingMarkup(
+    request
+  ){
+
+    const start =
+      Math.max(
+        DAY_START,
+        minutes(request.start)
+      );
+
+    const end =
+      Math.min(
+        DAY_END,
+        Math.max(
+          minutes(request.end),
+          start + 15
+        )
+      );
+
+    const top =
+      (
+        (start - DAY_START) /
+        DAY_SPAN
+      ) * 100;
+
+    const height =
+      (
+        (end - start) /
+        DAY_SPAN
+      ) * 100;
+
+    return `
+      <div
+        class="event-card pending"
+        style="
+          --event-top:${top}%;
+          --event-height:${height}%;
+        "
+        title="${
+          isAdmin
+          ? 'clique para revisar esta solicitação'
+          : 'solicitação aguardando aprovação'
+        }"
+        onclick="
+          event.stopPropagation();
+          ${
+            isAdmin
+            ? `openRequestDetails('${request.id}')`
+            : ''
+          }
+        "
+      >
+
+        <div class="event-title">
+          ${
+            isAdmin
+            ? esc(request.title)
+            : 'SOLICITAÇÃO PENDENTE'
+          }
+        </div>
+
+        <div class="event-time">
+          ${esc(
+            String(
+              request.start || ''
+            ).slice(0,5)
+          )}
+          -
+          ${esc(
+            String(
+              request.end || ''
+            ).slice(0,5)
+          )}
+        </div>
+
+        <div class="event-owner">
+          ${
+            isAdmin
+            ? esc(
+                request.requester_name ||
+                request.requester_email ||
+                'solicitante'
+              )
+            : 'aguardando aprovação'
+          }
+        </div>
+
+      </div>
+    `;
+
   }
+
 
   function timeAxis(){
-    return `<div class="time-axis">
-      ${hours.map((hour,index)=>`<span class="time-label" style="top:${(index/11)*100}%">${hour}</span>`).join('')}
-    </div>`;
+
+    return `
+      <div class="time-axis">
+
+        ${
+          hours
+            .map(
+              (hour,index) =>
+                `
+                <span
+                  class="time-label"
+                  style="
+                    top:${(index/11)*100}%
+                  "
+                >
+                  ${hour}
+                </span>
+                `
+            )
+            .join('')
+        }
+
+      </div>
+    `;
+
   }
 
-  function timeline(target){
-    const events = meetings
-      .filter(m => meetingOccursOnDate(m,target))
-      .sort((a,b)=>minutes(a.start)-minutes(b.start));
 
-    const pending = isAdmin ? meetingRequests.filter(r =>
-      r.status === 'pending' && r.date === target
-    ) : [];
+  function timeline(
+    target
+  ){
 
-    return `<div class="day-timeline" onclick="handleTimelineClick(event,'${target}')">
-      ${events.map(eventMarkup).join('')}
-      ${pending.map(pendingMarkup).join('')}
-    </div>`;
+    const events =
+      meetings
+        .filter(
+          m =>
+            meetingOccursOnDate(
+              m,
+              target
+            )
+        )
+        .sort(
+          (a,b) =>
+            minutes(a.start) -
+            minutes(b.start)
+        );
+
+    const pending =
+      meetingRequests
+        .filter(
+          r =>
+            r.status === 'pending' &&
+            r.date === target &&
+            (
+              isAdmin ||
+              String(
+                r.requester_email || ''
+              ).toLowerCase() ===
+              String(
+                currentUser?.email || ''
+              ).toLowerCase()
+            )
+        );
+
+    return `
+      <div
+        class="day-timeline"
+        onclick="
+          handleTimelineClick(
+            event,
+            '${target}'
+          )
+        "
+      >
+
+        ${
+          events
+            .map(eventMarkup)
+            .join('')
+        }
+
+        ${
+          pending
+            .map(pendingMarkup)
+            .join('')
+        }
+
+      </div>
+    `;
+
   }
 
-  if(agendaView === 'daily'){
-    const target = localDateString(selectedDate);
-    const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][selectedDate.getDay()];
-    $('week-label').textContent = `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
 
-    container.className = 'daily-calendar agenda-export-area';
+  if(
+    agendaView === 'daily'
+  ){
+
+    const target =
+      localDateString(
+        selectedDate
+      );
+
+    const dayName =
+      [
+        'DOM',
+        'SEG',
+        'TER',
+        'QUA',
+        'QUI',
+        'SEX',
+        'SÁB'
+      ][
+        selectedDate.getDay()
+      ];
+
+    $('week-label')
+      .textContent =
+        `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
+
+    container.className =
+      'daily-calendar agenda-export-area';
+
     container.innerHTML =
-      `<div class="grid-header">Hora</div>
-       <div class="grid-header"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>
-       ${timeAxis()}
-       ${timeline(target)}`;
-    requestAnimationFrame(syncAgendaViewport);
+      `
+        <div class="grid-header">
+          HORA
+        </div>
+
+        <div class="grid-header">
+
+          <strong>
+            ${dayName}
+          </strong>
+
+          <br>
+
+          <small>
+            ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}
+          </small>
+
+        </div>
+
+        ${timeAxis()}
+
+        ${timeline(target)}
+      `;
+
+    requestAnimationFrame(
+      syncAgendaViewport
+    );
+
     return;
+
   }
 
-  const sunday = startOfWeek(selectedDate);
-  const days = Array.from({length:7},(_,index)=>addDays(sunday,index));
-  $('week-label').textContent =
-    `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
 
-  container.className = 'calendar agenda-export-area';
+  const sunday =
+    startOfWeek(
+      selectedDate
+    );
+
+  const days =
+    Array.from(
+      {length:7},
+      (_,index) =>
+        addDays(
+          sunday,
+          index
+        )
+    );
+
+  $('week-label')
+    .textContent =
+      `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
+
+  container.className =
+    'calendar agenda-export-area';
+
   container.innerHTML =
-    `<div class="grid-header">Hora</div>` +
-    days.map(day=>{
-      const name=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][day.getDay()];
-      return `<div class="grid-header"><strong>${name}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
-    }).join('') +
-    timeAxis() +
-    days.map(day=>timeline(localDateString(day))).join('');
+    `<div class="grid-header">HORA</div>` +
 
-  requestAnimationFrame(syncAgendaViewport);
+    days
+      .map(
+        day => {
+
+          const name =
+            [
+              'DOM',
+              'SEG',
+              'TER',
+              'QUA',
+              'QUI',
+              'SEX',
+              'SÁB'
+            ][
+              day.getDay()
+            ];
+
+          return `
+            <div class="grid-header">
+
+              <strong>
+                ${name}
+              </strong>
+
+              <br>
+
+              <small>
+                ${pad(day.getDate())}/${pad(day.getMonth()+1)}
+              </small>
+
+            </div>
+          `;
+
+        }
+      )
+      .join('') +
+
+    timeAxis() +
+
+    days
+      .map(
+        day =>
+          timeline(
+            localDateString(day)
+          )
+      )
+      .join('');
+
+  requestAnimationFrame(
+    syncAgendaViewport
+  );
+
 }
+
 
 function syncAgendaViewport(){
-  const wrapper = document.querySelector('.calendar-wrapper');
-  const calendar = $('weekly-table');
-  if(!wrapper || !calendar) return;
-  if(window.innerWidth >= 900){
-    const h = Math.max(240, wrapper.clientHeight - 44);
-    calendar.style.setProperty('--timeline-height', `${h}px`);
-  }else{
-    calendar.style.removeProperty('--timeline-height');
-  }
-}
 
-window.addEventListener('resize', syncAgendaViewport);
+  const wrapper =
+    document.querySelector(
+      '.calendar-wrapper'
+    );
 
-function handleTimelineClick(event,date){
-  if(event.target.closest('.event-card')) return;
-  const timeline = event.currentTarget;
-  const rect = timeline.getBoundingClientRect();
-  const ratio = Math.min(0.999,Math.max(0,(event.clientY-rect.top)/rect.height));
-  const rawMinutes = 8*60 + ratio*(11*60);
-  const snapped = Math.round(rawMinutes/30)*30;
-  const start = Math.max(8*60,Math.min(18*60,snapped));
-  const end = Math.min(19*60,start+60);
-  openMeetingModal({
-    date,
-    start: `${pad(Math.floor(start/60))}:${pad(start%60)}`,
-    end: `${pad(Math.floor(end/60))}:${pad(end%60)}`
-  });
-}
+  const calendar =
+    $('weekly-table');
 
-function exportAgendaPNG(){
-  if(!window.html2canvas){
-    const script=document.createElement('script');
-    script.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-    script.onload=()=>exportAgendaPNG();
-    script.onerror=()=>alert('Não foi possível carregar o exportador PNG.');
-    document.head.appendChild(script);
+  if(
+    !wrapper ||
+    !calendar
+  )
     return;
+
+  if(
+    window.innerWidth >= 900
+  ){
+
+    const h =
+      Math.max(
+        240,
+        wrapper.clientHeight - 44
+      );
+
+    calendar.style.setProperty(
+      '--timeline-height',
+      `${h}px`
+    );
+
+  }else{
+
+    calendar.style.removeProperty(
+      '--timeline-height'
+    );
+
   }
-  const area=document.querySelector('.agenda-export-area');
-  if(!area) return;
-  html2canvas(area,{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false}).then(canvas=>{
-    const link=document.createElement('a');
-    const date=$('week-picker').value || localDateString();
-    link.download=`coworking-pro-be-${date}-${agendaView}.png`;
-    link.href=canvas.toDataURL('image/png');
-    link.click();
-  }).catch(error=>{
-    console.error(error);
-    alert('Não foi possível exportar a agenda em PNG.');
-  });
+
 }
 
-function handleLogoUpload(event){
-  const file=event.target.files?.[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=()=>{
-    localStorage.setItem('be_logo',reader.result);
-    applySavedLogo(reader.result);
-  };
-  reader.readAsDataURL(file);
-}
+window.addEventListener(
+  'resize',
+  syncAgendaViewport
+);
 
-function applySavedLogo(src){
-  const img=$('brand-logo');
-  const placeholder=$('logo-placeholder');
-  if(!img) return;
-  img.src=src;
-  img.style.display='block';
-  if(placeholder) placeholder.style.display='none';
-}
 
-function loadSavedLogo(){
-  const src=localStorage.getItem('be_logo');
-  if(src) applySavedLogo(src);
-}
-
-function handleSlotClick(
-  date,
-  hour
+function handleTimelineClick(
+  event,
+  date
 ){
 
-  const next =
-    parseInt(
-      hour.slice(0,2),
-      10
-    ) + 1;
-
-  if(next > 19)
+  if(
+    event.target.closest(
+      '.event-card'
+    )
+  )
     return;
+
+  const timeline =
+    event.currentTarget;
+
+  const rect =
+    timeline.getBoundingClientRect();
+
+  const ratio =
+    Math.min(
+      .999,
+      Math.max(
+        0,
+        (
+          event.clientY -
+          rect.top
+        ) /
+        rect.height
+      )
+    );
+
+  const rawMinutes =
+    8*60 +
+    ratio *
+    (11*60);
+
+  const snapped =
+    Math.round(
+      rawMinutes / 30
+    ) * 30;
+
+  const start =
+    Math.max(
+      8*60,
+      Math.min(
+        18*60,
+        snapped
+      )
+    );
+
+  const end =
+    Math.min(
+      19*60,
+      start + 60
+    );
 
   openMeetingModal({
 
     date,
 
-    start:hour,
+    start:
+      `${pad(Math.floor(start/60))}:${pad(start%60)}`,
 
     end:
-      `${pad(next)}:00`
+      `${pad(Math.floor(end/60))}:${pad(end%60)}`
 
   });
 
 }
 
 
-/* =========================
-   REUNIÕES
-========================= */
+/* =========================================================
+   EXPORTAÇÃO
+========================================================= */
 
+function exportAgendaPNG(){
 
-async function loadAdminUsers(){
-  adminEmails = new Set([PRIMARY_ADMIN_EMAIL.toLowerCase()]);
-  if(!db) return;
-  try{
-    const {data,error}=await db.from('admin_users').select('email').order('email');
-    if(error) return; // mantém o administrador principal como fallback
-    (data||[]).forEach(row=>{
-      if(row?.email) adminEmails.add(String(row.email).trim().toLowerCase());
-    });
-  }catch(error){
-    console.warn('Tabela admin_users indisponível; usando administrador principal.',error);
-  }
-}
+  if(!window.html2canvas){
 
-function isPrimaryAdmin(){
-  return !!currentUser &&
-    String(currentUser.email||'').toLowerCase()===PRIMARY_ADMIN_EMAIL.toLowerCase();
-}
+    const script =
+      document.createElement(
+        'script'
+      );
 
-async function openAdminsModal(){
-  if(!isAdmin){alert('Apenas administradores podem gerenciar administradores.');return;}
-  await loadAdminUsers();
-  renderAdmins();
-  $('admins-modal').style.display='flex';
-}
+    script.src =
+      'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
 
-function closeAdminsModal(){ $('admins-modal').style.display='none'; }
+    script.onload =
+      () => exportAgendaPNG();
 
-function renderAdmins(){
-  const list=$('admins-list');
-  const emails=[...adminEmails].sort((a,b)=>{
-    if(a===PRIMARY_ADMIN_EMAIL.toLowerCase()) return -1;
-    if(b===PRIMARY_ADMIN_EMAIL.toLowerCase()) return 1;
-    return a.localeCompare(b);
-  });
-  list.innerHTML=emails.map(email=>{
-    const primary=email===PRIMARY_ADMIN_EMAIL.toLowerCase();
-    return `<div class="admin-row">
-      <div>
-        <div class="admin-email">${esc(email)}</div>
-        <div class="admin-role">${primary?'Administrador principal':'Administrador'}</div>
-      </div>
-      ${primary
-        ? '<span class="status" style="font-size:9px;padding:5px 9px">PRINCIPAL</span>'
-        : `<button class="btn btn-danger" onclick="removeAdmin('${encodeURIComponent(email)}')">Remover</button>`}
-    </div>`;
-  }).join('');
-}
+    script.onerror =
+      () =>
+        alert(
+          'não foi possível carregar o exportador png.'
+        );
 
-async function addAdmin(event){
-  event.preventDefault();
-  if(!isAdmin||!db) return;
-  const email=$('admin-email-input').value.trim().toLowerCase();
-  if(!email) return;
-  if(email===PRIMARY_ADMIN_EMAIL.toLowerCase()){
-    alert('Esse e-mail já é o administrador principal.');
+    document.head.appendChild(
+      script
+    );
+
     return;
+
   }
-  if(adminEmails.has(email)){
-    alert('Esse e-mail já é administrador.');
+
+  const area =
+    document.querySelector(
+      '.agenda-export-area'
+    );
+
+  if(!area)
     return;
-  }
-  try{
-    const {error}=await db.from('admin_users').insert([{email}]);
-    if(error) throw error;
-    await loadAdminUsers();
-    renderAdmins();
-    $('admin-email-input').value='';
-    alert('Administrador adicionado.');
-  }catch(error){
-    console.error(error);
-    alert('Não foi possível adicionar o administrador. Verifique se a tabela admin_users e suas políticas estão configuradas no Supabase.');
-  }
+
+  html2canvas(
+    area,
+    {
+      backgroundColor:'#C8C8C8',
+      scale:2,
+      useCORS:true,
+      logging:false
+    }
+  )
+  .then(
+    canvas => {
+
+      const link =
+        document.createElement(
+          'a'
+        );
+
+      const date =
+        $('week-picker').value ||
+        localDateString();
+
+      link.download =
+        `dbvo-coworking-${date}-${agendaView}.png`;
+
+      link.href =
+        canvas.toDataURL(
+          'image/png'
+        );
+
+      link.click();
+
+    }
+  )
+  .catch(
+    error => {
+
+      console.error(error);
+
+      alert(
+        'não foi possível exportar a agenda em png.'
+      );
+
+    }
+  );
+
 }
 
-async function removeAdmin(encodedEmail){
-  if(!isAdmin||!db) return;
-  const email=decodeURIComponent(encodedEmail).toLowerCase();
-  if(email===PRIMARY_ADMIN_EMAIL.toLowerCase()) return;
-  if(!confirm(`Remover ${email} dos administradores?`)) return;
-  try{
-    const {error}=await db.from('admin_users').delete().eq('email',email);
-    if(error) throw error;
-    await loadAdminUsers();
-    updateAuthUI();
-    renderAdmins();
-  }catch(error){
-    console.error(error);
-    alert('Não foi possível remover o administrador. Verifique as políticas da tabela admin_users.');
-  }
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+function handleLogoUpload(
+  event
+){
+
+  const file =
+    event.target.files?.[0];
+
+  if(!file)
+    return;
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    () => {
+
+      localStorage.setItem(
+        'dbvo_logo',
+        reader.result
+      );
+
+      applySavedLogo(
+        reader.result
+      );
+
+    };
+
+  reader.readAsDataURL(
+    file
+  );
+
 }
+
+
+function applySavedLogo(src){
+
+  const img =
+    $('brand-logo');
+
+  const placeholder =
+    $('logo-placeholder');
+
+  if(!img)
+    return;
+
+  img.src =
+    src;
+
+  img.style.display =
+    'block';
+
+  if(placeholder)
+    placeholder.style.display =
+      'none';
+
+}
+
+
+function loadSavedLogo(){
+
+  const src =
+    localStorage.getItem(
+      'dbvo_logo'
+    );
+
+  if(src)
+    applySavedLogo(src);
+
+}
+
+
+/* =========================================================
+   REUNIÕES — FORMULÁRIO
+========================================================= */
 
 function fillOwnerSelect(){
 
@@ -2212,7 +4133,7 @@ function fillOwnerSelect(){
     select.innerHTML =
       `
       <option value="">
-        Cadastre um colaborador primeiro
+        cadastre um colaborador primeiro
       </option>
       `;
 
@@ -2232,8 +4153,7 @@ function fillOwnerSelect(){
         collaborator.name;
 
       option.textContent =
-        `${collaborator.name}
-         (${collaborator.team || ''})`;
+        `${collaborator.name} (${collaborator.team || ''})`;
 
       select.appendChild(
         option
@@ -2244,447 +4164,2008 @@ function fillOwnerSelect(){
 
 }
 
-function fillTeamSelect() {
-  const select = $('m-team-select');
-  const defaultTeams = ['CSUM', 'CSUA', 'CEO', 'EDFE', 'ENGO', 'ENGE'];
-  const collTeams = collaborators.map(c => c.team).filter(t => ['CSUM','CSUA','CEO','EDFE','ENGO','ENGE'].includes(t));
-  const allTeams = [...new Set([...defaultTeams, ...collTeams])];
 
-  select.innerHTML = '<option value="">Sem time</option>' +
-    allTeams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+function fillTeamSelect(){
+
+  const select =
+    $('m-team-select');
+
+  const defaultTeams =
+    [
+      'CSUM',
+      'CSUA',
+      'CEO',
+      'EDFE',
+      'ENGO',
+      'ENGE'
+    ];
+
+  const collTeams =
+    collaborators
+      .map(
+        c => c.team
+      )
+      .filter(
+        t =>
+          defaultTeams.includes(t)
+      );
+
+  const allTeams =
+    [
+      ...new Set(
+        [
+          ...defaultTeams,
+          ...collTeams
+        ]
+      )
+    ];
+
+  select.innerHTML =
+    '<option value="">SEM TIME</option>' +
+
+    allTeams
+      .map(
+        t =>
+          `<option value="${esc(t)}">${esc(t)}</option>`
+      )
+      .join('');
+
 }
+
 
 function populateTimeSelects(){
-  const start = $('m-start');
-  const end = $('m-end');
-  if(!start || !end) return;
+
+  const start =
+    $('m-start');
+
+  const end =
+    $('m-end');
+
+  if(
+    !start ||
+    !end
+  )
+    return;
 
   const options = [];
-  for(let h=8;h<=19;h++){
-    for(let m=0;m<60;m+=30){
-      if(h===19 && m>0) continue;
-      const value=`${pad(h)}:${pad(m)}`;
-      options.push(`<option value="${value}">${value}</option>`);
+
+  for(
+    let h=8;
+    h<=19;
+    h++
+  ){
+
+    for(
+      let m=0;
+      m<60;
+      m+=30
+    ){
+
+      if(
+        h===19 &&
+        m>0
+      )
+        continue;
+
+      const value =
+        `${pad(h)}:${pad(m)}`;
+
+      options.push(
+        `
+        <option value="${value}">
+          ${value}
+        </option>
+        `
+      );
+
     }
+
   }
-  start.innerHTML = options.join('');
-  end.innerHTML = options.join('');
-  start.addEventListener('change',updateMeetingTimeUI);
-  end.addEventListener('change',updateMeetingTimeUI);
+
+  start.innerHTML =
+    options.join('');
+
+  end.innerHTML =
+    options.join('');
+
+  start.addEventListener(
+    'change',
+    updateMeetingTimeUI
+  );
+
+  end.addEventListener(
+    'change',
+    updateMeetingTimeUI
+  );
+
 }
+
 
 function updateMeetingTimeUI(){
-  const start=minutes($('m-start')?.value);
-  const end=minutes($('m-end')?.value);
-  const label=$('m-duration-label');
-  if(!label) return;
-  if(end>start){
-    const d=end-start;
-    label.textContent=`Duração: ${Math.floor(d/60)}${d%60?'h30':'h'}`;
+
+  const start =
+    minutes(
+      $('m-start')?.value
+    );
+
+  const end =
+    minutes(
+      $('m-end')?.value
+    );
+
+  const label =
+    $('m-duration-label');
+
+  if(!label)
+    return;
+
+  if(end > start){
+
+    const d =
+      end - start;
+
+    label.textContent =
+      `DURAÇÃO: ${Math.floor(d/60)}${d%60?'H30':'H'}`;
+
   }else{
-    label.textContent='Escolha um horário final maior que o início';
+
+    label.textContent =
+      'escolha um horário final maior que o início';
+
   }
-  document.querySelectorAll('.duration-chip').forEach(chip=>chip.classList.remove('active'));
+
+  document
+    .querySelectorAll(
+      '.duration-chip'
+    )
+    .forEach(
+      chip =>
+        chip.classList.remove(
+          'active'
+        )
+    );
+
 }
 
-function setMeetingDuration(duration){
-  const start=minutes($('m-start').value);
-  if(!start) return;
-  const end=Math.min(19*60,start+duration);
-  $('m-end').value=`${pad(Math.floor(end/60))}:${pad(end%60)}`;
+
+function setMeetingDuration(
+  duration
+){
+
+  const start =
+    minutes(
+      $('m-start').value
+    );
+
+  if(!start)
+    return;
+
+  const end =
+    Math.min(
+      19*60,
+      start + duration
+    );
+
+  $('m-end').value =
+    `${pad(Math.floor(end/60))}:${pad(end%60)}`;
+
   updateMeetingTimeUI();
+
 }
 
-function updateAuthUI(){
-  isAdmin=!!currentUser && adminEmails.has(String(currentUser.email||'').toLowerCase());
-  document.body.classList.toggle('is-admin',isAdmin);
 
-  const btn=$('auth-btn');
-  const user=$('auth-user');
-  const meetingBtn=$('meeting-action-btn');
+/* =========================================================
+   ADMINISTRADORES
+========================================================= */
+
+async function resolveAdminAccess(){
+
+  if(!currentUser){
+
+    isAdmin =
+      false;
+
+    adminUsers =
+      [];
+
+    return;
+
+  }
+
+  const email =
+    String(
+      currentUser.email || ''
+    ).toLowerCase();
+
+  if(
+    email ===
+    ADMIN_BOOTSTRAP_EMAIL
+      .toLowerCase()
+  ){
+
+    isAdmin =
+      true;
+
+    return;
+
+  }
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await db
+        .from('admin_users')
+        .select('email')
+        .ilike(
+          'email',
+          email
+        )
+        .maybeSingle();
+
+    if(error)
+      throw error;
+
+    isAdmin =
+      !!data;
+
+  }catch(error){
+
+    console.warn(
+      'não foi possível validar administrador:',
+      error.message
+    );
+
+    isAdmin =
+      false;
+
+  }
+
+}
+
+
+async function updateAuthUI(){
+
+  await resolveAdminAccess();
+
+  document.body.classList.toggle(
+    'is-admin',
+    isAdmin
+  );
+
+  const btn =
+    $('auth-btn');
+
+  const user =
+    $('auth-user');
+
+  const meetingBtn =
+    $('meeting-action-btn');
 
   if(currentUser){
-    if(user) user.textContent=isAdmin ? 'Administrador' : (currentUser.email||'');
-    if(btn) btn.textContent='Sair';
-    if(meetingBtn) meetingBtn.textContent=isAdmin ? '+ Nova reunião' : '+ Solicitar reunião';
+
+    if(user){
+
+      user.textContent =
+        isAdmin
+        ? 'ADMINISTRADOR'
+        : (
+            currentUser.user_metadata
+              ?.full_name ||
+            currentUser.email ||
+            ''
+          );
+
+    }
+
+    if(btn)
+      btn.textContent =
+        'SAIR';
+
+    if(meetingBtn){
+
+      meetingBtn.textContent =
+        isAdmin
+        ? '+ NOVA REUNIÃO'
+        : '+ SOLICITAR REUNIÃO';
+
+    }
+
   }else{
-    if(user) user.textContent='';
-    if(btn) btn.textContent='Entrar';
-    if(meetingBtn) meetingBtn.textContent='+ Solicitar reunião';
+
+    if(user)
+      user.textContent =
+        '';
+
+    if(btn)
+      btn.textContent =
+        'ENTRAR';
+
+    if(meetingBtn)
+      meetingBtn.textContent =
+        '+ SOLICITAR REUNIÃO';
+
   }
 
   updateApprovalBadge();
+
 }
 
-function updateApprovalBadge(){
-  const count=meetingRequests.filter(r=>r.status==='pending').length;
-  const badge=$('approvals-inline-badge');
-  const headerBadge=$('approval-badge');
-  if(badge) badge.textContent=count;
-  if(headerBadge){
-    headerBadge.textContent=count;
-    headerBadge.style.display=isAdmin && count ? 'inline-flex' : 'none';
-  }
-}
 
-function openAuthModal(){
-  if(currentUser){
-    if(confirm('Deseja sair deste acesso?')) db?.auth.signOut();
+async function loadAdmins(){
+
+  if(
+    !db ||
+    !isAdmin
+  )
     return;
+
+  const {
+    data,
+    error
+  } =
+    await db
+      .from('admin_users')
+      .select('*')
+      .order(
+        'created_at',
+        {
+          ascending:true
+        }
+      );
+
+  if(error){
+
+    console.warn(
+      'não foi possível carregar administradores:',
+      error.message
+    );
+
+    return;
+
   }
-  authMode='login';
-  $('auth-title').textContent='Entrar';
-  $('auth-submit').textContent='Entrar';
-  $('auth-email').value='';
-  $('auth-password').value='';
-  $('auth-modal').style.display='flex';
+
+  adminUsers =
+    data || [];
+
 }
 
-function toggleAuthMode(){
-  authMode=authMode==='login'?'signup':'login';
-  $('auth-title').textContent=authMode==='login'?'Entrar':'Criar acesso';
-  $('auth-submit').textContent=authMode==='login'?'Entrar':'Criar acesso';
-  $('auth-help').textContent=authMode==='login'
-    ? 'Use seu acesso para solicitar reuniões. O administrador terá acesso às aprovações.'
-    : 'Crie um acesso com seu e-mail. Dependendo das configurações do Supabase, pode ser necessário confirmar o e-mail.';
+
+async function openAdminsModal(){
+
+  if(!isAdmin){
+
+    alert(
+      'apenas administradores podem gerenciar administradores.'
+    );
+
+    return;
+
+  }
+
+  await loadAdmins();
+
+  renderAdmins();
+
+  $('admins-modal')
+    .style.display =
+      'flex';
+
 }
 
-function closeAuthModal(){
-  $('auth-modal').style.display='none';
+
+function closeAdminsModal(){
+
+  $('admins-modal')
+    .style.display =
+      'none';
+
 }
 
-async function submitAuth(event){
+
+function renderAdmins(){
+
+  const list =
+    $('admins-list');
+
+  if(!list)
+    return;
+
+  const all =
+    [...adminUsers];
+
+  if(
+    !all.some(
+      a =>
+        String(a.email)
+          .toLowerCase() ===
+        ADMIN_BOOTSTRAP_EMAIL
+          .toLowerCase()
+    )
+  ){
+
+    all.unshift(
+      {
+        email:
+          ADMIN_BOOTSTRAP_EMAIL,
+        bootstrap:true
+      }
+    );
+
+  }
+
+  list.innerHTML =
+    all
+      .map(
+        a => `
+
+          <div class="admin-row">
+
+            <div>
+
+              <strong>
+                ${esc(a.email)}
+              </strong>
+
+              ${
+                a.bootstrap
+                ?
+                `
+                <span class="admin-primary">
+                  ADMINISTRADOR PRINCIPAL
+                </span>
+                `
+                :
+                ''
+              }
+
+            </div>
+
+            ${
+              a.bootstrap
+              ?
+              ''
+              :
+              `
+              <button
+                class="btn btn-danger"
+                onclick="removeAdmin('${esc(a.email)}')">
+                REMOVER
+              </button>
+              `
+            }
+
+          </div>
+
+        `
+      )
+      .join('');
+
+}
+
+
+async function addAdmin(
+  event
+){
+
   event.preventDefault();
-  if(!db){alert('Supabase indisponível.');return;}
-  const email=$('auth-email').value.trim();
-  const password=$('auth-password').value;
+
+  if(
+    !isAdmin ||
+    !db
+  )
+    return;
+
+  const input =
+    $('admin-email-input');
+
+  const email =
+    input.value
+      .trim()
+      .toLowerCase();
+
+  if(!email)
+    return;
 
   try{
-    if(authMode==='signup'){
-      const {error}=await db.auth.signUp({email,password});
-      if(error) throw error;
-      alert('Acesso criado. Se a confirmação de e-mail estiver ativa, confirme seu e-mail e depois entre.');
-      toggleAuthMode();
-      return;
-    }
-    const {error}=await db.auth.signInWithPassword({email,password});
-    if(error) throw error;
-    closeAuthModal();
+
+    const {
+      error
+    } =
+      await db
+        .from('admin_users')
+        .insert([
+          {email}
+        ]);
+
+    if(error)
+      throw error;
+
+    input.value =
+      '';
+
+    await loadAdmins();
+
+    renderAdmins();
+
+    alert(
+      'administrador adicionado. a pessoa deve criar ou acessar a agenda com este e-mail.'
+    );
+
   }catch(error){
+
+    alert(
+      'não foi possível adicionar administrador: ' +
+      error.message
+    );
+
+  }
+
+}
+
+
+async function removeAdmin(
+  email
+){
+
+  if(
+    !isAdmin ||
+    !db
+  )
+    return;
+
+  if(
+    email.toLowerCase() ===
+    ADMIN_BOOTSTRAP_EMAIL.toLowerCase()
+  )
+    return;
+
+  if(
+    !confirm(
+      `remover ${email} dos administradores?`
+    )
+  )
+    return;
+
+  const {
+    error
+  } =
+    await db
+      .from('admin_users')
+      .delete()
+      .eq(
+        'email',
+        email
+      );
+
+  if(error){
+
+    alert(
+      'não foi possível remover: ' +
+      error.message
+    );
+
+    return;
+
+  }
+
+  await loadAdmins();
+
+  renderAdmins();
+
+}
+
+
+function updateApprovalBadge(){
+
+  const count =
+    meetingRequests
+      .filter(
+        r =>
+          r.status ===
+          'pending'
+      )
+      .length;
+
+  const badge =
+    $('approvals-inline-badge');
+
+  const headerBadge =
+    $('approval-badge');
+
+  if(badge)
+    badge.textContent =
+      count;
+
+  if(headerBadge){
+
+    headerBadge.textContent =
+      count;
+
+    headerBadge.style.display =
+      isAdmin && count
+      ? 'inline-flex'
+      : 'none';
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGIN / CADASTRO
+========================================================= */
+
+function openAuthModal(){
+
+  if(currentUser){
+
+    if(
+      confirm(
+        'deseja sair deste acesso?'
+      )
+    ){
+
+      db?.auth.signOut();
+
+    }
+
+    return;
+
+  }
+
+  authMode =
+    'login';
+
+  updateAuthModal();
+
+  $('auth-email').value =
+    '';
+
+  $('auth-password').value =
+    '';
+
+  $('auth-password-confirm').value =
+    '';
+
+  $('auth-first-name').value =
+    '';
+
+  $('auth-last-name').value =
+    '';
+
+  $('auth-modal')
+    .style.display =
+      'flex';
+
+}
+
+
+function updateAuthModal(){
+
+  const isSignup =
+    authMode ===
+    'signup';
+
+  $('auth-title')
+    .textContent =
+      isSignup
+      ? 'CRIAR ACESSO'
+      : 'ENTRAR';
+
+  $('auth-submit')
+    .textContent =
+      isSignup
+      ? 'CRIAR ACESSO'
+      : 'ENTRAR';
+
+  $('signup-name-group')
+    .style.display =
+      isSignup
+      ? 'flex'
+      : 'none';
+
+  $('signup-lastname-group')
+    .style.display =
+      isSignup
+      ? 'flex'
+      : 'none';
+
+  $('signup-confirm-group')
+    .style.display =
+      isSignup
+      ? 'flex'
+      : 'none';
+
+  $('auth-first-name')
+    .required =
+      isSignup;
+
+  $('auth-last-name')
+    .required =
+      isSignup;
+
+  $('auth-password-confirm')
+    .required =
+      isSignup;
+
+  $('auth-password')
+    .autocomplete =
+      isSignup
+      ? 'new-password'
+      : 'current-password';
+
+  $('auth-help')
+    .textContent =
+      isSignup
+      ?
+      'cadastre seu nome, sobrenome, e-mail e senha para solicitar reuniões.'
+      :
+      'use seu acesso para solicitar reuniões. o administrador terá acesso às aprovações.';
+
+}
+
+
+function toggleAuthMode(){
+
+  authMode =
+    authMode ===
+    'login'
+    ? 'signup'
+    : 'login';
+
+  updateAuthModal();
+
+}
+
+
+function closeAuthModal(){
+
+  $('auth-modal')
+    .style.display =
+      'none';
+
+}
+
+
+async function submitAuth(
+  event
+){
+
+  event.preventDefault();
+
+  if(!db){
+
+    alert(
+      'supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  const email =
+    $('auth-email')
+      .value
+      .trim();
+
+  const password =
+    $('auth-password')
+      .value;
+
+  try{
+
+    /* =========================
+       CADASTRO
+    ========================= */
+
+    if(
+      authMode ===
+      'signup'
+    ){
+
+      const firstName =
+        $('auth-first-name')
+          .value
+          .trim();
+
+      const lastName =
+        $('auth-last-name')
+          .value
+          .trim();
+
+      const passwordConfirm =
+        $('auth-password-confirm')
+          .value;
+
+      if(!firstName){
+
+        alert(
+          'informe seu nome.'
+        );
+
+        return;
+
+      }
+
+      if(!lastName){
+
+        alert(
+          'informe seu sobrenome.'
+        );
+
+        return;
+
+      }
+
+      if(
+        password !==
+        passwordConfirm
+      ){
+
+        alert(
+          'as senhas não coincidem.'
+        );
+
+        $('auth-password-confirm')
+          .focus();
+
+        return;
+
+      }
+
+      if(password.length < 6){
+
+        alert(
+          'a senha deve possuir pelo menos 6 caracteres.'
+        );
+
+        return;
+
+      }
+
+      const fullName =
+        `${firstName} ${lastName}`.trim();
+
+      const {
+        data,
+        error
+      } =
+        await db.auth.signUp({
+
+          email,
+
+          password,
+
+          options:{
+            data:{
+              first_name:
+                firstName,
+
+              last_name:
+                lastName,
+
+              full_name:
+                fullName
+            }
+          }
+
+        });
+
+      if(error)
+        throw error;
+
+      /*
+        Caso a confirmação de e-mail
+        esteja desativada, o usuário
+        já poderá entrar automaticamente.
+      */
+
+      if(data?.session){
+
+        currentUser =
+          data.session.user;
+
+        closeAuthModal();
+
+        await updateAuthUI();
+
+        alert(
+          'acesso criado com sucesso.'
+        );
+
+      }else{
+
+        alert(
+          'acesso criado. se a confirmação de e-mail estiver ativa, confirme seu e-mail e depois entre.'
+        );
+
+        authMode =
+          'login';
+
+        updateAuthModal();
+
+      }
+
+      return;
+
+    }
+
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    const {
+      error
+    } =
+      await db.auth.signInWithPassword({
+
+        email,
+
+        password
+
+      });
+
+    if(error)
+      throw error;
+
+    closeAuthModal();
+
+  }catch(error){
+
     console.error(error);
-    alert('Não foi possível concluir o acesso: '+error.message);
+
+    alert(
+      'não foi possível concluir o acesso: ' +
+      error.message
+    );
+
   }
+
 }
 
-function fillOwnerSelect(){
-  const select=$('m-owner-select');
-  select.innerHTML='';
-  if(!collaborators.length){
-    select.innerHTML='<option value="">Cadastre um colaborador primeiro</option>';
-    return;
-  }
-  collaborators.forEach(collaborator=>{
-    const option=document.createElement('option');
-    option.value=collaborator.name;
-    option.textContent=`${collaborator.name} (${collaborator.team||''})`;
-    select.appendChild(option);
-  });
-}
 
-function fillTeamSelect(){
-  const select=$('m-team-select');
-  const defaultTeams=['CSUM','CSUA','CEO','EDFE','ENGO','ENGE'];
-  const collTeams=collaborators.map(c=>c.team).filter(t=>defaultTeams.includes(t));
-  const allTeams=[...new Set([...defaultTeams,...collTeams])];
-  select.innerHTML='<option value="">Sem time</option>'+allTeams.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
-}
+/* =========================================================
+   MODAL REUNIÃO
+========================================================= */
 
-function openMeetingModal(data=null){
+function openMeetingModal(
+  data=null
+){
+
   if(!currentUser){
+
     openAuthModal();
+
     return;
+
   }
 
   fillOwnerSelect();
+
   fillTeamSelect();
+
   $('meeting-form').reset();
 
-  $('m-id').value=data?.id||'';
-  $('m-title').value=data?.title||'';
-  $('m-team-select').value=data?.team||'';
-  $('m-type').value=data?.type||'Interna';
-  $('m-owner-select').value=data?.owner||collaborators[0]?.name||'';
-  $('m-attendees').value=data?.attendees_count||1;
-  $('m-participants').value=data?.participants||'';
-  $('m-date').value=data?.date||$('week-picker').value||localDateString();
-  $('m-start').value=data?.start?String(data.start).slice(0,5):'08:00';
-  $('m-end').value=data?.end?String(data.end).slice(0,5):'09:00';
-  $('m-recurrence').value=data?.recurrence||'none';
+  $('m-id').value =
+    data?.id || '';
 
-  const requester=$('requester-box');
-  const isEditing=!!data?.id;
-  const canEdit=isAdmin;
+  $('m-title').value =
+    data?.title || '';
 
-  $('modal-title-text').textContent =
-    isEditing ? 'Editar Reunião / Evento' : (isAdmin ? 'Nova reunião' : 'Solicitar reunião');
+  $('m-team-select').value =
+    data?.team || '';
 
-  $('btn-delete-meeting').style.display = isEditing && isAdmin ? 'inline-flex' : 'none';
-  $('m-owner-select').closest('.form-group').style.display = isAdmin ? '' : 'none';
+  $('m-type').value =
+    data?.type ||
+    'Interna';
+
+  $('m-owner-select').value =
+    data?.owner ||
+    collaborators[0]?.name ||
+    '';
+
+  $('m-attendees').value =
+    data?.attendees_count ||
+    1;
+
+  $('m-participants').value =
+    data?.participants ||
+    '';
+
+  $('m-date').value =
+    data?.date ||
+    $('week-picker').value ||
+    localDateString();
+
+  $('m-start').value =
+    data?.start
+    ? String(data.start).slice(0,5)
+    : '08:00';
+
+  $('m-end').value =
+    data?.end
+    ? String(data.end).slice(0,5)
+    : '09:00';
+
+  $('m-recurrence').value =
+    data?.recurrence ||
+    'none';
+
+  const requester =
+    $('requester-box');
+
+  const isEditing =
+    !!data?.id;
+
+  $('modal-title-text')
+    .textContent =
+      isEditing
+      ? 'EDITAR REUNIÃO / EVENTO'
+      : (
+          isAdmin
+          ? 'NOVA REUNIÃO'
+          : 'SOLICITAR REUNIÃO'
+        );
+
+  $('btn-delete-meeting')
+    .style.display =
+      isEditing &&
+      isAdmin
+      ? 'inline-flex'
+      : 'none';
+
+  $('owner-group')
+    .style.display =
+      isAdmin
+      ? ''
+      : 'none';
 
   if(requester){
-    requester.style.display=isAdmin?'none':'block';
+
+    requester.style.display =
+      isAdmin
+      ? 'none'
+      : 'block';
+
     if(!isAdmin){
-      const displayName=currentUser.user_metadata?.full_name || currentUser.email || 'Solicitante';
-      requester.innerHTML=`Solicitação em nome de <strong>${esc(displayName)}</strong><br><span style="font-size:10px">${esc(currentUser.email||'')}</span>`;
+
+      const displayName =
+        currentUser
+          .user_metadata
+          ?.full_name ||
+        currentUser.email ||
+        'solicitante';
+
+      requester.innerHTML =
+        `
+        solicitação em nome de
+        <strong>
+          ${esc(displayName)}
+        </strong>
+
+        <br>
+
+        <span style="
+          font-size:9px;
+        ">
+          ${esc(
+            currentUser.email || ''
+          )}
+        </span>
+        `;
+
     }
+
   }
 
-  // Solicitações são sempre novas para usuários comuns.
-  $('m-id').value = isAdmin ? (data?.id||'') : '';
-  $('meeting-modal').style.display='flex';
+  $('m-id').value =
+    isAdmin
+    ? (data?.id || '')
+    : '';
+
+  $('meeting-modal')
+    .style.display =
+      'flex';
+
   updateMeetingTimeUI();
+
 }
 
-function openMeetingModalFromEncoded(encoded){
+
+function openMeetingModalFromEncoded(
+  encoded
+){
+
   try{
-    openMeetingModal(JSON.parse(decodeURIComponent(encoded)));
+
+    openMeetingModal(
+      JSON.parse(
+        decodeURIComponent(
+          encoded
+        )
+      )
+    );
+
   }catch(error){
+
     console.error(error);
-    alert('Não foi possível abrir a reunião.');
+
+    alert(
+      'não foi possível abrir a reunião.'
+    );
+
   }
+
 }
 
-function closeMeetingModal(){ $('meeting-modal').style.display='none'; }
 
-function meetingConflict(candidate,editingId=''){
-  const start=minutes(candidate.start);
-  const end=minutes(candidate.end);
-  if(end<=start) return 'O horário final deve ser maior que o horário inicial.';
+function closeMeetingModal(){
 
-  const base=dateFromInput(candidate.date);
-  for(let i=0;i<366;i++){
-    const day=localDateString(addDays(base,i));
-    if(!meetingOccursOnDate(candidate,day)) continue;
-    for(const existing of meetings){
-      if(editingId && String(existing.id)===String(editingId)) continue;
-      if(!meetingOccursOnDate(existing,day)) continue;
-      if(start<minutes(existing.end) && end>minutes(existing.start)){
-        return `Conflito com "${existing.title}" em ${day.split('-').reverse().join('/')} (${String(existing.start).slice(0,5)}-${String(existing.end).slice(0,5)}).`;
+  $('meeting-modal')
+    .style.display =
+      'none';
+
+}
+
+
+/* =========================================================
+   CONFLITOS
+========================================================= */
+
+function meetingConflict(
+  candidate,
+  editingId=''
+){
+
+  const start =
+    minutes(
+      candidate.start
+    );
+
+  const end =
+    minutes(
+      candidate.end
+    );
+
+  if(end <= start)
+    return 'o horário final deve ser maior que o horário inicial.';
+
+  const base =
+    dateFromInput(
+      candidate.date
+    );
+
+  for(
+    let i=0;
+    i<366;
+    i++
+  ){
+
+    const day =
+      localDateString(
+        addDays(
+          base,
+          i
+        )
+      );
+
+    if(
+      !meetingOccursOnDate(
+        candidate,
+        day
+      )
+    )
+      continue;
+
+    for(
+      const existing
+      of meetings
+    ){
+
+      if(
+        editingId &&
+        String(existing.id) ===
+        String(editingId)
+      )
+        continue;
+
+      if(
+        !meetingOccursOnDate(
+          existing,
+          day
+        )
+      )
+        continue;
+
+      if(
+        start <
+        minutes(existing.end) &&
+        end >
+        minutes(existing.start)
+      ){
+
+        return `
+          conflito com "${existing.title}"
+          em
+          ${day.split('-').reverse().join('/')}
+          (${String(existing.start).slice(0,5)}-${String(existing.end).slice(0,5)}).
+        `;
+
       }
+
     }
+
   }
+
   return null;
+
 }
 
-async function saveMeeting(event){
-  event.preventDefault();
-  if(!db){alert('Supabase indisponível.');return;}
-  if(!currentUser){openAuthModal();return;}
 
-  const id=isAdmin ? $('m-id').value : '';
-  const data={
-    title:$('m-title').value.trim(),
-    owner:isAdmin ? $('m-owner-select').value : (currentUser.user_metadata?.full_name || currentUser.email || 'Solicitante'),
-    team:$('m-team-select').value,
-    type:$('m-type').value,
-    attendees_count:parseInt($('m-attendees').value,10)||1,
-    participants:$('m-participants').value.trim(),
-    date:$('m-date').value,
-    start:$('m-start').value,
-    end:$('m-end').value,
-    recurrence:$('m-recurrence').value
+/* =========================================================
+   SALVAR REUNIÃO
+========================================================= */
+
+async function saveMeeting(
+  event
+){
+
+  event.preventDefault();
+
+  if(!db){
+
+    alert(
+      'supabase indisponível.'
+    );
+
+    return;
+
+  }
+
+  if(!currentUser){
+
+    openAuthModal();
+
+    return;
+
+  }
+
+  const id =
+    isAdmin
+    ? $('m-id').value
+    : '';
+
+  const data = {
+
+    title:
+      $('m-title')
+        .value
+        .trim(),
+
+    owner:
+      isAdmin
+      ? $('m-owner-select').value
+      : (
+          currentUser
+            .user_metadata
+            ?.full_name ||
+          currentUser.email ||
+          'solicitante'
+        ),
+
+    team:
+      $('m-team-select').value,
+
+    type:
+      $('m-type').value,
+
+    attendees_count:
+      parseInt(
+        $('m-attendees').value,
+        10
+      ) || 1,
+
+    participants:
+      $('m-participants')
+        .value
+        .trim(),
+
+    date:
+      $('m-date').value,
+
+    start:
+      $('m-start').value,
+
+    end:
+      $('m-end').value,
+
+    recurrence:
+      $('m-recurrence').value
+
   };
 
-  if(!data.title||!data.date||!data.start||!data.end){
-    alert('Preencha todos os campos obrigatórios.');return;
-  }
-  if(minutes(data.end)<=minutes(data.start)){
-    alert('O horário final deve ser maior que o horário inicial.');return;
+  if(
+    !data.title ||
+    !data.date ||
+    !data.start ||
+    !data.end
+  ){
+
+    alert(
+      'preencha todos os campos obrigatórios.'
+    );
+
+    return;
+
   }
 
-  const conflict=meetingConflict(data,id);
-  if(conflict){alert(conflict);return;}
+  if(
+    minutes(data.end) <=
+    minutes(data.start)
+  ){
+
+    alert(
+      'o horário final deve ser maior que o horário inicial.'
+    );
+
+    return;
+
+  }
+
+  const conflict =
+    meetingConflict(
+      data,
+      id
+    );
+
+  if(conflict){
+
+    alert(conflict);
+
+    return;
+
+  }
 
   try{
+
     if(isAdmin){
-      const response=id
-        ? await db.from('meetings').update(data).eq('id',id).select().single()
-        : await db.from('meetings').insert([data]).select().single();
-      if(response.error) throw response.error;
+
+      const response =
+        id
+
+        ?
+
+        await db
+          .from('meetings')
+          .update(data)
+          .eq('id',id)
+          .select()
+          .single()
+
+        :
+
+        await db
+          .from('meetings')
+          .insert([data])
+          .select()
+          .single();
+
+      if(response.error)
+        throw response.error;
+
       closeMeetingModal();
+
       await loadData();
-      setStatus('● Sincronizado',true);
+
+      setStatus(
+        '● SINCRONIZADO',
+        true
+      );
+
       return;
+
     }
 
-    const requestData={
+
+    const requestData = {
+
       ...data,
-      requester_email:currentUser.email,
-      requester_name:currentUser.user_metadata?.full_name || currentUser.email,
-      status:'pending'
+
+      requester_email:
+        currentUser.email,
+
+      requester_name:
+        currentUser
+          .user_metadata
+          ?.full_name ||
+        currentUser.email,
+
+      status:
+        'pending'
+
     };
+
     delete requestData.owner;
 
-    const {data:createdRequest,error}=await db.from('meeting_requests').insert([requestData]).select().single();
-    if(error) throw error;
+    const {
+      data:createdRequest,
+      error
+    } =
+      await db
+        .from('meeting_requests')
+        .insert([
+          requestData
+        ])
+        .select()
+        .single();
 
-    // O pedido fica salvo mesmo se a notificação de e-mail estiver indisponível.
+    if(error)
+      throw error;
+
     try{
-      await notifyAdminByEmail(createdRequest || requestData);
+
+      await notifyAdminByEmail(
+        createdRequest ||
+        requestData
+      );
+
     }catch(emailError){
-      console.warn('Solicitação salva, mas o aviso por e-mail não foi enviado:',emailError);
+
+      console.warn(
+        'solicitação salva, mas o aviso por e-mail não foi enviado:',
+        emailError
+      );
+
     }
 
     closeMeetingModal();
-    alert('Solicitação enviada! O horário ficará pendente até a aprovação do administrador.');
-    if(isAdmin) await loadRequests();
+
+    alert(
+      'solicitação enviada! o horário ficará pendente até a aprovação do administrador.'
+    );
+
     renderDashboard();
+
   }catch(error){
+
     console.error(error);
-    alert('Não foi possível salvar/enviar: '+error.message);
+
+    alert(
+      'não foi possível salvar/enviar: ' +
+      error.message
+    );
+
   }
+
 }
+
+
+/* =========================================================
+   EXCLUIR REUNIÃO
+========================================================= */
 
 async function deleteMeeting(){
-  const id=$('m-id').value;
-  if(!isAdmin||!id||!confirm('Tem certeza que deseja excluir esta reunião?')) return;
-  if(!db){alert('Supabase indisponível.');return;}
-  try{
-    const {error}=await db.from('meetings').delete().eq('id',id);
-    if(error) throw error;
-    closeMeetingModal();
-    await loadData();
-  }catch(error){
-    alert('Erro ao excluir reunião: '+error.message);
+
+  const id =
+    $('m-id').value;
+
+  if(
+    !isAdmin ||
+    !id ||
+    !confirm(
+      'tem certeza que deseja excluir esta reunião?'
+    )
+  )
+    return;
+
+  if(!db){
+
+    alert(
+      'supabase indisponível.'
+    );
+
+    return;
+
   }
+
+  try{
+
+    const {
+      error
+    } =
+      await db
+        .from('meetings')
+        .delete()
+        .eq(
+          'id',
+          id
+        );
+
+    if(error)
+      throw error;
+
+    closeMeetingModal();
+
+    await loadData();
+
+  }catch(error){
+
+    alert(
+      'erro ao excluir reunião: ' +
+      error.message
+    );
+
+  }
+
 }
 
-async function notifyAdminByEmail(request){
-  if(!db || !currentUser) return;
-  const {data:{session}}=await db.auth.getSession();
-  if(!session?.access_token) return;
 
-  const response=await fetch(`${SUPABASE_URL}/functions/v1/notify-meeting-request`,{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization':`Bearer ${session.access_token}`
-    },
-    body:JSON.stringify({
-      request,
-      admin_email:PRIMARY_ADMIN_EMAIL
-    })
-  });
-  if(!response.ok) throw new Error(await response.text());
+/* =========================================================
+   NOTIFICAÇÃO
+========================================================= */
+
+async function notifyAdminByEmail(
+  request
+){
+
+  if(
+    !db ||
+    !currentUser
+  )
+    return;
+
+  const {
+    data:{
+      session
+    }
+  } =
+    await db.auth.getSession();
+
+  if(
+    !session?.access_token
+  )
+    return;
+
+  const response =
+    await fetch(
+      `${SUPABASE_URL}/functions/v1/notify-meeting-request`,
+      {
+        method:'POST',
+
+        headers:{
+          'Content-Type':
+            'application/json',
+
+          'Authorization':
+            `Bearer ${session.access_token}`
+        },
+
+        body:
+          JSON.stringify({
+
+            request,
+
+            admin_email:
+              ADMIN_EMAIL
+
+          })
+
+        }
+    );
+
+  if(!response.ok)
+    throw new Error(
+      await response.text()
+    );
+
 }
+
+
+/* =========================================================
+   APROVAÇÕES
+========================================================= */
 
 async function openApprovalsModal(){
-  if(!isAdmin){alert('Apenas o administrador pode acessar as aprovações.');return;}
+
+  if(!isAdmin){
+
+    alert(
+      'apenas o administrador pode acessar as aprovações.'
+    );
+
+    return;
+
+  }
+
   await loadRequests();
+
   renderApprovals();
-  $('approvals-modal').style.display='flex';
+
+  $('approvals-modal')
+    .style.display =
+      'flex';
+
 }
 
-function closeApprovalsModal(){ $('approvals-modal').style.display='none'; }
+
+function closeApprovalsModal(){
+
+  $('approvals-modal')
+    .style.display =
+      'none';
+
+}
+
 
 function renderApprovals(){
-  const list=$('approvals-list');
-  const pending=meetingRequests.filter(r=>r.status==='pending');
+
+  const list =
+    $('approvals-list');
+
+  const pending =
+    meetingRequests
+      .filter(
+        r =>
+          r.status ===
+          'pending'
+      );
 
   if(!pending.length){
-    list.innerHTML='<div class="empty-state">Nenhuma solicitação pendente.</div>';
+
+    list.innerHTML =
+      `
+      <div class="empty-state">
+        NENHUMA SOLICITAÇÃO PENDENTE.
+      </div>
+      `;
+
     return;
+
   }
 
-  list.innerHTML=pending.map(r=>`
-    <div class="request-item">
-      <div class="request-main">
-        <strong>${esc(r.title)}</strong>
-        <div class="request-meta">
-          ${esc(r.requester_name||r.requester_email||'Solicitante')} · ${esc(r.requester_email||'')}<br>
-          ${esc(r.date||'')} · ${esc(String(r.start||'').slice(0,5))} - ${esc(String(r.end||'').slice(0,5))} · ${esc(r.type||'Interna')} · ${esc(r.attendees_count||1)} pessoa(s)<br>
-          ${esc(r.team||'Sem time')}${r.participants?' · '+esc(r.participants):''}
-        </div>
-      </div>
-      <div class="request-actions">
-        <button class="btn btn-danger" onclick="rejectRequest('${r.id}')">Recusar</button>
-        <button class="btn btn-success" onclick="approveRequest('${r.id}')">Aprovar</button>
-      </div>
-    </div>
-  `).join('');
+  list.innerHTML =
+    pending
+      .map(
+        r => `
+
+          <div class="request-item">
+
+            <div class="request-main">
+
+              <strong>
+                ${esc(r.title)}
+              </strong>
+
+              <div class="request-meta">
+
+                ${esc(
+                  r.requester_name ||
+                  r.requester_email ||
+                  'solicitante'
+                )}
+
+                ·
+
+                ${esc(
+                  r.requester_email || ''
+                )}
+
+                <br>
+
+                ${esc(r.date || '')}
+
+                ·
+
+                ${esc(
+                  String(
+                    r.start || ''
+                  ).slice(0,5)
+                )}
+
+                -
+
+                ${esc(
+                  String(
+                    r.end || ''
+                  ).slice(0,5)
+                )}
+
+                ·
+
+                ${esc(
+                  r.type ||
+                  'Interna'
+                )}
+
+                ·
+
+                ${esc(
+                  r.attendees_count ||
+                  1
+                )}
+
+                pessoa(s)
+
+                <br>
+
+                ${esc(
+                  r.team ||
+                  'Sem time'
+                )}
+
+                ${
+                  r.participants
+                  ?
+                  ' · ' +
+                  esc(
+                    r.participants
+                  )
+                  :
+                  ''
+                }
+
+              </div>
+
+            </div>
+
+            <div class="request-actions">
+
+              <button
+                class="btn btn-danger"
+                onclick="rejectRequest('${r.id}')">
+                RECUSAR
+              </button>
+
+              <button
+                class="btn btn-success"
+                onclick="approveRequest('${r.id}')">
+                APROVAR
+              </button>
+
+            </div>
+
+          </div>
+
+        `
+      )
+      .join('');
+
 }
 
-async function openRequestDetails(id){
-  if(!isAdmin) return;
+
+async function openRequestDetails(
+  id
+){
+
+  if(!isAdmin)
+    return;
+
   await openApprovalsModal();
-  const item=meetingRequests.find(r=>String(r.id)===String(id));
-  if(item) alert(`Solicitação: ${item.title}\n${item.date} · ${String(item.start).slice(0,5)} - ${String(item.end).slice(0,5)}\nSolicitante: ${item.requester_name||item.requester_email}`);
+
+  const item =
+    meetingRequests.find(
+      r =>
+        String(r.id) ===
+        String(id)
+    );
+
+  if(item){
+
+    alert(
+      `SOLICITAÇÃO: ${item.title}\n` +
+      `${item.date} · ${String(item.start).slice(0,5)} - ${String(item.end).slice(0,5)}\n` +
+      `SOLICITANTE: ${item.requester_name || item.requester_email}`
+    );
+
+  }
+
 }
 
-async function approveRequest(id){
-  if(!isAdmin||!db) return;
-  const request=meetingRequests.find(r=>String(r.id)===String(id));
-  if(!request) return;
 
-  const data={
-    title:request.title,
-    owner:request.requester_name||request.requester_email||'Solicitante',
-    team:request.team||'',
-    type:request.type||'Interna',
-    attendees_count:request.attendees_count||1,
-    participants:request.participants||'',
-    date:request.date,
-    start:request.start,
-    end:request.end,
-    recurrence:request.recurrence||'none'
+async function approveRequest(
+  id
+){
+
+  if(
+    !isAdmin ||
+    !db
+  )
+    return;
+
+  const request =
+    meetingRequests.find(
+      r =>
+        String(r.id) ===
+        String(id)
+    );
+
+  if(!request)
+    return;
+
+  const data = {
+
+    title:
+      request.title,
+
+    owner:
+      request.requester_name ||
+      request.requester_email ||
+      'solicitante',
+
+    team:
+      request.team ||
+      '',
+
+    type:
+      request.type ||
+      'Interna',
+
+    attendees_count:
+      request.attendees_count ||
+      1,
+
+    participants:
+      request.participants ||
+      '',
+
+    date:
+      request.date,
+
+    start:
+      request.start,
+
+    end:
+      request.end,
+
+    recurrence:
+      request.recurrence ||
+      'none'
+
   };
 
-  const conflict=meetingConflict(data,'');
-  if(conflict){alert(conflict);return;}
+  const conflict =
+    meetingConflict(
+      data,
+      ''
+    );
 
-  if(!confirm(`Aprovar "${request.title}" para ${request.date} das ${String(request.start).slice(0,5)} às ${String(request.end).slice(0,5)}?`)) return;
+  if(conflict){
+
+    alert(conflict);
+
+    return;
+
+  }
+
+  if(
+    !confirm(
+      `aprovar "${request.title}" para ${request.date} das ${String(request.start).slice(0,5)} às ${String(request.end).slice(0,5)}?`
+    )
+  )
+    return;
 
   try{
-    const inserted=await db.from('meetings').insert([data]).select().single();
-    if(inserted.error) throw inserted.error;
 
-    const updated=await db.from('meeting_requests')
-      .update({status:'approved',approved_at:new Date().toISOString()})
-      .eq('id',id);
-    if(updated.error) throw updated.error;
+    const inserted =
+      await db
+        .from('meetings')
+        .insert([data])
+        .select()
+        .single();
+
+    if(inserted.error)
+      throw inserted.error;
+
+    const updated =
+      await db
+        .from('meeting_requests')
+        .update({
+          status:'approved',
+          approved_at:
+            new Date().toISOString()
+        })
+        .eq(
+          'id',
+          id
+        );
+
+    if(updated.error)
+      throw updated.error;
 
     await loadData();
+
     await loadRequests();
+
     renderApprovals();
+
     renderDashboard();
+
   }catch(error){
+
     console.error(error);
-    alert('Não foi possível aprovar: '+error.message);
+
+    alert(
+      'não foi possível aprovar: ' +
+      error.message
+    );
+
   }
+
 }
 
-async function rejectRequest(id){
-  if(!isAdmin||!db) return;
-  const request=meetingRequests.find(r=>String(r.id)===String(id));
-  if(!request) return;
-  if(!confirm(`Recusar a solicitação "${request.title}"?`)) return;
+
+async function rejectRequest(
+  id
+){
+
+  if(
+    !isAdmin ||
+    !db
+  )
+    return;
+
+  const request =
+    meetingRequests.find(
+      r =>
+        String(r.id) ===
+        String(id)
+    );
+
+  if(!request)
+    return;
+
+  if(
+    !confirm(
+      `recusar a solicitação "${request.title}"?`
+    )
+  )
+    return;
 
   try{
-    const {error}=await db.from('meeting_requests')
-      .update({status:'rejected',rejected_at:new Date().toISOString()})
-      .eq('id',id);
-    if(error) throw error;
+
+    const {
+      error
+    } =
+      await db
+        .from('meeting_requests')
+        .update({
+          status:'rejected',
+          rejected_at:
+            new Date().toISOString()
+        })
+        .eq(
+          'id',
+          id
+        );
+
+    if(error)
+      throw error;
+
     await loadRequests();
+
     renderApprovals();
+
     renderDashboard();
+
   }catch(error){
-    alert('Não foi possível recusar: '+error.message);
+
+    alert(
+      'não foi possível recusar: ' +
+      error.message
+    );
+
   }
+
 }
 
-/* =========================
-    ASSENTOS
-========================= */
+
+/* =========================================================
+   ASSENTOS
+========================================================= */
 
 function seatOccursOnDate(
   allocation,
@@ -2713,11 +6194,8 @@ function seatOccursOnDate(
     Number(
       allocation.exceptDay
     ) === day
-  ){
-
+  )
     return false;
-
-  }
 
   switch(
     allocation.recurrence ||
@@ -2741,14 +6219,17 @@ function seatOccursOnDate(
     case 'weekly':
 
       return (
-        day === start.getDay()
+        day ===
+        start.getDay()
       );
 
     case 'biweekly':{
 
       const difference =
         Math.floor(
-          (target-start) /
+          (
+            target-start
+          ) /
           86400000
         );
 
@@ -2767,114 +6248,430 @@ function seatOccursOnDate(
 
 }
 
-function storageTableId(table, period){
+
+function storageTableId(
+  table,
+  period
+){
+
   return `${table}__${period}`;
+
 }
+
 
 function getSeatOccupant(
   table,
   seat,
   date,
-  period = 'morning'
+  period='morning'
 ){
 
-  const currentTableId = storageTableId(table, period);
+  const currentTableId =
+    storageTableId(
+      table,
+      period
+    );
 
   return seatAllocations
-    .filter(allocation =>
-      String(allocation.seatCode) === String(seat) &&
-      (
-        String(allocation.tableId) === currentTableId ||
-        (period === 'morning' && String(allocation.tableId) === String(table))
-      ) &&
-      seatOccursOnDate(allocation,date)
+
+    .filter(
+      allocation =>
+
+        String(
+          allocation.seatCode
+        ) ===
+        String(seat)
+
+        &&
+
+        (
+          String(
+            allocation.tableId
+          ) ===
+          currentTableId
+
+          ||
+
+          (
+            period === 'morning' &&
+            String(
+              allocation.tableId
+            ) ===
+            String(table)
+          )
+        )
+
+        &&
+
+        seatOccursOnDate(
+          allocation,
+          date
+        )
     )
-    .sort((a,b) =>
-      String(b.startDate).localeCompare(String(a.startDate))
+
+    .sort(
+      (a,b) =>
+        String(
+          b.startDate
+        ).localeCompare(
+          String(
+            a.startDate
+          )
+        )
     )[0] || null;
+
 }
+
 
 function renderSeats(){
 
-  const date = $('seat-search-date').value || localDateString();
+  const date =
+    $('seat-search-date')
+      .value ||
+    localDateString();
 
-  function chair(table, code, period){
+  function chair(
+    table,
+    code,
+    period
+  ){
 
-    const allocation = getSeatOccupant(table,code,date,period);
+    const allocation =
+      getSeatOccupant(
+        table,
+        code,
+        date,
+        period
+      );
 
     return `
-      <div class="seat-chair ${allocation ? 'occupied' : ''}"
-           onclick="openSeatModal('${table}','${code}','${period}')">
-        <span>${code}</span>
-        <span class="seat-status">${esc(allocation?.collabName || 'Livre')}</span>
+      <div
+        class="seat-chair ${
+          allocation
+          ? 'occupied'
+          : ''
+        }"
+        onclick="
+          openSeatModal(
+            '${table}',
+            '${code}',
+            '${period}'
+          )
+        "
+      >
+
+        <span>
+          ${code}
+        </span>
+
+        <span class="seat-status">
+          ${esc(
+            allocation?.collabName ||
+            'LIVRE'
+          )}
+        </span>
+
       </div>
     `;
+
   }
 
-  $('m1-morning-top').innerHTML =
-    chair('Meeting01','C1','morning') + chair('Meeting01','C2','morning');
-  $('m1-morning-bottom').innerHTML =
-    chair('Meeting01','C3','morning') + chair('Meeting01','C4','morning');
 
-  $('m1-afternoon-top').innerHTML =
-    chair('Meeting01','C1','afternoon') + chair('Meeting01','C2','afternoon');
-  $('m1-afternoon-bottom').innerHTML =
-    chair('Meeting01','C3','afternoon') + chair('Meeting01','C4','afternoon');
+  $('m1-morning-top')
+    .innerHTML =
+      chair(
+        'Meeting01',
+        'C1',
+        'morning'
+      ) +
 
-  $('m2-morning-top').innerHTML =
-    chair('Meeting02','C1','morning') + chair('Meeting02','C2','morning');
-  $('m2-morning-bottom').innerHTML =
-    chair('Meeting02','C3','morning') + chair('Meeting02','C4','morning');
+      chair(
+        'Meeting01',
+        'C2',
+        'morning'
+      );
 
-  $('m2-afternoon-top').innerHTML =
-    chair('Meeting02','C1','afternoon') + chair('Meeting02','C2','afternoon');
-  $('m2-afternoon-bottom').innerHTML =
-    chair('Meeting02','C3','afternoon') + chair('Meeting02','C4','afternoon');
+  $('m1-morning-bottom')
+    .innerHTML =
+      chair(
+        'Meeting01',
+        'C3',
+        'morning'
+      ) +
 
-  $('m3-morning-top').innerHTML =
-    chair('Marketing','C1','morning') + chair('Marketing','C2','morning') + chair('Marketing','C3','morning');
-  $('m3-morning-bottom').innerHTML =
-    chair('Marketing','C4','morning') + chair('Marketing','C5','morning') + chair('Marketing','C6','morning');
+      chair(
+        'Meeting01',
+        'C4',
+        'morning'
+      );
 
-  $('m3-afternoon-top').innerHTML =
-    chair('Marketing','C1','afternoon') + chair('Marketing','C2','afternoon') + chair('Marketing','C3','afternoon');
-  $('m3-afternoon-bottom').innerHTML =
-    chair('Marketing','C4','afternoon') + chair('Marketing','C5','afternoon') + chair('Marketing','C6','afternoon');
+
+  $('m1-afternoon-top')
+    .innerHTML =
+      chair(
+        'Meeting01',
+        'C1',
+        'afternoon'
+      ) +
+
+      chair(
+        'Meeting01',
+        'C2',
+        'afternoon'
+      );
+
+  $('m1-afternoon-bottom')
+    .innerHTML =
+      chair(
+        'Meeting01',
+        'C3',
+        'afternoon'
+      ) +
+
+      chair(
+        'Meeting01',
+        'C4',
+        'afternoon'
+      );
+
+
+  $('m2-morning-top')
+    .innerHTML =
+      chair(
+        'Meeting02',
+        'C1',
+        'morning'
+      ) +
+
+      chair(
+        'Meeting02',
+        'C2',
+        'morning'
+      );
+
+  $('m2-morning-bottom')
+    .innerHTML =
+      chair(
+        'Meeting02',
+        'C3',
+        'morning'
+      ) +
+
+      chair(
+        'Meeting02',
+        'C4',
+        'morning'
+      );
+
+
+  $('m2-afternoon-top')
+    .innerHTML =
+      chair(
+        'Meeting02',
+        'C1',
+        'afternoon'
+      ) +
+
+      chair(
+        'Meeting02',
+        'C2',
+        'afternoon'
+      );
+
+  $('m2-afternoon-bottom')
+    .innerHTML =
+      chair(
+        'Meeting02',
+        'C3',
+        'afternoon'
+      ) +
+
+      chair(
+        'Meeting02',
+        'C4',
+        'afternoon'
+      );
+
+
+  $('m3-morning-top')
+    .innerHTML =
+      chair(
+        'Marketing',
+        'C1',
+        'morning'
+      ) +
+
+      chair(
+        'Marketing',
+        'C2',
+        'morning'
+      ) +
+
+      chair(
+        'Marketing',
+        'C3',
+        'morning'
+      );
+
+  $('m3-morning-bottom')
+    .innerHTML =
+      chair(
+        'Marketing',
+        'C4',
+        'morning'
+      ) +
+
+      chair(
+        'Marketing',
+        'C5',
+        'morning'
+      ) +
+
+      chair(
+        'Marketing',
+        'C6',
+        'morning'
+      );
+
+
+  $('m3-afternoon-top')
+    .innerHTML =
+      chair(
+        'Marketing',
+        'C1',
+        'afternoon'
+      ) +
+
+      chair(
+        'Marketing',
+        'C2',
+        'afternoon'
+      ) +
+
+      chair(
+        'Marketing',
+        'C3',
+        'afternoon'
+      );
+
+  $('m3-afternoon-bottom')
+    .innerHTML =
+      chair(
+        'Marketing',
+        'C4',
+        'afternoon'
+      ) +
+
+      chair(
+        'Marketing',
+        'C5',
+        'afternoon'
+      ) +
+
+      chair(
+        'Marketing',
+        'C6',
+        'afternoon'
+      );
+
 }
+
 
 function openSeatModal(
   table,
   seat,
-  period = 'morning'
+  period='morning'
 ){
 
-  const date = $('seat-search-date').value || localDateString();
-  const existing = getSeatOccupant(table,seat,date,period);
-  const select = $('s-collab-select');
+  const date =
+    $('seat-search-date')
+      .value ||
+    localDateString();
 
-  select.innerHTML = collaborators.length
-    ? collaborators.map(c => `
-        <option value="${esc(c.name)}">
-          ${esc(c.name)} (${esc(c.team || '')})
-        </option>
-      `).join('')
-    : `<option value="">Cadastre um colaborador primeiro</option>`;
+  const existing =
+    getSeatOccupant(
+      table,
+      seat,
+      date,
+      period
+    );
 
-  $('s-table-id').value = table;
-  $('s-seat-code').value = seat;
-  $('s-existing-id').value = existing?.id || '';
-  $('s-period').value = existing?.period || period;
-  $('s-start-date').value = existing?.startDate || date;
-  $('s-recurrence').value = existing?.recurrence || 'daily';
-  $('s-except-day').value = existing?.exceptDay || 'none';
-  $('s-collab-select').value = existing?.collabName || '';
+  const select =
+    $('s-collab-select');
 
-  $('seat-modal-title').textContent =
-    `Alocar Assento - ${table} (${seat}) - ${period === 'morning' ? 'Manhã' : 'Tarde'}`;
+  select.innerHTML =
+    collaborators.length
 
-  $('btn-remove-seat').style.display = existing ? 'inline-flex' : 'none';
-  $('seat-modal').style.display = 'flex';
+    ?
+
+    collaborators
+      .map(
+        c => `
+          <option value="${esc(c.name)}">
+            ${esc(c.name)}
+            (${esc(c.team || '')})
+          </option>
+        `
+      )
+      .join('')
+
+    :
+
+    `
+      <option value="">
+        cadastre um colaborador primeiro
+      </option>
+    `;
+
+  $('s-table-id').value =
+    table;
+
+  $('s-seat-code').value =
+    seat;
+
+  $('s-existing-id').value =
+    existing?.id || '';
+
+  $('s-period').value =
+    existing?.period ||
+    period;
+
+  $('s-start-date').value =
+    existing?.startDate ||
+    date;
+
+  $('s-recurrence').value =
+    existing?.recurrence ||
+    'daily';
+
+  $('s-except-day').value =
+    existing?.exceptDay ||
+    'none';
+
+  $('s-collab-select').value =
+    existing?.collabName ||
+    '';
+
+  $('seat-modal-title')
+    .textContent =
+      `ALOCAR ASSENTO - ${table} (${seat}) - ${
+        period === 'morning'
+        ? 'MANHÃ'
+        : 'TARDE'
+      }`;
+
+  $('btn-remove-seat')
+    .style.display =
+      existing
+      ? 'inline-flex'
+      : 'none';
+
+  $('seat-modal')
+    .style.display =
+      'flex';
+
 }
+
 
 function closeSeatModal(){
 
@@ -2884,72 +6681,175 @@ function closeSeatModal(){
 
 }
 
-function seatConflict(candidate, editingId = ''){
 
-  const base = dateFromInput(candidate.startDate);
+function seatConflict(
+  candidate,
+  editingId=''
+){
 
-  for(let i=0;i<366;i++){
+  const base =
+    dateFromInput(
+      candidate.startDate
+    );
 
-    const day = localDateString(addDays(base,i));
+  for(
+    let i=0;
+    i<366;
+    i++
+  ){
 
-    if(!seatOccursOnDate(candidate,day))
+    const day =
+      localDateString(
+        addDays(
+          base,
+          i
+        )
+      );
+
+    if(
+      !seatOccursOnDate(
+        candidate,
+        day
+      )
+    )
       continue;
 
-    for(const existing of seatAllocations){
+    for(
+      const existing
+      of seatAllocations
+    ){
 
-      if(editingId && String(existing.id) === String(editingId))
+      if(
+        editingId &&
+        String(existing.id) ===
+        String(editingId)
+      )
         continue;
 
-      if(String(existing.tableId) !== String(candidate.tableId))
+      if(
+        String(existing.tableId) !==
+        String(candidate.tableId)
+      )
         continue;
 
-      if(String(existing.seatCode) !== String(candidate.seatCode))
+      if(
+        String(existing.seatCode) !==
+        String(candidate.seatCode)
+      )
         continue;
 
-      if(String(existing.period || 'morning') !== String(candidate.period || 'morning'))
+      if(
+        String(
+          existing.period ||
+          'morning'
+        ) !==
+        String(
+          candidate.period ||
+          'morning'
+        )
+      )
         continue;
 
-      if(seatOccursOnDate(existing,day))
+      if(
+        seatOccursOnDate(
+          existing,
+          day
+        )
+      )
         return true;
+
     }
+
   }
 
   return false;
+
 }
 
-async function saveSeatAllocation(event){
+
+async function saveSeatAllocation(
+  event
+){
 
   event.preventDefault();
 
   if(!db){
-    alert('Supabase indisponível.');
+
+    alert(
+      'supabase indisponível.'
+    );
+
     return;
+
   }
 
-  const id = $('s-existing-id').value;
-  const table = $('s-table-id').value;
-  const period = $('s-period').value || 'morning';
+  const id =
+    $('s-existing-id').value;
+
+  const table =
+    $('s-table-id').value;
+
+  const period =
+    $('s-period').value ||
+    'morning';
 
   const data = {
-    tableId: storageTableId(table, period),
-    seatCode: $('s-seat-code').value,
-    collabName: $('s-collab-select').value,
-    startDate: $('s-start-date').value,
-    recurrence: $('s-recurrence').value,
-    exceptDay: $('s-except-day').value,
+
+    tableId:
+      storageTableId(
+        table,
+        period
+      ),
+
+    seatCode:
+      $('s-seat-code').value,
+
+    collabName:
+      $('s-collab-select').value,
+
+    startDate:
+      $('s-start-date').value,
+
+    recurrence:
+      $('s-recurrence').value,
+
+    exceptDay:
+      $('s-except-day').value,
+
     period
+
   };
 
-  if(!data.collabName || !data.startDate){
-    alert('Preencha colaborador e data.');
+  if(
+    !data.collabName ||
+    !data.startDate
+  ){
+
+    alert(
+      'preencha colaborador e data.'
+    );
+
     return;
+
   }
 
-  if(seatConflict(data,id)){
+  if(
+    seatConflict(
+      data,
+      id
+    )
+  ){
+
     alert(
-      `Este assento já possui uma alocação conflitante no período da ${period === 'morning' ? 'manhã' : 'tarde'}.`
+      `este assento já possui uma alocação conflitante no período da ${
+        period === 'morning'
+        ? 'manhã'
+        : 'tarde'
+      }.`
     );
+
     return;
+
   }
 
   try{
@@ -2957,82 +6857,119 @@ async function saveSeatAllocation(event){
     let response;
 
     if(id){
-      response = await db
-        .from('seat_allocations')
-        .update(data)
-        .eq('id',id)
-        .select()
-        .single();
+
+      response =
+        await db
+          .from('seat_allocations')
+          .update(data)
+          .eq(
+            'id',
+            id
+          )
+          .select()
+          .single();
+
     }else{
-      response = await db
-        .from('seat_allocations')
-        .insert([data])
-        .select()
-        .single();
+
+      response =
+        await db
+          .from('seat_allocations')
+          .insert([data])
+          .select()
+          .single();
+
     }
 
     if(response.error)
       throw response.error;
 
     closeSeatModal();
+
     await loadData();
 
   }catch(error){
 
     console.error(error);
 
-    // Compatibilidade: a separação também está no tableId,
-    // portanto o sistema continua funcionando sem a coluna "period".
-    const message = String(error?.message || '').toLowerCase();
+    const message =
+      String(
+        error?.message || ''
+      ).toLowerCase();
 
-    if(message.includes('period') || message.includes('column') || message.includes('schema cache')){
+    if(
+      message.includes('period') ||
+      message.includes('column') ||
+      message.includes('schema cache')
+    ){
 
       try{
 
-        const fallbackData = {...data};
+        const fallbackData =
+          {...data};
+
         delete fallbackData.period;
 
         let fallback;
 
         if(id){
-          fallback = await db
-            .from('seat_allocations')
-            .update(fallbackData)
-            .eq('id',id)
-            .select()
-            .single();
+
+          fallback =
+            await db
+              .from('seat_allocations')
+              .update(
+                fallbackData
+              )
+              .eq(
+                'id',
+                id
+              )
+              .select()
+              .single();
+
         }else{
-          fallback = await db
-            .from('seat_allocations')
-            .insert([fallbackData])
-            .select()
-            .single();
+
+          fallback =
+            await db
+              .from('seat_allocations')
+              .insert([
+                fallbackData
+              ])
+              .select()
+              .single();
+
         }
 
         if(fallback.error)
           throw fallback.error;
 
         closeSeatModal();
+
         await loadData();
+
         return;
 
       }catch(fallbackError){
 
         alert(
-          'Erro ao salvar assento: ' +
+          'erro ao salvar assento: ' +
           fallbackError.message
         );
 
         return;
+
       }
+
     }
 
     alert(
-      'Erro ao salvar assento: ' +
+      'erro ao salvar assento: ' +
       error.message
     );
+
   }
+
 }
+
 
 async function removeSeatAllocation(){
 
@@ -3042,7 +6979,7 @@ async function removeSeatAllocation(){
   if(
     !id ||
     !confirm(
-      'Deseja remover esta alocação?'
+      'deseja remover esta alocação?'
     )
   )
     return;
@@ -3050,7 +6987,7 @@ async function removeSeatAllocation(){
   if(!db){
 
     alert(
-      'Supabase indisponível.'
+      'supabase indisponível.'
     );
 
     return;
@@ -3059,11 +6996,16 @@ async function removeSeatAllocation(){
 
   try{
 
-    const {error} =
+    const {
+      error
+    } =
       await db
         .from('seat_allocations')
         .delete()
-        .eq('id',id);
+        .eq(
+          'id',
+          id
+        );
 
     if(error)
       throw error;
@@ -3075,7 +7017,7 @@ async function removeSeatAllocation(){
   }catch(error){
 
     alert(
-      'Erro ao remover assento: ' +
+      'erro ao remover assento: ' +
       error.message
     );
 
@@ -3084,9 +7026,9 @@ async function removeSeatAllocation(){
 }
 
 
-/* =========================
+/* =========================================================
    COLABORADORES
-========================= */
+========================================================= */
 
 function openCollabModal(){
 
@@ -3098,6 +7040,7 @@ function openCollabModal(){
 
 }
 
+
 function closeCollabModal(){
 
   $('collab-modal')
@@ -3105,6 +7048,7 @@ function closeCollabModal(){
       'none';
 
 }
+
 
 function renderCollabList(){
 
@@ -3115,9 +7059,9 @@ function renderCollabList(){
 
     list.innerHTML =
       `
-        <div class="empty-state">
-          Nenhum colaborador cadastrado.
-        </div>
+      <div class="empty-state">
+        NENHUM COLABORADOR CADASTRADO.
+      </div>
       `;
 
     return;
@@ -3136,23 +7080,31 @@ function renderCollabList(){
             )
       )
       .map(
-        c =>
-          `
+        c => `
+
           <div
             style="
               display:flex;
               justify-content:space-between;
               align-items:center;
               padding:8px 0;
-              border-bottom:1px solid var(--line)
+              border-bottom:1px solid var(--dbvo-gray);
             "
           >
 
-            <span>
+            <span
+              style="
+                font-size:10px;
+                color:var(--dbvo-black);
+              "
+            >
+
               ${esc(c.name)}
+
               <strong>
                 (${esc(c.team || '')})
               </strong>
+
             </span>
 
             <button
@@ -3163,24 +7115,28 @@ function renderCollabList(){
                 )
               "
             >
-              Excluir
+              EXCLUIR
             </button>
 
           </div>
-          `
+
+        `
       )
       .join('');
 
 }
 
-async function saveCollaborator(event){
+
+async function saveCollaborator(
+  event
+){
 
   event.preventDefault();
 
   if(!db){
 
     alert(
-      'Supabase indisponível.'
+      'supabase indisponível.'
     );
 
     return;
@@ -3210,7 +7166,7 @@ async function saveCollaborator(event){
   ){
 
     alert(
-      'Este colaborador já está cadastrado.'
+      'este colaborador já está cadastrado.'
     );
 
     return;
@@ -3219,7 +7175,9 @@ async function saveCollaborator(event){
 
   try{
 
-    const {error} =
+    const {
+      error
+    } =
       await db
         .from('collaborators')
         .insert([
@@ -3245,7 +7203,7 @@ async function saveCollaborator(event){
   }catch(error){
 
     alert(
-      'Erro ao cadastrar colaborador: ' +
+      'erro ao cadastrar colaborador: ' +
       error.message
     );
 
@@ -3253,7 +7211,10 @@ async function saveCollaborator(event){
 
 }
 
-async function deleteCollaborator(id){
+
+async function deleteCollaborator(
+  id
+){
 
   const collaborator =
     collaborators.find(
@@ -3265,24 +7226,9 @@ async function deleteCollaborator(id){
   if(!collaborator)
     return;
 
-  const hasMeeting =
-    meetings.some(
-      meeting =>
-        meeting.owner ===
-        collaborator.name
-    );
-
-  const hasSeat =
-    seatAllocations.some(
-      seat =>
-        seat.collabName ===
-        collaborator.name
-    );
-
   if(
     !confirm(
-      `Excluir ${collaborator.name}?\n\n` +
-      `Os lugares ocupados por este colaborador também serão liberados.`
+      `excluir ${collaborator.name}?\n\nos lugares ocupados por este colaborador também serão liberados.`
     )
   )
     return;
@@ -3292,20 +7238,30 @@ async function deleteCollaborator(id){
 
   try{
 
-    const {error: seatError} =
+    const {
+      error:seatError
+    } =
       await db
         .from('seat_allocations')
         .delete()
-        .eq('collabName', collaborator.name);
+        .eq(
+          'collabName',
+          collaborator.name
+        );
 
     if(seatError)
       throw seatError;
 
-    const {error} =
+    const {
+      error
+    } =
       await db
         .from('collaborators')
         .delete()
-        .eq('id',id);
+        .eq(
+          'id',
+          id
+        );
 
     if(error)
       throw error;
@@ -3313,12 +7269,13 @@ async function deleteCollaborator(id){
     await loadData();
 
     renderCollabList();
+
     renderSeats();
 
   }catch(error){
 
     alert(
-      'Erro ao excluir colaborador: ' +
+      'erro ao excluir colaborador: ' +
       error.message
     );
 
@@ -3327,15 +7284,18 @@ async function deleteCollaborator(id){
 }
 
 
-/* =========================
+/* =========================================================
    FECHAR MODAIS
-========================= */
+========================================================= */
 
 document.addEventListener(
   'keydown',
   event => {
 
-    if(event.key === 'Escape'){
+    if(
+      event.key ===
+      'Escape'
+    ){
 
       document
         .querySelectorAll(
@@ -3352,6 +7312,7 @@ document.addEventListener(
   }
 );
 
+
 document.addEventListener(
   'DOMContentLoaded',
   () => {
@@ -3360,26 +7321,28 @@ document.addEventListener(
       .querySelectorAll(
         '.modal-backdrop'
       )
-      .forEach(modal => {
+      .forEach(
+        modal => {
 
-        modal.addEventListener(
-          'click',
-          event => {
+          modal.addEventListener(
+            'click',
+            event => {
 
-            if(
-              event.target ===
-              modal
-            ){
+              if(
+                event.target ===
+                modal
+              ){
 
-              modal.style.display =
-                'none';
+                modal.style.display =
+                  'none';
+
+              }
 
             }
+          );
 
-          }
-        );
-
-      });
+        }
+      );
 
   }
 );
@@ -3388,3 +7351,4 @@ document.addEventListener(
 
 </body>
 </html>
+```
