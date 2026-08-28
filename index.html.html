@@ -9,23 +9,38 @@
 
 <style>
 *{box-sizing:border-box}
+:root{
+  --bg:#f7f7f6;
+  --surface:#ffffff;
+  --surface-soft:#fafafa;
+  --line:#e8e8e6;
+  --line-strong:#dededb;
+  --text:#111111;
+  --muted:#737373;
+  --black:#111111;
+  --hover:#f3f3f1;
+  --radius:12px;
+}
 body{
   margin:0;
   font-family:N27,Inter,Arial,sans-serif;
-  background:#f5f7fa;
-  color:#000000
+  background:var(--bg);
+  color:var(--text);
+  letter-spacing:-.01em;
 }
+button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
+button{cursor:pointer}
 button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
 button{cursor:pointer}
 
 .header{
-  height:72px;
+  height:68px;
   background:#fff;
-  border-bottom:1px solid #e5e7eb;
+  border-bottom:1px solid var(--line);
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 28px;
+  padding:0 30px;
   position:sticky;
   top:0;
   z-index:20
@@ -60,7 +75,7 @@ button{cursor:pointer}
 .container{
   max-width:1500px;
   margin:auto;
-  padding:24px
+  padding:20px 24px
 }
 
 .toolbar{
@@ -74,19 +89,19 @@ button{cursor:pointer}
 
 .tabs{
   display:flex;
-  gap:8px
+  gap:6px
 }
 
 .tab{
   border:0;
-  background:#e9edf3;
-  padding:10px 18px;
-  border-radius:9px;
+  background:#eeeeec;
+  padding:9px 16px;
+  border-radius:10px;
   font-weight:700
 }
 
 .tab.active{
-  background:#000000;
+  background:#111;
   color:#fff
 }
 
@@ -97,17 +112,19 @@ button{cursor:pointer}
 }
 
 .btn{
-  border:1px solid #d7dce4;
+  border:1px solid var(--line-strong);
   background:#fff;
   padding:9px 14px;
-  border-radius:8px;
+  border-radius:10px;
   font-weight:700
 }
 
-.btn:hover{background:#f1f5f9}
+.btn{transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+.btn:hover{background:#f3f3f1;border-color:#d4d4d1;transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
 
 .btn-primary{
-  background:#000000;
+  background:#111;
   color:#fff;
   border-color:#000000
 }
@@ -126,8 +143,8 @@ button{cursor:pointer}
 .week-controls input,
 .date-input{
   padding:9px 11px;
-  border:1px solid #d7dce4;
-  border-radius:8px;
+  border:1px solid var(--line-strong);
+  border-radius:10px;
   background:#fff
 }
 
@@ -135,10 +152,10 @@ button{cursor:pointer}
 
 .calendar-wrapper{
   background:#fff;
-  border:1px solid #e1e5eb;
+  border:1px solid var(--line);
   border-radius:14px;
   overflow:auto;
-  box-shadow:0 3px 15px rgba(15,23,42,.04)
+  box-shadow:0 2px 12px rgba(0,0,0,.035)
 }
 
 .calendar{
@@ -148,9 +165,9 @@ button{cursor:pointer}
 }
 
 .grid-header{
-  background:#f8fafc;
-  border-right:1px solid #e5e7eb;
-  border-bottom:1px solid #e5e7eb;
+  background:#fbfbfa;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
   padding:12px;
   text-align:center;
   font-weight:800;
@@ -159,7 +176,7 @@ button{cursor:pointer}
 
 .grid-header small{
   font-weight:500;
-  color:#64748b
+  color:#777
 }
 
 .time-slot{
@@ -169,17 +186,17 @@ button{cursor:pointer}
   text-align:center;
   font-size:12px;
   font-weight:700;
-  color:#64748b;
-  border-right:1px solid #e5e7eb;
-  border-bottom:1px solid #e5e7eb
+  color:#777;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line)
 }
 
 .day-cell{
   min-height:var(--slot-height,82px);
   height:var(--slot-height,82px);
   padding:5px;
-  border-right:1px solid #e5e7eb;
-  border-bottom:1px solid #e5e7eb;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
   background:#fff;
   position:relative;
   overflow:visible;
@@ -187,13 +204,13 @@ button{cursor:pointer}
 }
 
 .day-cell:hover{
-  background:#fafafa
+  background:#fbfbfa
 }
 
 .event-card{
-  background:#000000;
+  background:#111;
   color:#fff;
-  border-radius:8px;
+  border-radius:10px;
   padding:8px;
   margin-bottom:4px;
   cursor:pointer;
@@ -231,7 +248,7 @@ button{cursor:pointer}
 
 .seat-toolbar{
   background:#fff;
-  border:1px solid #e1e5eb;
+  border:1px solid var(--line);
   border-radius:12px;
   padding:15px;
   margin-bottom:20px;
@@ -250,10 +267,10 @@ button{cursor:pointer}
 
 .room{
   background:#fff;
-  border:1px solid #e1e5eb;
+  border:1px solid var(--line);
   border-radius:14px;
   padding:20px;
-  box-shadow:0 3px 15px rgba(15,23,42,.04)
+  box-shadow:0 2px 12px rgba(0,0,0,.035)
 }
 
 .room h3{
@@ -261,7 +278,7 @@ button{cursor:pointer}
 }
 
 .table{
-  background:#dbe3ec;
+  background:#ececea;;
   border-radius:10px;
   padding:12px;
   margin-bottom:22px
@@ -284,9 +301,9 @@ button{cursor:pointer}
 .seat-chair{
   width:115px;
   min-height:55px;
-  border:2px solid #cbd5e1;
-  border-radius:8px;
-  background:#f8fafc;
+  border:1.5px solid #d7d7d4;
+  border-radius:10px;
+  background:#fbfbfa;
   padding:7px;
   display:flex;
   flex-direction:column;
@@ -298,11 +315,11 @@ button{cursor:pointer}
 
 .seat-chair:hover{
   transform:translateY(-2px);
-  border-color:#64748b
+  border-color:#777
 }
 
 .seat-chair.occupied{
-  background:#000000;
+  background:#111;
   color:#fff;
   border-color:#000000
 }
@@ -342,7 +359,7 @@ button{cursor:pointer}
 
 .modal-header{
   padding:20px;
-  border-bottom:1px solid #e5e7eb;
+  border-bottom:1px solid var(--line);
   display:flex;
   justify-content:space-between;
   align-items:center
@@ -357,7 +374,7 @@ button{cursor:pointer}
   border:0;
   background:none;
   font-size:25px;
-  color:#64748b
+  color:#777
 }
 
 .modal-body{
@@ -389,8 +406,8 @@ button{cursor:pointer}
 .form-group input,
 .form-group select,
 .form-group textarea{
-  border:1px solid #d7dce4;
-  border-radius:8px;
+  border:1px solid var(--line-strong);
+  border-radius:10px;
   padding:10px;
   background:#fff
 }
@@ -416,15 +433,15 @@ button{cursor:pointer}
 .empty-state{
   text-align:center;
   padding:30px;
-  color:#64748b
+  color:#777
 }
 
 
 .brand-area{display:flex;align-items:center;gap:12px}
-.logo-upload{width:42px;height:42px;border:1.5px dashed #94a3b8;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#f8fafc;flex:none}
+.logo-upload{width:42px;height:42px;border:1.5px dashed #94a3b8;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#fbfbfa;flex:none}
 .logo-upload input{display:none}
 .logo-upload img{width:100%;height:100%;object-fit:contain}
-.logo-upload span{font-size:24px;color:#64748b;font-weight:500}
+.logo-upload span{font-size:24px;color:#777;font-weight:500}
 .logo{font-size:25px;font-weight:900;letter-spacing:-1px}
 .daily-calendar{min-width:650px;display:grid;grid-template-columns:75px 1fr}
 .daily-calendar .day-cell{min-height:82px}
@@ -480,23 +497,120 @@ button{cursor:pointer}
 .room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
 .room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
 
-/* Ajustes de escala para Monitores Maiores */
+/* AGENDA FULLSCREEN — semana e dia cabem na tela */
 @media(min-width:900px){
-  :root{--slot-height:60px} /* Levemente maior para acomodar melhor os textos */
-  .header{height:62px}
-  .container{padding:12px 24px}
-  .toolbar{margin-bottom:10px}
-  .calendar-wrapper{max-height:calc(100vh - 145px)}
-  .grid-header{min-height:36px;padding:5px}
-  .time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}
-  .time-slot{padding:5px}
-  .day-cell{padding:3px}
-  .event-card{padding:6px;font-size:11px}
+  :root{
+    --agenda-header-height:42px;
+    --agenda-slot-height:calc((100vh - 190px) / 11);
+  }
+
+  .header{
+    height:62px;
+  }
+
+  .container{
+    padding:10px 24px 12px;
+  }
+
+  .toolbar{
+    margin-bottom:8px;
+  }
+
+  #view-coworking > .toolbar{
+    margin-bottom:8px;
+  }
+
+  .calendar-wrapper{
+    height:calc(100vh - 145px);
+    max-height:none;
+    overflow:hidden;
+  }
+
+  .calendar,
+  .daily-calendar{
+    width:100%;
+    min-width:0;
+    height:100%;
+    overflow:hidden;
+    grid-template-rows:var(--agenda-header-height) repeat(11,minmax(0,1fr));
+  }
+
+  .calendar{
+    grid-template-columns:64px repeat(7,minmax(0,1fr));
+  }
+
+  .daily-calendar{
+    grid-template-columns:64px minmax(0,1fr);
+  }
+
+  .grid-header{
+    min-height:0;
+    height:100%;
+    padding:5px 4px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    line-height:1.05;
+  }
+
+  .grid-header small{
+    margin-top:3px;
+  }
+
+  .time-slot,
+  .day-cell{
+    min-height:0;
+    height:100%;
+  }
+
+  .time-slot{
+    padding:3px 4px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    font-size:10px;
+  }
+
+  .day-cell{
+    padding:3px;
+  }
+
+  .event-card{
+    padding:5px 6px;
+    min-height:34px;
+    font-size:10px;
+    border-radius:7px;
+  }
+
+  .event-title{
+    font-size:11px;
+    line-height:1.1;
+    margin-bottom:2px;
+  }
+
+  .event-time,
+  .event-owner{
+    font-size:9px;
+    line-height:1.1;
+  }
+
+  .event-owner{
+    margin-top:2px;
+  }
+}
+
+/* Em telas menores, mantém rolagem horizontal apenas quando realmente necessária. */
+@media(max-width:899px){
+  .calendar-wrapper{
+    overflow:auto;
+  }
+}
+
+.event-card{padding:6px;font-size:11px}
   .event-title{font-size:12px}
   .event-owner{font-size:10px}
 }
 
-:root{--slot-height:82px}
 .event-card{
   position:absolute;
   left:4px;
@@ -504,7 +618,7 @@ button{cursor:pointer}
   margin:0;
   top:4px;
   min-height:28px;
-  height:calc(var(--event-duration-hours, 1) * var(--slot-height) - 8px);
+  height:max(34px,calc(var(--event-duration-hours, 1) * var(--agenda-slot-height, 72px) - 8px));
   z-index:20;
   overflow:hidden;
   box-shadow:0 2px 5px rgba(0,0,0,.12);
@@ -516,7 +630,7 @@ button{cursor:pointer}
   border-radius:12px;
   padding:10px;
   margin-top:12px;
-  background:#fafafa;
+  background:#fbfbfa;
 }
 .shift-title{
   text-align:center;
@@ -536,6 +650,76 @@ button{cursor:pointer}
 }
 .shift-layout .seat-status{font-size:9px}
 @media(max-width:700px){.shift-layout .seat-chair{width:90px}}
+
+
+/* UX DA AGENDA — leitura clara mesmo em períodos curtos */
+.calendar-wrapper{scrollbar-width:thin}
+.grid-header{
+  position:sticky;
+  top:0;
+  z-index:8;
+  background:#fbfbfa;
+  color:#222;
+  min-height:48px;
+  padding:8px 6px;
+}
+.grid-header small{color:#8a8a87;font-size:10px}
+.time-slot{
+  background:#fcfcfb;
+  font-size:11px;
+  color:#8a8a87;
+  padding:7px 5px;
+  min-height:var(--slot-height,72px);
+}
+.day-cell{
+  min-height:var(--slot-height,72px);
+  height:var(--slot-height,72px);
+  padding:4px;
+  background:#fff;
+}
+.day-cell:hover{background:#fcfcfb}
+.event-card{
+  min-height:48px;
+  height:max(48px,calc(var(--event-duration-hours,1) * var(--slot-height) - 8px));
+  padding:7px 8px;
+  border-radius:9px;
+  background:#111;
+  box-shadow:0 2px 8px rgba(0,0,0,.09);
+  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
+}
+.event-card:hover{
+  opacity:1;
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,.13);
+}
+.event-title{font-size:12px;line-height:1.22}
+.event-time{font-size:10px;margin-top:3px}
+.event-owner{font-size:10px;margin-top:3px;opacity:.82}
+@media(min-width:900px){
+  :root{--slot-height:72px}
+  .header{height:64px}
+  .container{padding:14px 24px}
+  .toolbar{margin-bottom:12px}
+  .calendar-wrapper{max-height:calc(100vh - 138px)}
+  .grid-header{min-height:44px;padding:7px 5px}
+  .time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}
+  .event-card{padding:7px 8px}
+  .event-title{font-size:12px}
+  .event-owner{font-size:10px}
+}
+
+
+.tab,.btn,.date-input,.week-controls input,select,input,textarea{
+  transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.tab:not(.active):hover{background:#e8e8e5}
+.tab.active{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus,
+.date-input:focus,.week-controls input:focus{
+  outline:none;
+  border-color:#aaa;
+  box-shadow:0 0 0 3px rgba(0,0,0,.045);
+}
 
 </style>
 </head>
@@ -647,7 +831,7 @@ button{cursor:pointer}
 
       <div>
         <strong>Mapa de mesas</strong>
-        <div style="font-size:12px;color:#64748b">
+        <div style="font-size:12px;color:#777">
           Clique em um assento para alocar ou editar.
         </div>
       </div>
@@ -1098,8 +1282,15 @@ button{cursor:pointer}
 
             <label>Equipe</label>
 
-            <input id="c-team"
-                   placeholder="Ex.: Marketing">
+            <select id="c-team" required>
+              <option value="">Selecione o time</option>
+              <option value="CSUM">CSUM</option>
+              <option value="CSUA">CSUA</option>
+              <option value="CEO">CEO</option>
+              <option value="EDFE">EDFE</option>
+              <option value="ENGO">ENGO</option>
+              <option value="ENGE">ENGE</option>
+            </select>
 
           </div>
 
@@ -1604,6 +1795,24 @@ function meetingOccursOnDate(
 
 }
 
+function syncAgendaViewport(){
+  const calendar = $('weekly-table');
+  const wrapper = document.querySelector('.calendar-wrapper');
+  if(!calendar || !wrapper) return;
+
+  if(window.innerWidth >= 900){
+    const header = calendar.querySelector('.grid-header');
+    const headerHeight = header ? header.getBoundingClientRect().height : 42;
+    const available = Math.max(40, wrapper.clientHeight - headerHeight);
+    const slotHeight = available / 11;
+    calendar.style.setProperty('--agenda-slot-height', `${slotHeight}px`);
+  }else{
+    calendar.style.removeProperty('--agenda-slot-height');
+  }
+}
+
+window.addEventListener('resize', syncAgendaViewport);
+
 function renderDashboard(){
 
   const container = $('weekly-table');
@@ -1627,7 +1836,7 @@ function renderDashboard(){
       onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
       <div class="event-title">${typeBadge}${teamBadge}${esc(meeting.title)}</div>
       <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
-      <div class="event-owner">${esc(meeting.owner || '')}</div>
+      <div class="event-owner">${meeting.owner ? 'Responsável: ' + esc(meeting.owner) : 'Responsável: —'}</div>
     </div>`;
   }
 
@@ -1640,7 +1849,7 @@ function renderDashboard(){
       `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
 
     let html = '<div class="grid-header">Hora</div>';
-    html += `<div class="grid-header">${dayName}<br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
+    html += `<div class="grid-header"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
 
     hours.forEach(hour => {
 
@@ -1664,6 +1873,7 @@ function renderDashboard(){
 
     container.className = 'calendar agenda-export-area daily-calendar';
     container.innerHTML = html;
+    requestAnimationFrame(syncAgendaViewport);
     return;
   }
 
@@ -1677,7 +1887,7 @@ function renderDashboard(){
   const names = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
   days.forEach((day,index) => {
-    html += `<div class="grid-header">${names[index]}<br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
+    html += `<div class="grid-header"><strong>${names[index]}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
   });
 
   hours.forEach(hour => {
@@ -1707,6 +1917,7 @@ function renderDashboard(){
 
   container.className = 'calendar agenda-export-area';
   container.innerHTML = html;
+  requestAnimationFrame(syncAgendaViewport);
 }
 
 function exportAgendaPNG(){
@@ -1720,7 +1931,7 @@ function exportAgendaPNG(){
   }
   const area=document.querySelector('.agenda-export-area');
   if(!area) return;
-  html2canvas(area,{backgroundColor:'#ffffff',scale:2,useCORS:true}).then(canvas=>{
+  html2canvas(area,{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false}).then(canvas=>{
     const link=document.createElement('a');
     const date=$('week-picker').value || localDateString();
     link.download=`coworking-pro-be-${date}-${agendaView}.png`;
@@ -1836,8 +2047,8 @@ function fillOwnerSelect(){
 
 function fillTeamSelect() {
   const select = $('m-team-select');
-  const defaultTeams = ['CSUM', 'EDFE', 'MKT', 'UAU', 'COMERCIAL', 'DIRETORIA', 'PRO'];
-  const collTeams = collaborators.map(c => c.team).filter(Boolean);
+  const defaultTeams = ['CSUM', 'CSUA', 'CEO', 'EDFE', 'ENGO', 'ENGE'];
+  const collTeams = collaborators.map(c => c.team).filter(t => ['CSUM','CSUA','CEO','EDFE','ENGO','ENGE'].includes(t));
   const allTeams = [...new Set([...defaultTeams, ...collTeams])];
 
   select.innerHTML = '<option value="">Sem time</option>' +
@@ -2755,7 +2966,7 @@ function renderCollabList(){
               justify-content:space-between;
               align-items:center;
               padding:8px 0;
-              border-bottom:1px solid #e5e7eb
+              border-bottom:1px solid var(--line)
             "
           >
 
