@@ -149,97 +149,139 @@ button{cursor:pointer}
 }
 
 /* CALENDÁRIO */
-
 .calendar-wrapper{
   background:#fff;
   border:1px solid var(--line);
   border-radius:14px;
-  overflow:auto;
-  box-shadow:0 2px 12px rgba(0,0,0,.035)
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.035);
 }
-
 .calendar{
-  min-width:950px;
+  width:100%;
   display:grid;
-  grid-template-columns:75px repeat(7,1fr)
+  grid-template-columns:64px repeat(7,minmax(0,1fr));
+  grid-template-rows:44px minmax(0,1fr);
 }
-
+.daily-calendar{
+  width:100%;
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr);
+  grid-template-rows:44px minmax(0,1fr);
+}
 .grid-header{
   background:#fbfbfa;
   border-right:1px solid var(--line);
   border-bottom:1px solid var(--line);
-  padding:12px;
+  padding:6px 5px;
   text-align:center;
   font-weight:800;
-  min-height:55px
+  min-height:44px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  line-height:1.05;
+  position:relative;
+  z-index:4;
 }
-
 .grid-header small{
   font-weight:500;
-  color:#777
-}
-
-.time-slot{
-  min-height:var(--slot-height,82px);
-  height:var(--slot-height,82px);
-  padding:12px 8px;
-  text-align:center;
-  font-size:12px;
-  font-weight:700;
   color:#777;
-  border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line)
+  font-size:10px;
+  margin-top:3px;
 }
-
-.day-cell{
-  min-height:var(--slot-height,82px);
-  height:var(--slot-height,82px);
-  padding:5px;
-  border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  background:#fff;
+.time-axis{
   position:relative;
+  height:100%;
+  border-right:1px solid var(--line);
+  background:#fcfcfb;
+  overflow:hidden;
+}
+.time-label{
+  position:absolute;
+  left:0;
+  right:0;
+  transform:translateY(-50%);
+  text-align:center;
+  font-size:10px;
+  font-weight:700;
+  color:#8a8a87;
+  pointer-events:none;
+}
+.time-label:first-child{transform:none}
+.day-timeline{
+  position:relative;
+  min-width:0;
+  height:100%;
+  border-right:1px solid var(--line);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(9.0909% - 1px),
+      var(--line) calc(9.0909% - 1px),
+      var(--line) 9.0909%
+    ),
+    #fff;
   overflow:visible;
-  /* z-index removido para o card sobrescrever as linhas de baixo corretamente */
 }
-
-.day-cell:hover{
-  background:#fbfbfa
-}
-
+.day-timeline:hover{background-color:#fcfcfb}
 .event-card{
+  position:absolute;
+  left:5px;
+  right:5px;
+  top:var(--event-top,0%);
+  height:var(--event-height,50px);
+  min-height:24px;
+  margin:0;
   background:#111;
   color:#fff;
   border-radius:10px;
-  padding:8px;
-  margin-bottom:4px;
+  padding:6px 8px;
   cursor:pointer;
-  font-size:12px;
-  white-space:normal; /* Permite que o texto quebre melhor */
+  font-size:10px;
+  line-height:1.15;
+  white-space:normal;
+  overflow:auto;
+  scrollbar-width:none;
+  z-index:10;
+  box-shadow:0 2px 8px rgba(0,0,0,.10);
+  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
 }
-
 .event-card:hover{
-  opacity:.88
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
-
+.event-card.pending{
+  background:rgba(17,17,17,.38);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+  border:1px dashed rgba(255,255,255,.75);
+}
 .event-title{
   font-weight:800;
-  font-size:13px;
+  font-size:10px;
   margin-bottom:3px;
-  line-height:1.2;
+  line-height:1.15;
 }
-
 .event-time{
-  opacity:.8;
-  font-size:11px;
+  opacity:.85;
+  font-size:9px;
 }
-
 .event-owner{
   margin-top:3px;
-  font-size:11px;
-  opacity:.75;
+  font-size:9px;
+  opacity:.78;
 }
-
+.event-card.pending .event-title,
+.event-card.pending .event-owner{
+  filter:blur(4px);
+  user-select:none;
+}
+@media(max-width:899px){
+  .calendar-wrapper{overflow:auto}
+  .calendar{min-width:900px}
+  .daily-calendar{min-width:650px}
+}
 /* ASSENTOS */
 
 .seats-view{
@@ -497,218 +539,6 @@ button{cursor:pointer}
 .room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
 .room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
 
-/* AGENDA FULLSCREEN — semana e dia cabem na tela */
-@media(min-width:900px){
-  :root{
-    --agenda-header-height:42px;
-    --agenda-slot-height:calc((100vh - 190px) / 11);
-  }
-
-  .header{
-    height:62px;
-  }
-
-  .container{
-    padding:10px 24px 12px;
-  }
-
-  .toolbar{
-    margin-bottom:8px;
-  }
-
-  #view-coworking > .toolbar{
-    margin-bottom:8px;
-  }
-
-  .calendar-wrapper{
-    height:calc(100vh - 145px);
-    max-height:none;
-    overflow:hidden;
-  }
-
-  .calendar,
-  .daily-calendar{
-    width:100%;
-    min-width:0;
-    height:100%;
-    overflow:hidden;
-    grid-template-rows:var(--agenda-header-height) repeat(11,minmax(0,1fr));
-  }
-
-  .calendar{
-    grid-template-columns:64px repeat(7,minmax(0,1fr));
-  }
-
-  .daily-calendar{
-    grid-template-columns:64px minmax(0,1fr);
-  }
-
-  .grid-header{
-    min-height:0;
-    height:100%;
-    padding:5px 4px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    line-height:1.05;
-  }
-
-  .grid-header small{
-    margin-top:3px;
-  }
-
-  .time-slot,
-  .day-cell{
-    min-height:0;
-    height:100%;
-  }
-
-  .time-slot{
-    padding:3px 4px;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    font-size:10px;
-  }
-
-  .day-cell{
-    padding:3px;
-  }
-
-  .event-card{
-    padding:5px 6px;
-    min-height:34px;
-    font-size:10px;
-    border-radius:7px;
-  }
-
-  .event-title{
-    font-size:11px;
-    line-height:1.1;
-    margin-bottom:2px;
-  }
-
-  .event-time,
-  .event-owner{
-    font-size:9px;
-    line-height:1.1;
-  }
-
-  .event-owner{
-    margin-top:2px;
-  }
-}
-
-/* Em telas menores, mantém rolagem horizontal apenas quando realmente necessária. */
-@media(max-width:899px){
-  .calendar-wrapper{
-    overflow:auto;
-  }
-}
-
-.event-card{padding:6px;font-size:11px}
-  .event-title{font-size:12px}
-  .event-owner{font-size:10px}
-}
-
-.event-card{
-  position:absolute;
-  left:4px;
-  right:4px;
-  margin:0;
-  top:4px;
-  min-height:28px;
-  height:max(34px,calc(var(--event-duration-hours, 1) * var(--agenda-slot-height, 72px) - 8px));
-  z-index:20;
-  overflow:hidden;
-  box-shadow:0 2px 5px rgba(0,0,0,.12);
-}
-
-
-.shift-panel{
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  padding:10px;
-  margin-top:12px;
-  background:#fbfbfa;
-}
-.shift-title{
-  text-align:center;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.8px;
-  margin-bottom:4px;
-}
-.shift-layout{
-  min-height:210px;
-  grid-template-rows:64px 82px 64px;
-}
-.shift-layout .seat-chair{
-  width:105px;
-  min-height:50px;
-  font-size:11px;
-}
-.shift-layout .seat-status{font-size:9px}
-@media(max-width:700px){.shift-layout .seat-chair{width:90px}}
-
-
-/* UX DA AGENDA — leitura clara mesmo em períodos curtos */
-.calendar-wrapper{scrollbar-width:thin}
-.grid-header{
-  position:sticky;
-  top:0;
-  z-index:8;
-  background:#fbfbfa;
-  color:#222;
-  min-height:48px;
-  padding:8px 6px;
-}
-.grid-header small{color:#8a8a87;font-size:10px}
-.time-slot{
-  background:#fcfcfb;
-  font-size:11px;
-  color:#8a8a87;
-  padding:7px 5px;
-  min-height:var(--slot-height,72px);
-}
-.day-cell{
-  min-height:var(--slot-height,72px);
-  height:var(--slot-height,72px);
-  padding:4px;
-  background:#fff;
-}
-.day-cell:hover{background:#fcfcfb}
-.event-card{
-  min-height:48px;
-  height:max(48px,calc(var(--event-duration-hours,1) * var(--slot-height) - 8px));
-  padding:7px 8px;
-  border-radius:9px;
-  background:#111;
-  box-shadow:0 2px 8px rgba(0,0,0,.09);
-  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
-}
-.event-card:hover{
-  opacity:1;
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(0,0,0,.13);
-}
-.event-title{font-size:12px;line-height:1.22}
-.event-time{font-size:10px;margin-top:3px}
-.event-owner{font-size:10px;margin-top:3px;opacity:.82}
-@media(min-width:900px){
-  :root{--slot-height:72px}
-  .header{height:64px}
-  .container{padding:14px 24px}
-  .toolbar{margin-bottom:12px}
-  .calendar-wrapper{max-height:calc(100vh - 138px)}
-  .grid-header{min-height:44px;padding:7px 5px}
-  .time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}
-  .event-card{padding:7px 8px}
-  .event-title{font-size:12px}
-  .event-owner{font-size:10px}
-}
-
-
 .tab,.btn,.date-input,.week-controls input,select,input,textarea{
   transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;
 }
@@ -719,6 +549,220 @@ button{cursor:pointer}
   outline:none;
   border-color:#aaa;
   box-shadow:0 0 0 3px rgba(0,0,0,.045);
+}
+
+
+/* AJUSTES VISUAIS SOLICITADOS */
+*, *::before, *::after{font-family:N27,Inter,Arial,sans-serif}
+body{overflow:hidden}
+@media(max-width:899px){body{overflow:auto}}
+.auth-btn{min-width:104px}
+.auth-user{font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.approval-badge{
+  display:none;align-items:center;justify-content:center;min-width:20px;height:20px;
+  padding:0 6px;border-radius:999px;background:#111;color:#fff;font-size:10px;font-weight:900;
+}
+.time-picker-wrap{
+  grid-column:1/-1;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+  background:#fbfbfa;
+}
+.time-picker-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
+.time-picker-title{font-size:12px;font-weight:900}
+.time-picker-duration{font-size:10px;color:#777;font-weight:700}
+.time-selects{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.time-select{
+  width:100%;border:1px solid var(--line-strong);border-radius:10px;background:#fff;
+  padding:10px 12px;font-weight:800;appearance:auto;
+}
+.duration-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.duration-chip{
+  border:1px solid var(--line-strong);background:#fff;border-radius:999px;padding:6px 10px;
+  font-size:10px;font-weight:800;cursor:pointer;
+}
+.duration-chip:hover,.duration-chip.active{background:#111;color:#fff;border-color:#111}
+.requester-box{
+  grid-column:1/-1;padding:11px 12px;border-radius:11px;background:#f3f3f1;
+  border:1px solid var(--line);font-size:11px;color:#555;
+}
+.approvals-modal .modal{max-width:820px}
+.request-item{
+  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;
+  padding:14px 0;border-bottom:1px solid var(--line);
+}
+.request-main strong{display:block;font-size:13px;margin-bottom:4px}
+.request-meta{font-size:10px;color:#737373;line-height:1.5}
+.request-actions{display:flex;gap:6px}
+.btn-success{color:#15803d;border-color:#bbf7d0}
+.admin-only{display:none}
+body.is-admin .admin-only{display:inline-flex}
+body.is-admin .request-only{display:none}
+body:not(.is-admin) .admin-only-block{display:none!important}
+@media(max-width:700px){
+  .time-selects{grid-template-columns:1fr}
+  .request-item{grid-template-columns:1fr}
+  .request-actions{justify-content:flex-end}
+}
+
+
+@media(min-width:900px){
+  .calendar-wrapper{height:calc(100vh - 145px);max-height:none}
+  .calendar,.daily-calendar{height:100%}
+  .event-card{overflow:auto;scrollbar-width:none}
+  .event-card::-webkit-scrollbar{display:none}
+}
+
+
+/* =========================
+   NOVA DIREÇÃO VISUAL BE
+   ========================= */
+:root{
+  --be-green:#b7d43b;
+  --be-green-soft:#eef5cf;
+  --be-ink:#101010;
+  --be-paper:#f5f5f2;
+  --be-line:#e4e4df;
+}
+body{
+  background:var(--be-paper);
+  font-size:13px;
+}
+.header{
+  height:72px;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--be-line);
+  padding:0 34px;
+}
+.logo{
+  font-size:20px;
+  letter-spacing:-.7px;
+}
+.brand-area:after{
+  content:'A MORADIA DO FUTURO';
+  display:block;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.16em;
+  color:#777;
+  margin-left:2px;
+}
+.brand-area{gap:10px}
+.logo-upload{
+  width:38px;height:38px;border:0;border-radius:11px;background:var(--be-ink);color:#fff;
+}
+.logo-upload span{color:var(--be-green);font-size:22px}
+.status{
+  background:var(--be-green-soft);
+  color:#4e6410;
+  border:1px solid #dbe9a4;
+}
+.container{max-width:1540px;padding:22px 28px}
+.toolbar{margin-bottom:14px}
+.tabs{
+  background:#e9e9e5;
+  border-radius:12px;
+  padding:3px;
+}
+.tab{
+  background:transparent;
+  padding:8px 14px;
+  border-radius:9px;
+  font-size:12px;
+}
+.tab.active{
+  background:#fff;
+  color:#111;
+  box-shadow:0 1px 5px rgba(0,0,0,.08);
+}
+.btn{
+  border-color:#deded9;
+  border-radius:9px;
+  background:#fff;
+  padding:8px 12px;
+  font-size:12px;
+}
+.btn-primary{
+  background:var(--be-ink);
+  border-color:var(--be-ink);
+  color:#fff;
+}
+.btn-primary:hover{background:#242424;color:#fff}
+.week-controls{gap:6px}
+.week-controls .btn{width:34px;height:34px;padding:0}
+.week-controls input,.date-input{height:34px;border-radius:9px}
+#week-label{font-size:13px;letter-spacing:-.02em}
+.calendar-wrapper{
+  border:1px solid var(--be-line);
+  border-radius:16px;
+  box-shadow:0 8px 30px rgba(0,0,0,.055);
+}
+.grid-header{
+  background:#fbfbf9;
+  border-color:var(--be-line);
+  font-size:11px;
+}
+.grid-header strong{font-size:12px}
+.grid-header small{font-size:9px}
+.time-axis{background:#fafaf8;border-color:var(--be-line)}
+.time-label{font-size:9px;color:#92928d}
+.day-timeline{
+  background:
+    repeating-linear-gradient(to bottom,transparent 0,transparent calc(9.0909% - 1px),#ededeb calc(9.0909% - 1px),#ededeb 9.0909%),
+    #fff;
+}
+.day-timeline:hover{background-color:#fcfcfa}
+.event-card{
+  left:4px;right:4px;
+  border-radius:8px;
+  padding:7px 8px;
+  background:#111;
+  border-left:3px solid var(--be-green);
+  box-shadow:0 3px 10px rgba(0,0,0,.12);
+  font-size:10px;
+}
+.event-title{
+  font-size:10px;
+  line-height:1.2;
+  margin:0 0 4px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.event-time{font-size:9px;opacity:.78}
+.event-owner{font-size:9px;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.event-card.pending{border-left-color:#b9b9b5;background:rgba(30,30,30,.46)}
+.room,.seat-toolbar{
+  border-color:var(--be-line);
+  box-shadow:0 5px 20px rgba(0,0,0,.035);
+}
+.room h3{font-size:15px;letter-spacing:-.03em}
+.room-table-shape{border-color:#111;box-shadow:inset 0 0 0 4px #fff, inset 0 0 0 6px #111}
+.shift-title{font-size:9px;font-weight:900;letter-spacing:.12em;color:#777;margin:4px 0}
+.seat-chair.occupied{background:#111;border-color:#111}
+.modal{border-radius:18px}
+.modal-header{padding:18px 20px}
+.modal-header h2{font-size:17px;letter-spacing:-.03em}
+.modal-subtitle{font-size:10px;color:#888;margin-top:3px}
+.form-group label{font-size:11px;color:#60605c}
+.form-group input,.form-group select,.form-group textarea{border-radius:9px}
+.admin-add-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.admin-add-row input{border:1px solid var(--line-strong);border-radius:9px;padding:10px}
+.admins-list{margin-top:18px}
+.admin-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--be-line);
+}
+.admin-email{font-size:12px;font-weight:800}
+.admin-role{font-size:9px;color:#777;margin-top:2px}
+.admin-note{margin-top:16px;padding:10px 12px;border-radius:10px;background:var(--be-green-soft);font-size:10px;color:#56611e}
+@media(max-width:700px){
+  .header{padding:0 14px}
+  .brand-area:after{display:none}
+  .admin-add-row{grid-template-columns:1fr}
 }
 
 </style>
@@ -737,9 +781,10 @@ button{cursor:pointer}
   </div>
 
   <div class="header-right">
-    <span id="connection-status" class="status offline">
-      ● Carregando...
-    </span>
+    <span id="connection-status" class="status offline">● Carregando...</span>
+    <span id="auth-user" class="auth-user"></span>
+    <span id="approval-badge" class="approval-badge"></span>
+    <button id="auth-btn" class="btn auth-btn" onclick="openAuthModal()">Entrar</button>
   </div>
 </header>
 
@@ -776,7 +821,15 @@ button{cursor:pointer}
         Exportar PNG
       </button>
 
-      <button class="btn btn-primary"
+      <button id="approvals-btn" class="btn admin-only" onclick="openApprovalsModal()">
+        Aprovações <span id="approvals-inline-badge" class="approval-badge" style="display:inline-flex;margin-left:5px">0</span>
+      </button>
+
+      <button id="admins-btn" class="btn admin-only" onclick="openAdminsModal()">
+        Administradores
+      </button>
+
+      <button id="meeting-action-btn" class="btn btn-primary"
               onclick="openMeetingModal()">
         + Nova reunião
       </button>
@@ -952,6 +1005,8 @@ button{cursor:pointer}
 
         <div class="form-grid">
 
+          <div id="requester-box" class="requester-box" style="display:none"></div>
+
           <div class="form-group full" style="display:flex; gap:14px; flex-wrap:wrap;">
             <div class="form-group" style="flex:1; min-width:120px;">
                <label>Time</label>
@@ -1024,20 +1079,21 @@ button{cursor:pointer}
 
           </div>
 
-          <div class="form-group">
-            <label>Início</label>
-
-            <input id="m-start"
-                   type="time"
-                   required>
-          </div>
-
-          <div class="form-group">
-            <label>Fim</label>
-
-            <input id="m-end"
-                   type="time"
-                   required>
+          <div class="time-picker-wrap">
+            <div class="time-picker-head">
+              <span class="time-picker-title">Horário</span>
+              <span id="m-duration-label" class="time-picker-duration">Selecione início e fim</span>
+            </div>
+            <div class="time-selects">
+              <select id="m-start" class="time-select" required aria-label="Horário de início"></select>
+              <select id="m-end" class="time-select" required aria-label="Horário de fim"></select>
+            </div>
+            <div class="duration-chips">
+              <button type="button" class="duration-chip" onclick="setMeetingDuration(30)">30 min</button>
+              <button type="button" class="duration-chip" onclick="setMeetingDuration(60)">1 h</button>
+              <button type="button" class="duration-chip" onclick="setMeetingDuration(90)">1h30</button>
+              <button type="button" class="duration-chip" onclick="setMeetingDuration(120)">2 h</button>
+            </div>
           </div>
 
           <div class="form-group full">
@@ -1082,6 +1138,79 @@ button{cursor:pointer}
 
   </div>
 
+</div>
+
+
+<!-- MODAL LOGIN -->
+<div id="auth-modal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="auth-title">Entrar</h2>
+      <button class="close" onclick="closeAuthModal()">×</button>
+    </div>
+    <form onsubmit="submitAuth(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>E-mail</label>
+            <input id="auth-email" type="email" required placeholder="seu@email.com" autocomplete="email">
+          </div>
+          <div class="form-group full">
+            <label>Senha</label>
+            <input id="auth-password" type="password" required minlength="6" placeholder="Mínimo de 6 caracteres" autocomplete="current-password">
+          </div>
+        </div>
+        <div id="auth-help" style="font-size:10px;color:#777;margin-top:10px">
+          Use seu acesso para solicitar reuniões. O administrador terá acesso às aprovações.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" onclick="toggleAuthMode()">Criar acesso</button>
+        <div class="footer-right">
+          <button type="button" class="btn" onclick="closeAuthModal()">Cancelar</button>
+          <button id="auth-submit" type="submit" class="btn btn-primary">Entrar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL APROVAÇÕES -->
+<div id="approvals-modal" class="modal-backdrop approvals-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Aprovações de reuniões</h2>
+      <button class="close" onclick="closeApprovalsModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="approvals-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMINISTRADORES -->
+<div id="admins-modal" class="modal-backdrop admins-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2>Administradores</h2>
+        <div class="modal-subtitle">Defina quem pode aprovar e gerenciar a agenda.</div>
+      </div>
+      <button class="close" onclick="closeAdminsModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form onsubmit="addAdmin(event)">
+        <div class="admin-add-row">
+          <input id="admin-email-input" type="email" required placeholder="email@empresa.com">
+          <button type="submit" class="btn btn-primary">+ Dar acesso de administrador</button>
+        </div>
+      </form>
+      <div id="admins-list" class="admins-list"></div>
+      <div class="admin-note">
+        O primeiro administrador é <strong>gabrielsz.silva12@gmail.com</strong>. Ele não pode ser removido.
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL ASSENTO -->
@@ -1324,6 +1453,12 @@ const SUPABASE_KEY =
   'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
 
 let db = null;
+const PRIMARY_ADMIN_EMAIL = 'gabrielsz.silva12@gmail.com';
+let adminEmails = new Set([PRIMARY_ADMIN_EMAIL.toLowerCase()]);
+let currentUser = null;
+let isAdmin = false;
+let authMode = 'login';
+let meetingRequests = [];
 
 let collaborators = [];
 let meetings = [];
@@ -1430,97 +1565,54 @@ document.addEventListener(
 );
 
 async function init(){
-
-  const today =
-    localDateString();
-
-  $('week-picker').value =
-    today;
-
-  $('seat-search-date').value =
-    today;
-
+  const today = localDateString();
+  $('week-picker').value = today;
+  $('seat-search-date').value = today;
   loadSavedLogo();
-
+  populateTimeSelects();
   toggleSeatShift('morning');
-
-  /*
-    IMPORTANTE:
-    A interface é criada ANTES
-    da tentativa de conexão.
-  */
-
   renderDashboard();
   renderSeats();
+  updateAuthUI();
 
   if(!window.supabase){
-
-    setStatus(
-      '● Modo local',
-      false
-    );
-
+    setStatus('● Modo local',false);
     return;
-
   }
 
   try{
+    db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    setStatus('● Conectando...',false);
 
-    db =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+    const {data:{session}} = await db.auth.getSession();
+    currentUser = session?.user || null;
+    await loadAdminUsers();
+    updateAuthUI();
 
-    setStatus(
-      '● Conectando...',
-      false
-    );
+    db.auth.onAuthStateChange(async (_event,sessionData)=>{
+      currentUser = sessionData?.user || null;
+      await loadAdminUsers();
+      updateAuthUI();
+      if(currentUser && isAdmin) await loadRequests();
+      else meetingRequests = [];
+      renderDashboard();
+    });
 
     await Promise.race([
-
       loadData(),
-
-      new Promise(
-        (_,reject) =>
-          setTimeout(
-            () => reject(
-              new Error(
-                'Timeout de conexão'
-              )
-            ),
-            7000
-          )
-      )
-
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Timeout de conexão')),7000))
     ]);
 
-    setStatus(
-      '● Sincronizado',
-      true
-    );
-
+    setStatus('● Sincronizado',true);
     setupRealtime();
-
+    if(isAdmin) await loadRequests();
+    updateAuthUI();
   }catch(error){
-
     console.error(error);
-
-    setStatus(
-      '● Sem conexão',
-      false
-    );
-
-    /*
-      A agenda continua funcionando
-      visualmente mesmo sem banco.
-    */
-
+    setStatus('● Sem conexão',false);
     renderDashboard();
     renderSeats();
-
   }
-
 }
 
 
@@ -1529,7 +1621,6 @@ async function init(){
 ========================= */
 
 async function loadData(){
-
   if(!db) return;
 
   const [
@@ -1537,46 +1628,36 @@ async function loadData(){
     meetingsResult,
     seatsResult
   ] = await Promise.all([
-
-    db
-      .from('collaborators')
-      .select('*')
-      .order('name'),
-
-    db
-      .from('meetings')
-      .select('*')
-      .order('date')
-      .order('start'),
-
-    db
-      .from('seat_allocations')
-      .select('*')
-      .order('startDate')
-
+    db.from('collaborators').select('*').order('name'),
+    db.from('meetings').select('*').order('date').order('start'),
+    db.from('seat_allocations').select('*').order('startDate')
   ]);
 
-  if(collaboratorsResult.error)
-    throw collaboratorsResult.error;
+  if(collaboratorsResult.error) throw collaboratorsResult.error;
+  if(meetingsResult.error) throw meetingsResult.error;
+  if(seatsResult.error) throw seatsResult.error;
 
-  if(meetingsResult.error)
-    throw meetingsResult.error;
-
-  if(seatsResult.error)
-    throw seatsResult.error;
-
-  collaborators =
-    collaboratorsResult.data || [];
-
-  meetings =
-    meetingsResult.data || [];
-
-  seatAllocations =
-    seatsResult.data || [];
+  collaborators = collaboratorsResult.data || [];
+  meetings = meetingsResult.data || [];
+  seatAllocations = seatsResult.data || [];
 
   renderDashboard();
   renderSeats();
+}
 
+async function loadRequests(){
+  if(!db || !isAdmin) return;
+  const {data,error} = await db.from('meeting_requests')
+    .select('*')
+    .order('created_at',{ascending:false});
+  if(error){
+    console.warn('A tabela meeting_requests ainda não está configurada:',error.message);
+    meetingRequests = [];
+    updateApprovalBadge();
+    return;
+  }
+  meetingRequests = data || [];
+  updateApprovalBadge();
 }
 
 function setupRealtime(){
@@ -1609,7 +1690,13 @@ function setupRealtime(){
 
             try{
 
-              await loadData();
+              if(table === 'meeting_requests'){
+                await loadRequests();
+                renderDashboard();
+                if($('approvals-modal').style.display === 'flex') renderApprovals();
+              }else{
+                await loadData();
+              }
 
               setStatus(
                 '● Sincronizado',
@@ -1796,128 +1883,147 @@ function meetingOccursOnDate(
 }
 
 function syncAgendaViewport(){
-  const calendar = $('weekly-table');
-  const wrapper = document.querySelector('.calendar-wrapper');
-  if(!calendar || !wrapper) return;
+  const wrapper=document.querySelector('.calendar-wrapper');
+  const calendar=$('weekly-table');
+  if(!wrapper||!calendar) return;
 
-  if(window.innerWidth >= 900){
-    const header = calendar.querySelector('.grid-header');
-    const headerHeight = header ? header.getBoundingClientRect().height : 42;
-    const available = Math.max(40, wrapper.clientHeight - headerHeight);
-    const slotHeight = available / 11;
-    calendar.style.setProperty('--agenda-slot-height', `${slotHeight}px`);
+  if(window.innerWidth>=900){
+    const top=wrapper.getBoundingClientRect().top;
+    const available=Math.max(360,window.innerHeight-top-12);
+    wrapper.style.height=`${available}px`;
+    calendar.style.setProperty('--timeline-height',`${Math.max(260,available-44)}px`);
   }else{
-    calendar.style.removeProperty('--agenda-slot-height');
+    wrapper.style.height='';
+    calendar.style.removeProperty('--timeline-height');
   }
 }
-
-window.addEventListener('resize', syncAgendaViewport);
+window.addEventListener('resize',syncAgendaViewport);
 
 function renderDashboard(){
-
   const container = $('weekly-table');
   if(!container) return;
 
   const selected = $('week-picker').value || localDateString();
   const selectedDate = dateFromInput(selected);
 
-  function eventMarkup(meeting, hourStart){
-    const start = minutes(meeting.start);
-    const end = minutes(meeting.end);
-    const safeEnd = Math.max(end, start + 15);
-    const durationHours = (safeEnd - start) / 60;
-    const offsetPercent = ((start - hourStart) / 60) * 100;
-    const encoded = encodeURIComponent(JSON.stringify(meeting));
-    const typeBadge = meeting.type === 'Externa' ? '<span style="color:#fca5a5">[Ext]</span> ' : '';
-    const teamBadge = meeting.team ? `${esc(meeting.team)} | ` : '';
+  const DAY_START = 8 * 60;
+  const DAY_END = 19 * 60;
+  const DAY_SPAN = DAY_END - DAY_START;
 
+  function eventMarkup(meeting){
+    const start = Math.max(DAY_START, minutes(meeting.start));
+    const end = Math.min(DAY_END, Math.max(minutes(meeting.end), start + 15));
+    const top = ((start - DAY_START) / DAY_SPAN) * 100;
+    const height = ((end - start) / DAY_SPAN) * 100;
+    const encoded = encodeURIComponent(JSON.stringify(meeting));
+    const typeBadge = meeting.type === 'Externa' ? 'Externa' : 'Interna';
+    const meta = meeting.team ? `${esc(meeting.team)} · ${typeBadge}` : typeBadge;
     return `<div class="event-card"
-      style="top:${Math.max(0,offsetPercent)}%;--event-duration-hours:${durationHours};"
+      style="--event-top:${top}%;--event-height:${height}%"
       onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
-      <div class="event-title">${typeBadge}${teamBadge}${esc(meeting.title)}</div>
-      <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
-      <div class="event-owner">${meeting.owner ? 'Responsável: ' + esc(meeting.owner) : 'Responsável: —'}</div>
+      <div class="event-title">${esc(meeting.title)}</div>
+      <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} – ${esc(String(meeting.end || '').slice(0,5))} · ${meta}</div>
+      <div class="event-owner">${esc(meeting.owner || '—')}</div>
+    </div>`;
+  }
+
+  function pendingMarkup(request){
+    const start = Math.max(DAY_START, minutes(request.start));
+    const end = Math.min(DAY_END, Math.max(minutes(request.end), start + 15));
+    const top = ((start - DAY_START) / DAY_SPAN) * 100;
+    const height = ((end - start) / DAY_SPAN) * 100;
+    return `<div class="event-card pending"
+      style="--event-top:${top}%;--event-height:${height}%"
+      title="${isAdmin ? 'Clique para revisar esta solicitação' : 'Solicitação aguardando aprovação'}"
+      onclick="event.stopPropagation();${isAdmin ? `openRequestDetails('${request.id}')` : ''}">
+      <div class="event-title">${isAdmin ? 'Solicitação • ' + esc(request.title) : 'Solicitação pendente'}</div>
+      <div class="event-time">${esc(String(request.start || '').slice(0,5))} - ${esc(String(request.end || '').slice(0,5))}</div>
+      <div class="event-owner">${isAdmin ? esc(request.requester_name || request.requester_email || 'Solicitante') : 'Aguardando aprovação'}</div>
+    </div>`;
+  }
+
+  function timeAxis(){
+    return `<div class="time-axis">
+      ${hours.map((hour,index)=>`<span class="time-label" style="top:${(index/11)*100}%">${hour}</span>`).join('')}
+    </div>`;
+  }
+
+  function timeline(target){
+    const events = meetings
+      .filter(m => meetingOccursOnDate(m,target))
+      .sort((a,b)=>minutes(a.start)-minutes(b.start));
+
+    const pending = isAdmin ? meetingRequests.filter(r =>
+      r.status === 'pending' && r.date === target
+    ) : [];
+
+    return `<div class="day-timeline" onclick="handleTimelineClick(event,'${target}')">
+      ${events.map(eventMarkup).join('')}
+      ${pending.map(pendingMarkup).join('')}
     </div>`;
   }
 
   if(agendaView === 'daily'){
-
     const target = localDateString(selectedDate);
     const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][selectedDate.getDay()];
+    $('week-label').textContent = `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
 
-    $('week-label').textContent =
-      `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
-
-    let html = '<div class="grid-header">Hora</div>';
-    html += `<div class="grid-header"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
-
-    hours.forEach(hour => {
-
-      const hourStart = minutes(hour);
-      const hourEnd = hourStart + 60;
-
-      html += `<div class="time-slot">${hour}</div>`;
-
-      const events = meetings
-        .filter(m => meetingOccursOnDate(m,target))
-        .filter(m => {
-          const start = minutes(m.start);
-          return start >= hourStart && start < hourEnd;
-        })
-        .sort((a,b) => minutes(a.start) - minutes(b.start));
-
-      html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
-      events.forEach(meeting => html += eventMarkup(meeting, hourStart));
-      html += '</div>';
-    });
-
-    container.className = 'calendar agenda-export-area daily-calendar';
-    container.innerHTML = html;
+    container.className = 'daily-calendar agenda-export-area';
+    container.innerHTML =
+      `<div class="grid-header">Hora</div>
+       <div class="grid-header"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>
+       ${timeAxis()}
+       ${timeline(target)}`;
     requestAnimationFrame(syncAgendaViewport);
     return;
   }
 
   const sunday = startOfWeek(selectedDate);
   const days = Array.from({length:7},(_,index)=>addDays(sunday,index));
-
   $('week-label').textContent =
     `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
 
-  let html = '<div class="grid-header">Hora</div>';
-  const names = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-
-  days.forEach((day,index) => {
-    html += `<div class="grid-header"><strong>${names[index]}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
-  });
-
-  hours.forEach(hour => {
-
-    const hourStart = minutes(hour);
-    const hourEnd = hourStart + 60;
-
-    html += `<div class="time-slot">${hour}</div>`;
-
-    days.forEach(day => {
-
-      const target = localDateString(day);
-
-      const events = meetings
-        .filter(meeting => meetingOccursOnDate(meeting,target))
-        .filter(meeting => {
-          const start = minutes(meeting.start);
-          return start >= hourStart && start < hourEnd;
-        })
-        .sort((a,b) => minutes(a.start) - minutes(b.start));
-
-      html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
-      events.forEach(meeting => html += eventMarkup(meeting, hourStart));
-      html += '</div>';
-    });
-  });
-
   container.className = 'calendar agenda-export-area';
-  container.innerHTML = html;
+  container.innerHTML =
+    `<div class="grid-header">Hora</div>` +
+    days.map(day=>{
+      const name=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][day.getDay()];
+      return `<div class="grid-header"><strong>${name}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
+    }).join('') +
+    timeAxis() +
+    days.map(day=>timeline(localDateString(day))).join('');
+
   requestAnimationFrame(syncAgendaViewport);
+}
+
+function syncAgendaViewport(){
+  const wrapper = document.querySelector('.calendar-wrapper');
+  const calendar = $('weekly-table');
+  if(!wrapper || !calendar) return;
+  if(window.innerWidth >= 900){
+    const h = Math.max(240, wrapper.clientHeight - 44);
+    calendar.style.setProperty('--timeline-height', `${h}px`);
+  }else{
+    calendar.style.removeProperty('--timeline-height');
+  }
+}
+
+window.addEventListener('resize', syncAgendaViewport);
+
+function handleTimelineClick(event,date){
+  if(event.target.closest('.event-card')) return;
+  const timeline = event.currentTarget;
+  const rect = timeline.getBoundingClientRect();
+  const ratio = Math.min(0.999,Math.max(0,(event.clientY-rect.top)/rect.height));
+  const rawMinutes = 8*60 + ratio*(11*60);
+  const snapped = Math.round(rawMinutes/30)*30;
+  const start = Math.max(8*60,Math.min(18*60,snapped));
+  const end = Math.min(19*60,start+60);
+  openMeetingModal({
+    date,
+    start: `${pad(Math.floor(start/60))}:${pad(start%60)}`,
+    end: `${pad(Math.floor(end/60))}:${pad(end%60)}`
+  });
 }
 
 function exportAgendaPNG(){
@@ -2000,6 +2106,99 @@ function handleSlotClick(
    REUNIÕES
 ========================= */
 
+
+async function loadAdminUsers(){
+  adminEmails = new Set([PRIMARY_ADMIN_EMAIL.toLowerCase()]);
+  if(!db) return;
+  try{
+    const {data,error}=await db.from('admin_users').select('email').order('email');
+    if(error) return; // mantém o administrador principal como fallback
+    (data||[]).forEach(row=>{
+      if(row?.email) adminEmails.add(String(row.email).trim().toLowerCase());
+    });
+  }catch(error){
+    console.warn('Tabela admin_users indisponível; usando administrador principal.',error);
+  }
+}
+
+function isPrimaryAdmin(){
+  return !!currentUser &&
+    String(currentUser.email||'').toLowerCase()===PRIMARY_ADMIN_EMAIL.toLowerCase();
+}
+
+async function openAdminsModal(){
+  if(!isAdmin){alert('Apenas administradores podem gerenciar administradores.');return;}
+  await loadAdminUsers();
+  renderAdmins();
+  $('admins-modal').style.display='flex';
+}
+
+function closeAdminsModal(){ $('admins-modal').style.display='none'; }
+
+function renderAdmins(){
+  const list=$('admins-list');
+  const emails=[...adminEmails].sort((a,b)=>{
+    if(a===PRIMARY_ADMIN_EMAIL.toLowerCase()) return -1;
+    if(b===PRIMARY_ADMIN_EMAIL.toLowerCase()) return 1;
+    return a.localeCompare(b);
+  });
+  list.innerHTML=emails.map(email=>{
+    const primary=email===PRIMARY_ADMIN_EMAIL.toLowerCase();
+    return `<div class="admin-row">
+      <div>
+        <div class="admin-email">${esc(email)}</div>
+        <div class="admin-role">${primary?'Administrador principal':'Administrador'}</div>
+      </div>
+      ${primary
+        ? '<span class="status" style="font-size:9px;padding:5px 9px">PRINCIPAL</span>'
+        : `<button class="btn btn-danger" onclick="removeAdmin('${encodeURIComponent(email)}')">Remover</button>`}
+    </div>`;
+  }).join('');
+}
+
+async function addAdmin(event){
+  event.preventDefault();
+  if(!isAdmin||!db) return;
+  const email=$('admin-email-input').value.trim().toLowerCase();
+  if(!email) return;
+  if(email===PRIMARY_ADMIN_EMAIL.toLowerCase()){
+    alert('Esse e-mail já é o administrador principal.');
+    return;
+  }
+  if(adminEmails.has(email)){
+    alert('Esse e-mail já é administrador.');
+    return;
+  }
+  try{
+    const {error}=await db.from('admin_users').insert([{email}]);
+    if(error) throw error;
+    await loadAdminUsers();
+    renderAdmins();
+    $('admin-email-input').value='';
+    alert('Administrador adicionado.');
+  }catch(error){
+    console.error(error);
+    alert('Não foi possível adicionar o administrador. Verifique se a tabela admin_users e suas políticas estão configuradas no Supabase.');
+  }
+}
+
+async function removeAdmin(encodedEmail){
+  if(!isAdmin||!db) return;
+  const email=decodeURIComponent(encodedEmail).toLowerCase();
+  if(email===PRIMARY_ADMIN_EMAIL.toLowerCase()) return;
+  if(!confirm(`Remover ${email} dos administradores?`)) return;
+  try{
+    const {error}=await db.from('admin_users').delete().eq('email',email);
+    if(error) throw error;
+    await loadAdminUsers();
+    updateAuthUI();
+    renderAdmins();
+  }catch(error){
+    console.error(error);
+    alert('Não foi possível remover o administrador. Verifique as políticas da tabela admin_users.');
+  }
+}
+
 function fillOwnerSelect(){
 
   const select =
@@ -2055,457 +2254,436 @@ function fillTeamSelect() {
     allTeams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
 }
 
-function openMeetingModal(
-  data = null
-){
+function populateTimeSelects(){
+  const start = $('m-start');
+  const end = $('m-end');
+  if(!start || !end) return;
+
+  const options = [];
+  for(let h=8;h<=19;h++){
+    for(let m=0;m<60;m+=30){
+      if(h===19 && m>0) continue;
+      const value=`${pad(h)}:${pad(m)}`;
+      options.push(`<option value="${value}">${value}</option>`);
+    }
+  }
+  start.innerHTML = options.join('');
+  end.innerHTML = options.join('');
+  start.addEventListener('change',updateMeetingTimeUI);
+  end.addEventListener('change',updateMeetingTimeUI);
+}
+
+function updateMeetingTimeUI(){
+  const start=minutes($('m-start')?.value);
+  const end=minutes($('m-end')?.value);
+  const label=$('m-duration-label');
+  if(!label) return;
+  if(end>start){
+    const d=end-start;
+    label.textContent=`Duração: ${Math.floor(d/60)}${d%60?'h30':'h'}`;
+  }else{
+    label.textContent='Escolha um horário final maior que o início';
+  }
+  document.querySelectorAll('.duration-chip').forEach(chip=>chip.classList.remove('active'));
+}
+
+function setMeetingDuration(duration){
+  const start=minutes($('m-start').value);
+  if(!start) return;
+  const end=Math.min(19*60,start+duration);
+  $('m-end').value=`${pad(Math.floor(end/60))}:${pad(end%60)}`;
+  updateMeetingTimeUI();
+}
+
+function updateAuthUI(){
+  isAdmin=!!currentUser && adminEmails.has(String(currentUser.email||'').toLowerCase());
+  document.body.classList.toggle('is-admin',isAdmin);
+
+  const btn=$('auth-btn');
+  const user=$('auth-user');
+  const meetingBtn=$('meeting-action-btn');
+
+  if(currentUser){
+    if(user) user.textContent=isAdmin ? 'Administrador' : (currentUser.email||'');
+    if(btn) btn.textContent='Sair';
+    if(meetingBtn) meetingBtn.textContent=isAdmin ? '+ Nova reunião' : '+ Solicitar reunião';
+  }else{
+    if(user) user.textContent='';
+    if(btn) btn.textContent='Entrar';
+    if(meetingBtn) meetingBtn.textContent='+ Solicitar reunião';
+  }
+
+  updateApprovalBadge();
+}
+
+function updateApprovalBadge(){
+  const count=meetingRequests.filter(r=>r.status==='pending').length;
+  const badge=$('approvals-inline-badge');
+  const headerBadge=$('approval-badge');
+  if(badge) badge.textContent=count;
+  if(headerBadge){
+    headerBadge.textContent=count;
+    headerBadge.style.display=isAdmin && count ? 'inline-flex' : 'none';
+  }
+}
+
+function openAuthModal(){
+  if(currentUser){
+    if(confirm('Deseja sair deste acesso?')) db?.auth.signOut();
+    return;
+  }
+  authMode='login';
+  $('auth-title').textContent='Entrar';
+  $('auth-submit').textContent='Entrar';
+  $('auth-email').value='';
+  $('auth-password').value='';
+  $('auth-modal').style.display='flex';
+}
+
+function toggleAuthMode(){
+  authMode=authMode==='login'?'signup':'login';
+  $('auth-title').textContent=authMode==='login'?'Entrar':'Criar acesso';
+  $('auth-submit').textContent=authMode==='login'?'Entrar':'Criar acesso';
+  $('auth-help').textContent=authMode==='login'
+    ? 'Use seu acesso para solicitar reuniões. O administrador terá acesso às aprovações.'
+    : 'Crie um acesso com seu e-mail. Dependendo das configurações do Supabase, pode ser necessário confirmar o e-mail.';
+}
+
+function closeAuthModal(){
+  $('auth-modal').style.display='none';
+}
+
+async function submitAuth(event){
+  event.preventDefault();
+  if(!db){alert('Supabase indisponível.');return;}
+  const email=$('auth-email').value.trim();
+  const password=$('auth-password').value;
+
+  try{
+    if(authMode==='signup'){
+      const {error}=await db.auth.signUp({email,password});
+      if(error) throw error;
+      alert('Acesso criado. Se a confirmação de e-mail estiver ativa, confirme seu e-mail e depois entre.');
+      toggleAuthMode();
+      return;
+    }
+    const {error}=await db.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    closeAuthModal();
+  }catch(error){
+    console.error(error);
+    alert('Não foi possível concluir o acesso: '+error.message);
+  }
+}
+
+function fillOwnerSelect(){
+  const select=$('m-owner-select');
+  select.innerHTML='';
+  if(!collaborators.length){
+    select.innerHTML='<option value="">Cadastre um colaborador primeiro</option>';
+    return;
+  }
+  collaborators.forEach(collaborator=>{
+    const option=document.createElement('option');
+    option.value=collaborator.name;
+    option.textContent=`${collaborator.name} (${collaborator.team||''})`;
+    select.appendChild(option);
+  });
+}
+
+function fillTeamSelect(){
+  const select=$('m-team-select');
+  const defaultTeams=['CSUM','CSUA','CEO','EDFE','ENGO','ENGE'];
+  const collTeams=collaborators.map(c=>c.team).filter(t=>defaultTeams.includes(t));
+  const allTeams=[...new Set([...defaultTeams,...collTeams])];
+  select.innerHTML='<option value="">Sem time</option>'+allTeams.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+}
+
+function openMeetingModal(data=null){
+  if(!currentUser){
+    openAuthModal();
+    return;
+  }
 
   fillOwnerSelect();
   fillTeamSelect();
+  $('meeting-form').reset();
 
-  $('meeting-form')
-    .reset();
+  $('m-id').value=data?.id||'';
+  $('m-title').value=data?.title||'';
+  $('m-team-select').value=data?.team||'';
+  $('m-type').value=data?.type||'Interna';
+  $('m-owner-select').value=data?.owner||collaborators[0]?.name||'';
+  $('m-attendees').value=data?.attendees_count||1;
+  $('m-participants').value=data?.participants||'';
+  $('m-date').value=data?.date||$('week-picker').value||localDateString();
+  $('m-start').value=data?.start?String(data.start).slice(0,5):'08:00';
+  $('m-end').value=data?.end?String(data.end).slice(0,5):'09:00';
+  $('m-recurrence').value=data?.recurrence||'none';
 
-  $('m-id').value =
-    data?.id || '';
+  const requester=$('requester-box');
+  const isEditing=!!data?.id;
+  const canEdit=isAdmin;
 
-  $('m-title').value =
-    data?.title || '';
+  $('modal-title-text').textContent =
+    isEditing ? 'Editar Reunião / Evento' : (isAdmin ? 'Nova reunião' : 'Solicitar reunião');
 
-  $('m-team-select').value =
-    data?.team || '';
+  $('btn-delete-meeting').style.display = isEditing && isAdmin ? 'inline-flex' : 'none';
+  $('m-owner-select').closest('.form-group').style.display = isAdmin ? '' : 'none';
 
-  $('m-type').value =
-    data?.type || 'Interna';
-
-  $('m-owner-select').value =
-    data?.owner ||
-    collaborators[0]?.name ||
-    '';
-
-  $('m-attendees').value =
-    data?.attendees_count ||
-    1;
-
-  $('m-participants').value =
-    data?.participants ||
-    '';
-
-  $('m-date').value =
-    data?.date ||
-    $('week-picker').value ||
-    localDateString();
-
-  $('m-start').value =
-    data?.start
-      ? String(data.start).slice(0,5)
-      : '';
-
-  $('m-end').value =
-    data?.end
-      ? String(data.end).slice(0,5)
-      : '';
-
-  $('m-recurrence').value =
-    data?.recurrence ||
-    'none';
-
-  $('modal-title-text')
-    .textContent =
-      data?.id
-      ? 'Editar Reunião / Evento'
-      : 'Agendar Reunião';
-
-  $('btn-delete-meeting')
-    .style.display =
-      data?.id
-      ? 'inline-flex'
-      : 'none';
-
-  $('meeting-modal')
-    .style.display =
-      'flex';
-
-}
-
-function openMeetingModalFromEncoded(
-  encoded
-){
-
-  try{
-
-    openMeetingModal(
-      JSON.parse(
-        decodeURIComponent(encoded)
-      )
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      'Não foi possível abrir a reunião.'
-    );
-
-  }
-
-}
-
-function closeMeetingModal(){
-
-  $('meeting-modal')
-    .style.display =
-      'none';
-
-}
-
-function meetingConflict(
-  candidate,
-  editingId = ''
-){
-
-  const start =
-    minutes(
-      candidate.start
-    );
-
-  const end =
-    minutes(
-      candidate.end
-    );
-
-  if(end <= start){
-
-    return (
-      'O horário final deve ser maior ' +
-      'que o horário inicial.'
-    );
-
-  }
-
-  /*
-    Verifica 1 ano para frente.
-    Assim uma recorrência não consegue
-    colidir com outra recorrência.
-  */
-
-  const base =
-    dateFromInput(
-      candidate.date
-    );
-
-  for(
-    let i=0;
-    i<366;
-    i++
-  ){
-
-    const day =
-      localDateString(
-        addDays(base,i)
-      );
-
-    if(
-      !meetingOccursOnDate(
-        candidate,
-        day
-      )
-    ) continue;
-
-    for(
-      const existing of meetings
-    ){
-
-      if(
-        editingId &&
-        String(existing.id) ===
-        String(editingId)
-      )
-        continue;
-
-      if(
-        !meetingOccursOnDate(
-          existing,
-          day
-        )
-      )
-        continue;
-
-      if(
-        start <
-        minutes(existing.end) &&
-
-        end >
-        minutes(existing.start)
-      ){
-
-        return `
-          Conflito com "${existing.title}"
-          em
-          ${day.split('-').reverse().join('/')}
-          (
-          ${String(existing.start).slice(0,5)}
-          -
-          ${String(existing.end).slice(0,5)}
-          ).
-        `;
-
-      }
-
+  if(requester){
+    requester.style.display=isAdmin?'none':'block';
+    if(!isAdmin){
+      const displayName=currentUser.user_metadata?.full_name || currentUser.email || 'Solicitante';
+      requester.innerHTML=`Solicitação em nome de <strong>${esc(displayName)}</strong><br><span style="font-size:10px">${esc(currentUser.email||'')}</span>`;
     }
-
   }
 
-  return null;
+  // Solicitações são sempre novas para usuários comuns.
+  $('m-id').value = isAdmin ? (data?.id||'') : '';
+  $('meeting-modal').style.display='flex';
+  updateMeetingTimeUI();
+}
 
+function openMeetingModalFromEncoded(encoded){
+  try{
+    openMeetingModal(JSON.parse(decodeURIComponent(encoded)));
+  }catch(error){
+    console.error(error);
+    alert('Não foi possível abrir a reunião.');
+  }
+}
+
+function closeMeetingModal(){ $('meeting-modal').style.display='none'; }
+
+function meetingConflict(candidate,editingId=''){
+  const start=minutes(candidate.start);
+  const end=minutes(candidate.end);
+  if(end<=start) return 'O horário final deve ser maior que o horário inicial.';
+
+  const base=dateFromInput(candidate.date);
+  for(let i=0;i<366;i++){
+    const day=localDateString(addDays(base,i));
+    if(!meetingOccursOnDate(candidate,day)) continue;
+    for(const existing of meetings){
+      if(editingId && String(existing.id)===String(editingId)) continue;
+      if(!meetingOccursOnDate(existing,day)) continue;
+      if(start<minutes(existing.end) && end>minutes(existing.start)){
+        return `Conflito com "${existing.title}" em ${day.split('-').reverse().join('/')} (${String(existing.start).slice(0,5)}-${String(existing.end).slice(0,5)}).`;
+      }
+    }
+  }
+  return null;
 }
 
 async function saveMeeting(event){
-
   event.preventDefault();
+  if(!db){alert('Supabase indisponível.');return;}
+  if(!currentUser){openAuthModal();return;}
 
-  if(!db){
-
-    alert(
-      'O Supabase está indisponível. ' +
-      'A agenda continua visível, mas a reunião ' +
-      'não pode ser salva neste momento.'
-    );
-
-    return;
-
-  }
-
-  const id =
-    $('m-id').value;
-
-  const owner =
-    $('m-owner-select').value;
-
-  const collaborator =
-    collaborators.find(
-      c => c.name === owner
-    );
-
-  const data = {
-
-    title:
-      $('m-title').value.trim(),
-
-    owner,
-
-    team:
-      $('m-team-select').value,
-
-    type:
-      $('m-type').value,
-
-    attendees_count:
-      parseInt(
-        $('m-attendees').value,
-        10
-      ) || 1,
-
-    participants:
-      $('m-participants').value.trim(),
-
-    date:
-      $('m-date').value,
-
-    start:
-      $('m-start').value,
-
-    end:
-      $('m-end').value,
-
-    recurrence:
-      $('m-recurrence').value
-
+  const id=isAdmin ? $('m-id').value : '';
+  const data={
+    title:$('m-title').value.trim(),
+    owner:isAdmin ? $('m-owner-select').value : (currentUser.user_metadata?.full_name || currentUser.email || 'Solicitante'),
+    team:$('m-team-select').value,
+    type:$('m-type').value,
+    attendees_count:parseInt($('m-attendees').value,10)||1,
+    participants:$('m-participants').value.trim(),
+    date:$('m-date').value,
+    start:$('m-start').value,
+    end:$('m-end').value,
+    recurrence:$('m-recurrence').value
   };
 
-  if(
-    !data.title ||
-    !data.owner ||
-    !data.date ||
-    !data.start ||
-    !data.end
-  ){
-
-    alert(
-      'Preencha todos os campos obrigatórios.'
-    );
-
-    return;
-
+  if(!data.title||!data.date||!data.start||!data.end){
+    alert('Preencha todos os campos obrigatórios.');return;
+  }
+  if(minutes(data.end)<=minutes(data.start)){
+    alert('O horário final deve ser maior que o horário inicial.');return;
   }
 
-  const conflict =
-    meetingConflict(
-      data,
-      id
-    );
-
-  if(conflict){
-
-    alert(conflict);
-
-    return;
-
-  }
+  const conflict=meetingConflict(data,id);
+  if(conflict){alert(conflict);return;}
 
   try{
-
-    let response;
-
-    if(id){
-
-      response =
-        await db
-          .from('meetings')
-          .update(data)
-          .eq('id',id)
-          .select()
-          .single();
-
-    }else{
-
-      response =
-        await db
-          .from('meetings')
-          .insert([data])
-          .select()
-          .single();
-
+    if(isAdmin){
+      const response=id
+        ? await db.from('meetings').update(data).eq('id',id).select().single()
+        : await db.from('meetings').insert([data]).select().single();
+      if(response.error) throw response.error;
+      closeMeetingModal();
+      await loadData();
+      setStatus('● Sincronizado',true);
+      return;
     }
 
-    if(response.error)
-      throw response.error;
+    const requestData={
+      ...data,
+      requester_email:currentUser.email,
+      requester_name:currentUser.user_metadata?.full_name || currentUser.email,
+      status:'pending'
+    };
+    delete requestData.owner;
+
+    const {data:createdRequest,error}=await db.from('meeting_requests').insert([requestData]).select().single();
+    if(error) throw error;
+
+    // O pedido fica salvo mesmo se a notificação de e-mail estiver indisponível.
+    try{
+      await notifyAdminByEmail(createdRequest || requestData);
+    }catch(emailError){
+      console.warn('Solicitação salva, mas o aviso por e-mail não foi enviado:',emailError);
+    }
 
     closeMeetingModal();
-
-    await loadData();
-
-    setStatus(
-      '● Sincronizado',
-      true
-    );
-
+    alert('Solicitação enviada! O horário ficará pendente até a aprovação do administrador.');
+    if(isAdmin) await loadRequests();
+    renderDashboard();
   }catch(error){
-
     console.error(error);
-
-    // Compatibilidade: garante que salvar não quebre se não for criado nova coluna no seu banco Supabase.
-    const message = String(error?.message || '').toLowerCase();
-
-    if(message.includes('column') || message.includes('schema cache')){
-
-      try {
-        const fallbackData = {...data};
-        delete fallbackData.type;
-
-        if(data.type) {
-            fallbackData.participants = `[${data.type}] ` + fallbackData.participants;
-        }
-
-        let fallback;
-
-        if(id){
-          fallback = await db
-            .from('meetings')
-            .update(fallbackData)
-            .eq('id',id)
-            .select()
-            .single();
-        }else{
-          fallback = await db
-            .from('meetings')
-            .insert([fallbackData])
-            .select()
-            .single();
-        }
-
-        if(fallback.error)
-          throw fallback.error;
-
-        closeMeetingModal();
-        await loadData();
-        return;
-
-      } catch(fallbackError){
-        alert(
-          'Erro ao salvar reunião: ' +
-          fallbackError.message
-        );
-        return;
-      }
-    }
-
-    setStatus(
-      '● Sem conexão',
-      false
-    );
-
-    alert(
-      'Erro ao salvar reunião: ' +
-      error.message
-    );
-
+    alert('Não foi possível salvar/enviar: '+error.message);
   }
-
 }
 
 async function deleteMeeting(){
-
-  const id =
-    $('m-id').value;
-
-  if(
-    !id ||
-    !confirm(
-      'Tem certeza que deseja excluir esta reunião?'
-    )
-  )
-    return;
-
-  if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
-    return;
-
-  }
-
+  const id=$('m-id').value;
+  if(!isAdmin||!id||!confirm('Tem certeza que deseja excluir esta reunião?')) return;
+  if(!db){alert('Supabase indisponível.');return;}
   try{
-
-    const {error} =
-      await db
-        .from('meetings')
-        .delete()
-        .eq('id',id);
-
-    if(error)
-      throw error;
-
+    const {error}=await db.from('meetings').delete().eq('id',id);
+    if(error) throw error;
     closeMeetingModal();
-
     await loadData();
-
   }catch(error){
-
-    alert(
-      'Erro ao excluir reunião: ' +
-      error.message
-    );
-
+    alert('Erro ao excluir reunião: '+error.message);
   }
-
 }
 
+async function notifyAdminByEmail(request){
+  if(!db || !currentUser) return;
+  const {data:{session}}=await db.auth.getSession();
+  if(!session?.access_token) return;
+
+  const response=await fetch(`${SUPABASE_URL}/functions/v1/notify-meeting-request`,{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization':`Bearer ${session.access_token}`
+    },
+    body:JSON.stringify({
+      request,
+      admin_email:PRIMARY_ADMIN_EMAIL
+    })
+  });
+  if(!response.ok) throw new Error(await response.text());
+}
+
+async function openApprovalsModal(){
+  if(!isAdmin){alert('Apenas o administrador pode acessar as aprovações.');return;}
+  await loadRequests();
+  renderApprovals();
+  $('approvals-modal').style.display='flex';
+}
+
+function closeApprovalsModal(){ $('approvals-modal').style.display='none'; }
+
+function renderApprovals(){
+  const list=$('approvals-list');
+  const pending=meetingRequests.filter(r=>r.status==='pending');
+
+  if(!pending.length){
+    list.innerHTML='<div class="empty-state">Nenhuma solicitação pendente.</div>';
+    return;
+  }
+
+  list.innerHTML=pending.map(r=>`
+    <div class="request-item">
+      <div class="request-main">
+        <strong>${esc(r.title)}</strong>
+        <div class="request-meta">
+          ${esc(r.requester_name||r.requester_email||'Solicitante')} · ${esc(r.requester_email||'')}<br>
+          ${esc(r.date||'')} · ${esc(String(r.start||'').slice(0,5))} - ${esc(String(r.end||'').slice(0,5))} · ${esc(r.type||'Interna')} · ${esc(r.attendees_count||1)} pessoa(s)<br>
+          ${esc(r.team||'Sem time')}${r.participants?' · '+esc(r.participants):''}
+        </div>
+      </div>
+      <div class="request-actions">
+        <button class="btn btn-danger" onclick="rejectRequest('${r.id}')">Recusar</button>
+        <button class="btn btn-success" onclick="approveRequest('${r.id}')">Aprovar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function openRequestDetails(id){
+  if(!isAdmin) return;
+  await openApprovalsModal();
+  const item=meetingRequests.find(r=>String(r.id)===String(id));
+  if(item) alert(`Solicitação: ${item.title}\n${item.date} · ${String(item.start).slice(0,5)} - ${String(item.end).slice(0,5)}\nSolicitante: ${item.requester_name||item.requester_email}`);
+}
+
+async function approveRequest(id){
+  if(!isAdmin||!db) return;
+  const request=meetingRequests.find(r=>String(r.id)===String(id));
+  if(!request) return;
+
+  const data={
+    title:request.title,
+    owner:request.requester_name||request.requester_email||'Solicitante',
+    team:request.team||'',
+    type:request.type||'Interna',
+    attendees_count:request.attendees_count||1,
+    participants:request.participants||'',
+    date:request.date,
+    start:request.start,
+    end:request.end,
+    recurrence:request.recurrence||'none'
+  };
+
+  const conflict=meetingConflict(data,'');
+  if(conflict){alert(conflict);return;}
+
+  if(!confirm(`Aprovar "${request.title}" para ${request.date} das ${String(request.start).slice(0,5)} às ${String(request.end).slice(0,5)}?`)) return;
+
+  try{
+    const inserted=await db.from('meetings').insert([data]).select().single();
+    if(inserted.error) throw inserted.error;
+
+    const updated=await db.from('meeting_requests')
+      .update({status:'approved',approved_at:new Date().toISOString()})
+      .eq('id',id);
+    if(updated.error) throw updated.error;
+
+    await loadData();
+    await loadRequests();
+    renderApprovals();
+    renderDashboard();
+  }catch(error){
+    console.error(error);
+    alert('Não foi possível aprovar: '+error.message);
+  }
+}
+
+async function rejectRequest(id){
+  if(!isAdmin||!db) return;
+  const request=meetingRequests.find(r=>String(r.id)===String(id));
+  if(!request) return;
+  if(!confirm(`Recusar a solicitação "${request.title}"?`)) return;
+
+  try{
+    const {error}=await db.from('meeting_requests')
+      .update({status:'rejected',rejected_at:new Date().toISOString()})
+      .eq('id',id);
+    if(error) throw error;
+    await loadRequests();
+    renderApprovals();
+    renderDashboard();
+  }catch(error){
+    alert('Não foi possível recusar: '+error.message);
+  }
+}
 
 /* =========================
-   ASSENTOS
+    ASSENTOS
 ========================= */
 
 function seatOccursOnDate(
