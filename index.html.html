@@ -5,36 +5,149 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LOJA CONCEITO BE | Coworking Pro BE</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
+
 :root{
-  --bg:#f7f7f6;
+  --bg:#ffffff;
   --surface:#ffffff;
-  --surface-soft:#fafafa;
-  --line:#e8e8e6;
-  --line-strong:#dededb;
+  --surface-soft:#f7f7f6;
+  --line:rgba(200,200,200,.5);
+  --line-strong:rgba(200,200,200,.9);
   --text:#111111;
-  --muted:#737373;
+  --muted:#646464;
   --black:#111111;
   --hover:#f3f3f1;
   --radius:12px;
+  --slot-height:78px;
 }
+
+*{font-family:inherit}
+
+html{font-family:'N27','Montserrat',sans-serif}
+
 body{
   margin:0;
-  font-family:N27,Inter,Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   letter-spacing:-.01em;
 }
-button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
-button{cursor:pointer}
-button,input,select,textarea{font:inherit;font-family:N27,Inter,Arial,sans-serif}
+
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 
+/* ============ AUTENTICAÇÃO ============ */
+
+#view-auth{
+  display:none;
+  min-height:100vh;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  padding:20px;
+}
+
+.auth-card{
+  width:100%;
+  max-width:380px;
+  background:#fff;
+  border:1px solid var(--line-strong);
+  border-radius:16px;
+  padding:32px;
+  box-shadow:0 10px 40px rgba(0,0,0,.06);
+}
+
+.auth-logo{
+  font-size:20px;
+  font-weight:900;
+  text-transform:uppercase;
+  text-align:center;
+  margin-bottom:22px;
+  letter-spacing:-.3px;
+}
+
+.auth-title{
+  font-size:17px;
+  font-weight:800;
+  text-transform:uppercase;
+  margin-bottom:16px;
+  text-align:center;
+}
+
+.auth-field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:14px;
+}
+
+.auth-field label{
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+
+.auth-field input{
+  border:1px solid var(--line-strong);
+  border-radius:10px;
+  padding:11px 12px;
+  background:#fff;
+  font-weight:500;
+  width:100%;
+}
+
+.auth-error{
+  color:#c0392b;
+  font-size:13px;
+  min-height:18px;
+  margin-bottom:8px;
+  text-align:center;
+  font-weight:600;
+}
+
+.auth-submit{
+  width:100%;
+  background:#111;
+  color:#fff;
+  border:0;
+  border-radius:10px;
+  padding:12px;
+  font-weight:800;
+  font-size:13px;
+  text-transform:uppercase;
+  cursor:pointer;
+  margin-top:6px;
+  transition:opacity .15s ease;
+}
+.auth-submit:hover{opacity:.85}
+
+.auth-switch{
+  text-align:center;
+  font-size:13px;
+  margin-top:18px;
+  color:var(--muted);
+  font-weight:500;
+}
+
+.auth-switch a{
+  color:#111;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+/* ============ ESTRUTURA GERAL ============ */
+
 .header{
-  height:68px;
+  height:64px;
   background:#fff;
   border-bottom:1px solid var(--line);
   display:flex;
@@ -47,35 +160,28 @@ button{cursor:pointer}
 }
 
 .logo{
-  font-size:25px;
+  font-size:22px;
   font-weight:900;
-  letter-spacing:-1px
+  letter-spacing:-.5px;
+  text-transform:uppercase;
 }
 
 .header-right{
   display:flex;
   align-items:center;
-  gap:12px
+  gap:14px
 }
 
-.status{
-  padding:7px 12px;
-  border-radius:20px;
-  background:#dcfce7;
-  color:#15803d;
-  font-size:12px;
-  font-weight:800
-}
-
-.status.offline{
-  background:#fff7ed;
-  color:#c2410c
+.user-name-display{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
 }
 
 .container{
   max-width:1500px;
   margin:auto;
-  padding:20px 24px
+  padding:14px 24px
 }
 
 .toolbar{
@@ -83,168 +189,248 @@ button{cursor:pointer}
   align-items:center;
   justify-content:space-between;
   gap:15px;
-  margin-bottom:20px;
+  margin-bottom:12px;
   flex-wrap:wrap
 }
 
-.tabs{
-  display:flex;
-  gap:6px
-}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
 
 .tab{
   border:0;
-  background:#eeeeec;
+  background:var(--surface-soft);
   padding:9px 16px;
   border-radius:10px;
-  font-weight:700
+  font-weight:700;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.2px;
+  transition:background .18s ease,box-shadow .18s ease;
 }
+
+.tab:not(.active):hover{background:#ececea}
 
 .tab.active{
   background:#111;
-  color:#fff
+  color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.12)
 }
 
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap
+.tab-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:18px;
+  height:18px;
+  padding:0 5px;
+  border-radius:20px;
+  background:#c0392b;
+  color:#fff;
+  font-size:10px;
+  font-weight:800;
+  margin-left:6px;
+  vertical-align:middle;
 }
+.tab-badge:empty{display:none}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap}
 
 .btn{
   border:1px solid var(--line-strong);
   background:#fff;
   padding:9px 14px;
   border-radius:10px;
-  font-weight:700
+  font-weight:700;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.2px;
+  color:var(--text);
+  transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease
 }
 
-.btn{transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease}
-.btn:hover{background:#f3f3f1;border-color:#d4d4d1;transform:translateY(-1px)}
+.btn:hover{background:var(--hover);border-color:#b8b8b8;transform:translateY(-1px)}
 .btn:active{transform:translateY(0)}
 
-.btn-primary{
-  background:#111;
-  color:#fff;
-  border-color:#000000
-}
+.btn-primary{background:#111;color:#fff;border-color:#000000}
+.btn-danger{color:#c0392b;border-color:#e8b4ac}
 
-.btn-danger{
-  color:#dc2626;
-  border-color:#fecaca
-}
-
-.week-controls{
-  display:flex;
-  align-items:center;
-  gap:8px
-}
+.week-controls{display:flex;align-items:center;gap:8px}
 
 .week-controls input,
 .date-input{
   padding:9px 11px;
   border:1px solid var(--line-strong);
   border-radius:10px;
-  background:#fff
+  background:#fff;
+  transition:border-color .18s ease,box-shadow .18s ease
 }
 
-/* CALENDÁRIO */
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus,
+.date-input:focus,.week-controls input:focus,.auth-field input:focus{
+  outline:none;
+  border-color:#888;
+  box-shadow:0 0 0 3px rgba(0,0,0,.06);
+}
+
+/* ============ CALENDÁRIO — estilo Google Agenda ============ */
 
 .calendar-wrapper{
   background:#fff;
   border:1px solid var(--line);
   border-radius:14px;
   overflow:auto;
-  box-shadow:0 2px 12px rgba(0,0,0,.035)
+  scrollbar-width:thin;
+  box-shadow:0 2px 12px rgba(0,0,0,.03)
+}
+
+@media(min-width:900px){
+  .calendar-wrapper{max-height:calc(100vh - 220px)}
 }
 
 .calendar{
   min-width:950px;
   display:grid;
-  grid-template-columns:75px repeat(7,1fr)
+  grid-template-columns:60px repeat(7,1fr);
+  grid-template-rows:46px repeat(11,var(--slot-height,72px));
+}
+
+.daily-calendar{
+  min-width:600px;
+  display:grid;
+  grid-template-columns:60px 1fr;
+  grid-template-rows:46px repeat(11,var(--slot-height,72px));
 }
 
 .grid-header{
+  position:sticky;
+  top:0;
+  z-index:8;
   background:#fbfbfa;
   border-right:1px solid var(--line);
   border-bottom:1px solid var(--line);
-  padding:12px;
+  padding:8px 4px 5px;
   text-align:center;
   font-weight:800;
-  min-height:55px
+  font-size:12px;
+  line-height:1.3;
+  text-transform:uppercase;
 }
 
+.grid-header.today{background:#eef0ee}
+
 .grid-header small{
+  display:block;
   font-weight:500;
-  color:#777
+  color:var(--muted);
+  font-size:10px;
+  text-transform:none;
 }
 
 .time-slot{
-  min-height:var(--slot-height,82px);
-  height:var(--slot-height,82px);
-  padding:12px 8px;
-  text-align:center;
-  font-size:12px;
-  font-weight:700;
-  color:#777;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:6px;
+  font-size:10.5px;
+  font-weight:600;
+  color:var(--muted);
+  background:#fcfcfb;
   border-right:1px solid var(--line);
   border-bottom:1px solid var(--line)
 }
 
 .day-cell{
-  min-height:var(--slot-height,82px);
-  height:var(--slot-height,82px);
-  padding:5px;
+  padding:3px;
   border-right:1px solid var(--line);
   border-bottom:1px solid var(--line);
   background:#fff;
   position:relative;
-  overflow:visible;
-  /* z-index removido para o card sobrescrever as linhas de baixo corretamente */
+  /* sem z-index aqui de proposito, para o card sobrepor as linhas de baixo corretamente */
 }
 
-.day-cell:hover{
-  background:#fbfbfa
-}
+.day-cell:hover{background:#fcfcfb}
+.day-cell.today{background:#fafcfa}
+.day-cell.today:hover{background:#f5f8f5}
 
 .event-card{
-  background:#111;
-  color:#fff;
+  position:absolute;
+  left:3px;
+  right:3px;
+  top:4px;
+  margin:0;
+  min-height:max(42px,calc(var(--event-duration-hours,1) * var(--slot-height,72px) - 6px));
+  padding:5px 7px;
   border-radius:10px;
-  padding:8px;
-  margin-bottom:4px;
   cursor:pointer;
-  font-size:12px;
-  white-space:normal; /* Permite que o texto quebre melhor */
+  z-index:5;
+  box-shadow:0 1px 4px rgba(0,0,0,.14);
+  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
 }
 
 .event-card:hover{
-  opacity:.88
+  opacity:.94;
+  transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(0,0,0,.18);
 }
 
-.event-title{
-  font-weight:800;
-  font-size:13px;
-  margin-bottom:3px;
-  line-height:1.2;
+.event-title{font-weight:700;font-size:10.5px;line-height:1.25;margin-bottom:2px}
+.event-time{font-size:9.5px;line-height:1.2;opacity:.85;font-weight:500}
+.event-owner{margin-top:2px;font-size:9.5px;line-height:1.2;opacity:.8;font-weight:500}
+
+.event-card.cat-time{background:#992C1A;color:#fff}
+.event-card.cat-fornecedor{background:#7247F6;color:#fff}
+.event-card.cat-cliente{background:#46B276;color:#fff}
+.event-card.cat-lead{background:#FCBF44;color:#111111}
+
+.event-card.pending{
+  background:#fff;
+  color:#111111;
+  border:2px dashed var(--cat-color,#C8C8C8);
+  box-shadow:none;
 }
 
-.event-time{
-  opacity:.8;
-  font-size:11px;
+.cat-dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--cat-color,#646464);
+  margin-right:4px;
+  vertical-align:middle;
 }
 
-.event-owner{
-  margin-top:3px;
-  font-size:11px;
-  opacity:.75;
+/* ============ SOLICITAÇÕES ============ */
+
+.request-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border:1px solid var(--line-strong);
+  border-radius:12px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+  background:#fff;
 }
 
-/* ASSENTOS */
+.request-card-main{display:flex;align-items:flex-start;gap:8px}
+.request-title{font-size:14px;font-weight:800}
+.request-meta{font-size:12px;color:var(--muted);margin-top:3px;font-weight:500}
+.request-actions{display:flex;gap:8px}
 
-.seats-view{
-  display:none
+.status-pill{
+  font-size:10.5px;
+  font-weight:700;
+  color:var(--muted);
+  background:var(--surface-soft);
+  padding:6px 12px;
+  border-radius:20px;
+  text-transform:uppercase;
 }
+
+/* ============ ASSENTOS ============ */
+
+.seats-view{display:none}
 
 .seat-toolbar{
   background:#fff;
@@ -270,38 +456,26 @@ button{cursor:pointer}
   border:1px solid var(--line);
   border-radius:14px;
   padding:20px;
-  box-shadow:0 2px 12px rgba(0,0,0,.035)
+  box-shadow:0 2px 12px rgba(0,0,0,.03)
 }
 
-.room h3{
-  margin:0 0 18px
-}
-
-.table{
-  background:#ececea;;
-  border-radius:10px;
-  padding:12px;
-  margin-bottom:22px
-}
-
-.table-name{
-  text-align:center;
-  font-weight:800;
-  font-size:12px;
-  margin-bottom:8px
-}
+.room h3{margin:0 0 18px;font-size:15px;font-weight:800;text-transform:uppercase}
 
 .seats-row{
+  position:relative;
+  z-index:3;
   display:flex;
   justify-content:center;
+  align-items:center;
   gap:8px;
-  margin:8px 0
+  margin:8px 0;
+  width:100%;
 }
 
 .seat-chair{
   width:115px;
   min-height:55px;
-  border:1.5px solid #d7d7d4;
+  border:1.5px solid var(--line-strong);
   border-radius:10px;
   background:#fbfbfa;
   padding:7px;
@@ -313,28 +487,22 @@ button{cursor:pointer}
   transition:.15s
 }
 
-.seat-chair:hover{
-  transform:translateY(-2px);
-  border-color:#777
-}
+.seat-chair:hover{transform:translateY(-2px);border-color:#888}
 
-.seat-chair.occupied{
-  background:#111;
-  color:#fff;
-  border-color:#000000
-}
+.seat-chair.occupied{background:#111;color:#fff;border-color:#000000}
 
 .seat-status{
   font-size:10px;
+  font-weight:500;
   margin-top:3px;
   text-align:center;
-  max-width:100px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
+  max-width:100%;
+  white-space:normal;
+  word-break:break-word;
+  line-height:1.2;
 }
 
-/* MODAIS */
+/* ============ MODAIS ============ */
 
 .modal-backdrop{
   display:none;
@@ -365,42 +533,23 @@ button{cursor:pointer}
   align-items:center
 }
 
-.modal-header h2{
-  margin:0;
-  font-size:19px
-}
+.modal-header h2{margin:0;font-size:17px;font-weight:800;text-transform:uppercase}
 
-.close{
-  border:0;
-  background:none;
-  font-size:25px;
-  color:#777
-}
+.close{border:0;background:none;font-size:25px;color:var(--muted);font-weight:400}
 
-.modal-body{
-  padding:20px
-}
+.modal-body{padding:20px}
 
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px
-}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-.form-group{
-  display:flex;
-  flex-direction:column;
-  gap:6px
-}
-
-.form-group.full{
-  grid-column:1/-1
-}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
 
 .form-group label{
-  font-size:12px;
-  font-weight:800;
-  color:#475569
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.3px;
 }
 
 .form-group input,
@@ -409,52 +558,55 @@ button{cursor:pointer}
   border:1px solid var(--line-strong);
   border-radius:10px;
   padding:10px;
-  background:#fff
+  background:#fff;
+  font-weight:500;
 }
 
-.form-group textarea{
-  min-height:80px;
-  resize:vertical
-}
+.form-group input[readonly]{background:var(--surface-soft);color:var(--muted)}
+.form-group textarea{min-height:80px;resize:vertical}
 
 .modal-footer{
   padding:15px 20px;
-  border-top:1px solid #e5e7eb;
+  border-top:1px solid var(--line);
   display:flex;
   justify-content:space-between;
   gap:8px
 }
 
-.footer-right{
-  display:flex;
-  gap:8px
-}
+.footer-right{display:flex;gap:8px}
 
-.empty-state{
-  text-align:center;
-  padding:30px;
-  color:#777
-}
-
+.empty-state{text-align:center;padding:30px;color:var(--muted);font-weight:500}
 
 .brand-area{display:flex;align-items:center;gap:12px}
-.logo-upload{width:42px;height:42px;border:1.5px dashed #94a3b8;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#fbfbfa;flex:none}
+.logo-upload{width:42px;height:42px;border:1.5px dashed #b0b0b0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:var(--surface-soft);flex:none}
 .logo-upload input{display:none}
 .logo-upload img{width:100%;height:100%;object-fit:contain}
-.logo-upload span{font-size:24px;color:#777;font-weight:500}
-.logo{font-size:25px;font-weight:900;letter-spacing:-1px}
-.daily-calendar{min-width:650px;display:grid;grid-template-columns:75px 1fr}
-.daily-calendar .day-cell{min-height:82px}
-@media(max-width:700px){.brand-area{gap:8px}.logo{font-size:18px}.logo-upload{width:36px;height:36px}}
+.logo-upload span{font-size:24px;color:var(--muted);font-weight:500}
+
+.user-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  gap:10px;
+  flex-wrap:wrap;
+  font-size:13px;
+  font-weight:500;
+}
 
 @media(max-width:700px){
+  .brand-area{gap:8px}
+  .logo{font-size:16px}
+  .logo-upload{width:36px;height:36px}
   .container{padding:12px}
   .header{padding:0 14px}
   .form-grid{grid-template-columns:1fr}
   .form-group.full{grid-column:auto}
+  .user-name-display{display:none}
 }
 
-/* Layout das mesas */
+/* ============ Layout das mesas ============ */
 .room-layout{
   min-height:255px;
   padding:12px 6px;
@@ -466,265 +618,78 @@ button{cursor:pointer}
   gap:0;
 }
 .room-table-shape{
-  grid-column:1;
-  grid-row:2;
-  position:static;
-  transform:none;
-  width:150px;
-  height:88px;
-  border:2px solid #000;
-  border-radius:6px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:12px;
-  font-weight:900;
-  z-index:1;
+  grid-column:1;grid-row:2;position:static;transform:none;
+  width:150px;height:88px;border:2px solid #000;border-radius:6px;background:#fff;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:12px;font-weight:900;z-index:1;
 }
 .room-table-shape span{color:#000}
 .marketing-table{width:175px}
-.seats-row{
-  position:relative;
-  z-index:3;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  width:100%;
-}
 .room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
 .room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
 
-/* AGENDA FULLSCREEN — semana e dia cabem na tela */
-@media(min-width:900px){
-  :root{
-    --agenda-header-height:42px;
-    --agenda-slot-height:calc((100vh - 190px) / 11);
-  }
-
-  .header{
-    height:62px;
-  }
-
-  .container{
-    padding:10px 24px 12px;
-  }
-
-  .toolbar{
-    margin-bottom:8px;
-  }
-
-  #view-coworking > .toolbar{
-    margin-bottom:8px;
-  }
-
-  .calendar-wrapper{
-    height:calc(100vh - 145px);
-    max-height:none;
-    overflow:hidden;
-  }
-
-  .calendar,
-  .daily-calendar{
-    width:100%;
-    min-width:0;
-    height:100%;
-    overflow:hidden;
-    grid-template-rows:var(--agenda-header-height) repeat(11,minmax(0,1fr));
-  }
-
-  .calendar{
-    grid-template-columns:64px repeat(7,minmax(0,1fr));
-  }
-
-  .daily-calendar{
-    grid-template-columns:64px minmax(0,1fr);
-  }
-
-  .grid-header{
-    min-height:0;
-    height:100%;
-    padding:5px 4px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    line-height:1.05;
-  }
-
-  .grid-header small{
-    margin-top:3px;
-  }
-
-  .time-slot,
-  .day-cell{
-    min-height:0;
-    height:100%;
-  }
-
-  .time-slot{
-    padding:3px 4px;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    font-size:10px;
-  }
-
-  .day-cell{
-    padding:3px;
-  }
-
-  .event-card{
-    padding:5px 6px;
-    min-height:34px;
-    font-size:10px;
-    border-radius:7px;
-  }
-
-  .event-title{
-    font-size:11px;
-    line-height:1.1;
-    margin-bottom:2px;
-  }
-
-  .event-time,
-  .event-owner{
-    font-size:9px;
-    line-height:1.1;
-  }
-
-  .event-owner{
-    margin-top:2px;
-  }
-}
-
-/* Em telas menores, mantém rolagem horizontal apenas quando realmente necessária. */
-@media(max-width:899px){
-  .calendar-wrapper{
-    overflow:auto;
-  }
-}
-
-.event-card{padding:6px;font-size:11px}
-  .event-title{font-size:12px}
-  .event-owner{font-size:10px}
-}
-
-.event-card{
-  position:absolute;
-  left:4px;
-  right:4px;
-  margin:0;
-  top:4px;
-  min-height:28px;
-  height:max(34px,calc(var(--event-duration-hours, 1) * var(--agenda-slot-height, 72px) - 8px));
-  z-index:20;
-  overflow:hidden;
-  box-shadow:0 2px 5px rgba(0,0,0,.12);
-}
-
-
 .shift-panel{
-  border:1px solid #e5e7eb;
+  border:1px solid var(--line);
   border-radius:12px;
   padding:10px;
   margin-top:12px;
-  background:#fbfbfa;
+  background:var(--surface-soft);
 }
-.shift-title{
-  text-align:center;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.8px;
-  margin-bottom:4px;
-}
-.shift-layout{
-  min-height:210px;
-  grid-template-rows:64px 82px 64px;
-}
-.shift-layout .seat-chair{
-  width:105px;
-  min-height:50px;
-  font-size:11px;
-}
+.shift-title{text-align:center;font-size:11px;font-weight:900;letter-spacing:.8px;margin-bottom:4px;text-transform:uppercase}
+.shift-layout{min-height:210px;grid-template-rows:64px 82px 64px}
+.shift-layout .seat-chair{width:105px;min-height:50px;font-size:11px}
 .shift-layout .seat-status{font-size:9px}
 @media(max-width:700px){.shift-layout .seat-chair{width:90px}}
-
-
-/* UX DA AGENDA — leitura clara mesmo em períodos curtos */
-.calendar-wrapper{scrollbar-width:thin}
-.grid-header{
-  position:sticky;
-  top:0;
-  z-index:8;
-  background:#fbfbfa;
-  color:#222;
-  min-height:48px;
-  padding:8px 6px;
-}
-.grid-header small{color:#8a8a87;font-size:10px}
-.time-slot{
-  background:#fcfcfb;
-  font-size:11px;
-  color:#8a8a87;
-  padding:7px 5px;
-  min-height:var(--slot-height,72px);
-}
-.day-cell{
-  min-height:var(--slot-height,72px);
-  height:var(--slot-height,72px);
-  padding:4px;
-  background:#fff;
-}
-.day-cell:hover{background:#fcfcfb}
-.event-card{
-  min-height:48px;
-  height:max(48px,calc(var(--event-duration-hours,1) * var(--slot-height) - 8px));
-  padding:7px 8px;
-  border-radius:9px;
-  background:#111;
-  box-shadow:0 2px 8px rgba(0,0,0,.09);
-  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
-}
-.event-card:hover{
-  opacity:1;
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(0,0,0,.13);
-}
-.event-title{font-size:12px;line-height:1.22}
-.event-time{font-size:10px;margin-top:3px}
-.event-owner{font-size:10px;margin-top:3px;opacity:.82}
-@media(min-width:900px){
-  :root{--slot-height:72px}
-  .header{height:64px}
-  .container{padding:14px 24px}
-  .toolbar{margin-bottom:12px}
-  .calendar-wrapper{max-height:calc(100vh - 138px)}
-  .grid-header{min-height:44px;padding:7px 5px}
-  .time-slot,.day-cell{min-height:var(--slot-height);height:var(--slot-height)}
-  .event-card{padding:7px 8px}
-  .event-title{font-size:12px}
-  .event-owner{font-size:10px}
-}
-
-
-.tab,.btn,.date-input,.week-controls input,select,input,textarea{
-  transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;
-}
-.tab:not(.active):hover{background:#e8e8e5}
-.tab.active{box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus,
-.date-input:focus,.week-controls input:focus{
-  outline:none;
-  border-color:#aaa;
-  box-shadow:0 0 0 3px rgba(0,0,0,.045);
-}
 
 </style>
 </head>
 
 <body>
+
+<section id="view-auth">
+  <div class="auth-card">
+    <div class="auth-logo">Loja Conceito BE</div>
+    <div class="auth-title" id="auth-title">Entrar</div>
+    <div class="auth-error" id="auth-error"></div>
+
+    <form onsubmit="handleAuthSubmit(event)">
+      <div id="auth-signup-fields" style="display:none">
+        <div class="auth-field">
+          <label>Nome</label>
+          <input id="auth-first-name" placeholder="Nome">
+        </div>
+        <div class="auth-field">
+          <label>Sobrenome</label>
+          <input id="auth-last-name" placeholder="Sobrenome">
+        </div>
+      </div>
+
+      <div class="auth-field">
+        <label>Email corporativo</label>
+        <input id="auth-email" type="email" placeholder="nome@edificabpo.com.br" required>
+      </div>
+
+      <div class="auth-field">
+        <label>Senha</label>
+        <input id="auth-password" type="password" required minlength="6">
+      </div>
+
+      <div class="auth-field" id="auth-confirm-field" style="display:none">
+        <label>Confirmar senha</label>
+        <input id="auth-password-confirm" type="password" minlength="6">
+      </div>
+
+      <button type="submit" class="auth-submit" id="auth-submit-btn">Entrar</button>
+    </form>
+
+    <div class="auth-switch">
+      <span id="auth-toggle-text">Não tem conta?</span>
+      <a id="auth-toggle-link" onclick="setAuthMode(authMode === 'login' ? 'signup' : 'login')">Criar conta</a>
+    </div>
+  </div>
+</section>
+
+<div id="app-shell" style="display:none">
 
 <header class="header">
   <div class="brand-area">
@@ -737,9 +702,8 @@ button{cursor:pointer}
   </div>
 
   <div class="header-right">
-    <span id="connection-status" class="status offline">
-      ● Carregando...
-    </span>
+    <span id="user-name-display" class="user-name-display"></span>
+    <button class="btn" onclick="handleLogout()">Sair</button>
   </div>
 </header>
 
@@ -748,39 +712,17 @@ button{cursor:pointer}
   <div class="toolbar">
 
     <div class="tabs">
-      <button id="btn-tab-coworking"
-              class="tab active"
-              onclick="switchTab('coworking')">
-        Coworking Pro BE
-      </button>
-
-      <button id="btn-tab-seats"
-              class="tab"
-              onclick="switchTab('seats')">
-        Mapeamento de lugares
-      </button>
+      <button id="btn-tab-coworking" class="tab active" onclick="switchTab('coworking')">Coworking Pro BE</button>
+      <button id="btn-tab-seats" class="tab" onclick="switchTab('seats')">Mapeamento de lugares</button>
+      <button id="btn-tab-requests" class="tab" onclick="switchTab('requests')">Solicitações<span id="requests-badge" class="tab-badge"></span></button>
     </div>
 
     <div class="actions">
-
-      <button class="btn"
-              onclick="openCollabModal()">
-        Colaboradores
-      </button>
-
-      <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">
-        Visualização: Semanal
-      </button>
-
-      <button class="btn" onclick="exportAgendaPNG()">
-        Exportar PNG
-      </button>
-
-      <button class="btn btn-primary"
-              onclick="openMeetingModal()">
-        + Nova reunião
-      </button>
-
+      <button class="btn" onclick="openCollabModal()">Colaboradores</button>
+      <button class="btn admin-only" style="display:none" onclick="openUsersModal()">Usuários</button>
+      <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">Visualização: Semanal</button>
+      <button class="btn" onclick="exportAgendaPNG()">Exportar PNG</button>
+      <button class="btn btn-primary" onclick="openMeetingModal()">+ Nova reunião</button>
     </div>
   </div>
 
@@ -789,51 +731,28 @@ button{cursor:pointer}
   <section id="view-coworking">
 
     <div class="toolbar">
-
       <div class="week-controls">
-
-        <button class="btn"
-                onclick="changePeriod(-1)">
-          ←
-        </button>
-
-        <input id="week-picker"
-               type="date"
-               onchange="renderDashboard()">
-
-        <button class="btn"
-                onclick="changePeriod(1)">
-          →
-        </button>
-
+        <button class="btn" onclick="changePeriod(-1)">←</button>
+        <input id="week-picker" type="date" onchange="renderDashboard()">
+        <button class="btn" onclick="changePeriod(1)">→</button>
       </div>
-
       <strong id="week-label"></strong>
-
     </div>
 
     <div class="calendar-wrapper">
-
-      <div id="weekly-table"
-           class="calendar agenda-export-area">
-      </div>
-
+      <div id="weekly-table" class="calendar agenda-export-area"></div>
     </div>
 
   </section>
 
   <!-- MESAS -->
 
-  <section id="view-seats"
-           class="seats-view">
+  <section id="view-seats" class="seats-view">
 
     <div class="seat-toolbar">
-
       <div>
         <strong>Mapa de mesas</strong>
-        <div style="font-size:12px;color:#777">
-          Clique em um assento para alocar ou editar.
-        </div>
+        <div style="font-size:12px;color:var(--muted)">Clique em um assento para alocar ou editar.</div>
       </div>
 
       <div class="tabs" style="margin: 0 auto;">
@@ -841,29 +760,23 @@ button{cursor:pointer}
          <button id="btn-shift-afternoon" class="tab" onclick="toggleSeatShift('afternoon')">Tarde</button>
       </div>
 
-      <input id="seat-search-date"
-             class="date-input"
-             type="date"
-             onchange="renderSeats()">
-
+      <input id="seat-search-date" class="date-input" type="date" onchange="renderSeats()">
     </div>
 
     <div class="rooms">
 
       <div class="room">
         <h3>Meeting 01</h3>
-
         <div class="shift-panel">
-          <div class="shift-title">MANHÃ</div>
+          <div class="shift-title">Manhã</div>
           <div class="room-layout shift-layout">
             <div class="room-table-shape"><span>MEETING 01</span></div>
             <div id="m1-morning-top" class="seats-row"></div>
             <div id="m1-morning-bottom" class="seats-row"></div>
           </div>
         </div>
-
         <div class="shift-panel">
-          <div class="shift-title">TARDE</div>
+          <div class="shift-title">Tarde</div>
           <div class="room-layout shift-layout">
             <div class="room-table-shape"><span>MEETING 01</span></div>
             <div id="m1-afternoon-top" class="seats-row"></div>
@@ -874,18 +787,16 @@ button{cursor:pointer}
 
       <div class="room">
         <h3>Meeting 02</h3>
-
         <div class="shift-panel">
-          <div class="shift-title">MANHÃ</div>
+          <div class="shift-title">Manhã</div>
           <div class="room-layout shift-layout">
             <div class="room-table-shape"><span>MEETING 02</span></div>
             <div id="m2-morning-top" class="seats-row"></div>
             <div id="m2-morning-bottom" class="seats-row"></div>
           </div>
         </div>
-
         <div class="shift-panel">
-          <div class="shift-title">TARDE</div>
+          <div class="shift-title">Tarde</div>
           <div class="room-layout shift-layout">
             <div class="room-table-shape"><span>MEETING 02</span></div>
             <div id="m2-afternoon-top" class="seats-row"></div>
@@ -896,18 +807,16 @@ button{cursor:pointer}
 
       <div class="room">
         <h3>Mesa Marketing</h3>
-
         <div class="shift-panel">
-          <div class="shift-title">MANHÃ</div>
+          <div class="shift-title">Manhã</div>
           <div class="room-layout shift-layout">
             <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
             <div id="m3-morning-top" class="seats-row"></div>
             <div id="m3-morning-bottom" class="seats-row"></div>
           </div>
         </div>
-
         <div class="shift-panel">
-          <div class="shift-title">TARDE</div>
+          <div class="shift-title">Tarde</div>
           <div class="room-layout shift-layout">
             <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
             <div id="m3-afternoon-top" class="seats-row"></div>
@@ -920,41 +829,34 @@ button{cursor:pointer}
 
   </section>
 
+  <!-- SOLICITAÇÕES -->
+
+  <section id="view-requests" style="display:none">
+    <div id="requests-list"></div>
+  </section>
+
 </main>
+
+</div><!-- /#app-shell -->
 
 <!-- MODAL REUNIÃO -->
 
-<div id="meeting-modal"
-     class="modal-backdrop">
-
+<div id="meeting-modal" class="modal-backdrop">
   <div class="modal">
-
     <div class="modal-header">
-
-      <h2 id="modal-title-text">
-        Agendar Reunião
-      </h2>
-
-      <button class="close"
-              onclick="closeMeetingModal()">
-        ×
-      </button>
-
+      <h2 id="modal-title-text">Agendar Reunião</h2>
+      <button class="close" onclick="closeMeetingModal()">×</button>
     </div>
 
-    <form id="meeting-form"
-          onsubmit="saveMeeting(event)">
-
+    <form id="meeting-form" onsubmit="saveMeeting(event)">
       <div class="modal-body">
-
-        <input id="m-id"
-               type="hidden">
+        <input id="m-id" type="hidden">
 
         <div class="form-grid">
 
           <div class="form-group full" style="display:flex; gap:14px; flex-wrap:wrap;">
             <div class="form-group" style="flex:1; min-width:120px;">
-               <label>Time</label>
+               <label>Departamento</label>
                <select id="m-team-select"></select>
             </div>
             <div class="form-group" style="flex:3; min-width:200px;">
@@ -964,179 +866,94 @@ button{cursor:pointer}
           </div>
 
           <div class="form-group">
-            <label>Tipo de Reunião</label>
-            <select id="m-type">
-               <option value="Interna">Com o time (Interna)</option>
-               <option value="Externa">Com externos (Externa)</option>
+            <label>Reunião com</label>
+            <select id="m-category" required>
+              <option value="time">Time (interno)</option>
+              <option value="fornecedor">Fornecedor</option>
+              <option value="cliente">Cliente</option>
+              <option value="lead">Lead</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>Responsável</label>
-            <select id="m-owner-select"
-                    required>
-            </select>
+            <label>Solicitante</label>
+            <input id="m-owner-display" readonly>
           </div>
 
           <div class="form-group">
             <label>Nº de pessoas</label>
-
-            <input id="m-attendees"
-                   type="number"
-                   min="1"
-                   value="1">
+            <input id="m-attendees" type="number" min="1" value="1">
           </div>
 
           <div class="form-group">
             <label>Data</label>
-
-            <input id="m-date"
-                   type="date"
-                   required>
+            <input id="m-date" type="date" required>
           </div>
 
           <div class="form-group">
             <label>Recorrência</label>
-
             <select id="m-recurrence">
-
-              <option value="none">
-                Sem recorrência
-              </option>
-
-              <option value="daily">
-                Diária
-              </option>
-
-              <option value="weekly">
-                Semanal
-              </option>
-
-              <option value="biweekly">
-                Quinzenal
-              </option>
-
-              <option value="monthly">
-                Mensal
-              </option>
-
+              <option value="none">Sem recorrência</option>
+              <option value="daily">Diária</option>
+              <option value="weekly">Semanal</option>
+              <option value="biweekly">Quinzenal</option>
+              <option value="monthly">Mensal</option>
             </select>
-
           </div>
 
           <div class="form-group">
             <label>Início</label>
-
-            <input id="m-start"
-                   type="time"
-                   required>
+            <input id="m-start" type="time" required>
           </div>
 
           <div class="form-group">
             <label>Fim</label>
-
-            <input id="m-end"
-                   type="time"
-                   required>
+            <input id="m-end" type="time" required>
           </div>
 
           <div class="form-group full">
             <label>Participantes / observações</label>
-
-            <textarea id="m-participants"
-                      placeholder="Participantes, observações ou informações adicionais"></textarea>
+            <textarea id="m-participants" placeholder="Participantes, observações ou informações adicionais"></textarea>
           </div>
 
         </div>
-
       </div>
 
       <div class="modal-footer">
-
-        <button type="button"
-                id="btn-delete-meeting"
-                class="btn btn-danger"
-                style="display:none"
-                onclick="deleteMeeting()">
-          Excluir
-        </button>
-
+        <button type="button" id="btn-delete-meeting" class="btn btn-danger" style="display:none" onclick="deleteMeeting()">Excluir</button>
         <div class="footer-right">
-
-          <button type="button"
-                  class="btn"
-                  onclick="closeMeetingModal()">
-            Cancelar
-          </button>
-
-          <button type="submit"
-                  class="btn btn-primary">
-            Salvar
-          </button>
-
+          <button type="button" class="btn" onclick="closeMeetingModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-meeting">Salvar</button>
         </div>
-
       </div>
-
     </form>
-
   </div>
-
 </div>
 
 <!-- MODAL ASSENTO -->
 
-<div id="seat-modal"
-     class="modal-backdrop">
-
+<div id="seat-modal" class="modal-backdrop">
   <div class="modal">
-
     <div class="modal-header">
-
-      <h2 id="seat-modal-title">
-        Alocar Assento
-      </h2>
-
-      <button class="close"
-              onclick="closeSeatModal()">
-        ×
-      </button>
-
+      <h2 id="seat-modal-title">Alocar Assento</h2>
+      <button class="close" onclick="closeSeatModal()">×</button>
     </div>
 
     <form onsubmit="saveSeatAllocation(event)">
-
       <div class="modal-body">
-
-        <input id="s-table-id"
-               type="hidden">
-
-        <input id="s-seat-code"
-               type="hidden">
-
-        <input id="s-existing-id"
-               type="hidden">
+        <input id="s-table-id" type="hidden">
+        <input id="s-seat-code" type="hidden">
+        <input id="s-existing-id" type="hidden">
 
         <div class="form-grid">
-
           <div class="form-group full">
-
             <label>Colaborador</label>
-
-            <select id="s-collab-select"
-                    required>
-            </select>
-
+            <select id="s-collab-select" required></select>
           </div>
 
-                    <div class="form-group">
-
+          <div class="form-group">
             <label>Data inicial</label>
-
-            <input id="s-start-date"
-                   type="date"
-                   required>
-
+            <input id="s-start-date" type="date" required>
           </div>
 
           <div class="form-group">
@@ -1148,140 +965,59 @@ button{cursor:pointer}
           </div>
 
           <div class="form-group">
-
             <label>Recorrência</label>
-
             <select id="s-recurrence">
-
-              <option value="single">
-                Apenas este dia
-              </option>
-
-              <option value="daily">
-                Todos os dias úteis
-              </option>
-
-              <option value="weekly">
-                Semanal
-              </option>
-
-              <option value="biweekly">
-                Quinzenal
-              </option>
-
+              <option value="single">Apenas este dia</option>
+              <option value="daily">Todos os dias úteis</option>
+              <option value="weekly">Semanal</option>
+              <option value="biweekly">Quinzenal</option>
             </select>
-
           </div>
 
           <div class="form-group full">
-
             <label>Dia de exceção</label>
-
             <select id="s-except-day">
-
-              <option value="none">
-                Sem exceção
-              </option>
-
-              <option value="1">
-                Segunda-feira
-              </option>
-
-              <option value="2">
-                Terça-feira
-              </option>
-
-              <option value="3">
-                Quarta-feira
-              </option>
-
-              <option value="4">
-                Quinta-feira
-              </option>
-
-              <option value="5">
-                Sexta-feira
-              </option>
-
+              <option value="none">Sem exceção</option>
+              <option value="1">Segunda-feira</option>
+              <option value="2">Terça-feira</option>
+              <option value="3">Quarta-feira</option>
+              <option value="4">Quinta-feira</option>
+              <option value="5">Sexta-feira</option>
             </select>
-
           </div>
-
         </div>
-
       </div>
 
       <div class="modal-footer">
-
-        <button type="button"
-                id="btn-remove-seat"
-                class="btn btn-danger"
-                style="display:none"
-                onclick="removeSeatAllocation()">
-          Remover
-        </button>
-
+        <button type="button" id="btn-remove-seat" class="btn btn-danger" style="display:none" onclick="removeSeatAllocation()">Remover</button>
         <div class="footer-right">
-
-          <button type="button"
-                  class="btn"
-                  onclick="closeSeatModal()">
-            Cancelar
-          </button>
-
-          <button type="submit"
-                  class="btn btn-primary">
-            Salvar
-          </button>
-
+          <button type="button" class="btn" onclick="closeSeatModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
-
       </div>
-
     </form>
-
   </div>
-
 </div>
 
 <!-- MODAL COLABORADORES -->
 
-<div id="collab-modal"
-     class="modal-backdrop">
-
+<div id="collab-modal" class="modal-backdrop">
   <div class="modal">
-
     <div class="modal-header">
-
       <h2>Colaboradores</h2>
-
-      <button class="close"
-              onclick="closeCollabModal()">
-        ×
-      </button>
-
+      <button class="close" onclick="closeCollabModal()">×</button>
     </div>
 
     <div class="modal-body">
-
       <form onsubmit="saveCollaborator(event)">
-
         <div class="form-grid">
-
           <div class="form-group">
-
             <label>Nome</label>
-
-            <input id="c-name"
-                   required
-                   placeholder="Nome do colaborador">
-
+            <input id="c-name" required placeholder="Nome do colaborador">
           </div>
 
           <div class="form-group">
-
             <label>Equipe</label>
-
             <select id="c-team" required>
               <option value="">Selecione o time</option>
               <option value="CSUM">CSUM</option>
@@ -1291,391 +1027,311 @@ button{cursor:pointer}
               <option value="ENGO">ENGO</option>
               <option value="ENGE">ENGE</option>
             </select>
-
           </div>
-
         </div>
 
         <br>
-
-        <button class="btn btn-primary"
-                type="submit">
-          + Adicionar colaborador
-        </button>
-
+        <button class="btn btn-primary" type="submit">+ Adicionar colaborador</button>
       </form>
 
-      <hr style="border:0;border-top:1px solid #e5e7eb;margin:20px 0">
-
+      <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
       <div id="collab-list"></div>
-
     </div>
-
   </div>
+</div>
 
+<!-- MODAL USUÁRIOS (admin) -->
+
+<div id="users-modal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Usuários</h2>
+      <button class="close" onclick="closeUsersModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="users-list"></div>
+    </div>
+  </div>
 </div>
 
 <script>
 
-const SUPABASE_URL =
-  'https://twrtjqqaaiyleefbhdlz.supabase.co';
-
-const SUPABASE_KEY =
-  'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
+const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
+const ADMIN_EMAIL = 'gabriel.s@edificabpo.com.br';
+const CORP_DOMAIN = '@edificabpo.com.br';
 
 let db = null;
 
 let collaborators = [];
 let meetings = [];
 let seatAllocations = [];
-
 let realtimeChannels = [];
+
+let currentUser = null;
+let currentProfile = null;
+let authMode = 'login';
+let agendaView = 'weekly';
 
 const hours = [
   '08:00','09:00','10:00','11:00','12:00',
   '13:00','14:00','15:00','16:00','17:00','18:00'
 ];
 
-const $ = id => document.getElementById(id);
+const CATEGORY_COLORS = {time:'#992C1A', fornecedor:'#7247F6', cliente:'#46B276', lead:'#FCBF44'};
+const CATEGORY_LABELS = {time:'Time (interno)', fornecedor:'Fornecedor', cliente:'Cliente', lead:'Lead'};
 
+function categoryColor(cat){ return CATEGORY_COLORS[cat] || '#646464'; }
+function categoryLabel(cat){ return CATEGORY_LABELS[cat] || cat || ''; }
+
+const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
 
 function localDateString(date = new Date()) {
-
   return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
-
 }
 
 function dateFromInput(value) {
-
   return new Date(`${value}T00:00:00`);
-
 }
 
 function addDays(date,amount) {
-
   const d = new Date(date);
-
   d.setDate(d.getDate()+amount);
-
   return d;
-
 }
 
 function startOfWeek(date) {
-
   const d = new Date(date);
-
   const day = d.getDay();
-
   d.setDate(d.getDate() - day);
-
   d.setHours(0,0,0,0);
-
   return d;
-
 }
 
 function minutes(time) {
-
-  const [h,m] =
-    String(time || '')
-      .slice(0,5)
-      .split(':')
-      .map(Number);
-
+  const [h,m] = String(time || '').slice(0,5).split(':').map(Number);
   return (h || 0)*60 + (m || 0);
-
 }
 
 function esc(value) {
-
-  return String(value ?? '')
-    .replace(/[&<>"']/g,char => ({
-
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
-
-    }[char]));
-
+  return String(value ?? '').replace(/[&<>"']/g,char => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[char]));
 }
-
-function setStatus(text,connected) {
-
-  const element =
-    $('connection-status');
-
-  if(!element) return;
-
-  element.textContent = text;
-
-  element.classList.toggle(
-    'offline',
-    !connected
-  );
-
-}
-
 
 /* =========================
    INICIALIZAÇÃO
 ========================= */
 
-document.addEventListener(
-  'DOMContentLoaded',
-  init
-);
+document.addEventListener('DOMContentLoaded', init);
 
 async function init(){
-
-  const today =
-    localDateString();
-
-  $('week-picker').value =
-    today;
-
-  $('seat-search-date').value =
-    today;
+  const today = localDateString();
+  $('week-picker').value = today;
+  $('seat-search-date').value = today;
 
   loadSavedLogo();
-
   toggleSeatShift('morning');
-
-  /*
-    IMPORTANTE:
-    A interface é criada ANTES
-    da tentativa de conexão.
-  */
-
-  renderDashboard();
-  renderSeats();
+  setAuthMode('login');
 
   if(!window.supabase){
-
-    setStatus(
-      '● Modo local',
-      false
-    );
-
+    $('view-auth').innerHTML = '<div class="auth-card"><p>Não foi possível carregar a conexão com o servidor. Recarregue a página.</p></div>';
+    $('view-auth').style.display = 'flex';
     return;
-
   }
 
-  try{
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    db =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
+  db.auth.onAuthStateChange(async (event, session) => {
+    currentUser = session?.user || null;
 
-    setStatus(
-      '● Conectando...',
-      false
-    );
+    if(currentUser){
+      await loadCurrentProfile();
+    }else{
+      currentProfile = null;
+    }
 
-    await Promise.race([
+    refreshAuthUI();
 
-      loadData(),
-
-      new Promise(
-        (_,reject) =>
-          setTimeout(
-            () => reject(
-              new Error(
-                'Timeout de conexão'
-              )
-            ),
-            7000
-          )
-      )
-
-    ]);
-
-    setStatus(
-      '● Sincronizado',
-      true
-    );
-
-    setupRealtime();
-
-  }catch(error){
-
-    console.error(error);
-
-    setStatus(
-      '● Sem conexão',
-      false
-    );
-
-    /*
-      A agenda continua funcionando
-      visualmente mesmo sem banco.
-    */
-
-    renderDashboard();
-    renderSeats();
-
-  }
-
+    if(currentUser && currentProfile){
+      try{
+        await loadData();
+        setupRealtime();
+      }catch(error){
+        console.error(error);
+      }
+    }else{
+      collaborators = [];
+      meetings = [];
+      seatAllocations = [];
+      realtimeChannels.forEach(ch => db.removeChannel(ch));
+      realtimeChannels = [];
+    }
+  });
 }
 
+/* =========================
+   AUTENTICAÇÃO
+========================= */
+
+function setAuthMode(mode){
+  authMode = mode;
+  const isSignup = mode === 'signup';
+  $('auth-title').textContent = isSignup ? 'Criar conta' : 'Entrar';
+  $('auth-signup-fields').style.display = isSignup ? 'block' : 'none';
+  $('auth-confirm-field').style.display = isSignup ? 'flex' : 'none';
+  $('auth-submit-btn').textContent = isSignup ? 'Criar conta' : 'Entrar';
+  $('auth-toggle-text').textContent = isSignup ? 'Já tem conta?' : 'Não tem conta?';
+  $('auth-toggle-link').textContent = isSignup ? 'Entrar' : 'Criar conta';
+  $('auth-error').textContent = '';
+  $('auth-error').style.color = '#c0392b';
+}
+
+async function handleAuthSubmit(event){
+  event.preventDefault();
+  $('auth-error').style.color = '#c0392b';
+  $('auth-error').textContent = '';
+
+  const email = $('auth-email').value.trim();
+  const password = $('auth-password').value;
+
+  if(!email.toLowerCase().endsWith(CORP_DOMAIN)){
+    $('auth-error').textContent = `Use seu email corporativo (${CORP_DOMAIN}).`;
+    return;
+  }
+
+  if(authMode === 'signup'){
+    const firstName = $('auth-first-name').value.trim();
+    const lastName = $('auth-last-name').value.trim();
+    const confirmPassword = $('auth-password-confirm').value;
+
+    if(!firstName || !lastName){
+      $('auth-error').textContent = 'Preencha nome e sobrenome.';
+      return;
+    }
+    if(password !== confirmPassword){
+      $('auth-error').textContent = 'As senhas não coincidem.';
+      return;
+    }
+    if(password.length < 6){
+      $('auth-error').textContent = 'A senha deve ter ao menos 6 caracteres.';
+      return;
+    }
+
+    const {error} = await db.auth.signUp({
+      email,
+      password,
+      options:{ data:{ first_name:firstName, last_name:lastName } }
+    });
+
+    if(error){
+      $('auth-error').textContent = error.message;
+      return;
+    }
+
+    $('auth-error').style.color = '#2f8f5e';
+    $('auth-error').textContent = 'Conta criada! Se for solicitado, confirme pelo email recebido e faça login.';
+    setAuthMode('login');
+    return;
+  }
+
+  const {error} = await db.auth.signInWithPassword({email, password});
+  if(error){
+    $('auth-error').textContent = 'Email ou senha inválidos.';
+  }
+}
+
+async function handleLogout(){
+  if(db) await db.auth.signOut();
+}
+
+async function loadCurrentProfile(){
+  if(!db || !currentUser){ currentProfile = null; return; }
+  const {data, error} = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+  if(error){
+    console.error(error);
+    currentProfile = null;
+    return;
+  }
+  currentProfile = data;
+}
+
+function refreshAuthUI(){
+  const authed = !!currentUser && !!currentProfile;
+  $('view-auth').style.display = authed ? 'none' : 'flex';
+  $('app-shell').style.display = authed ? 'block' : 'none';
+
+  if(authed){
+    $('user-name-display').textContent = `${currentProfile.first_name} ${currentProfile.last_name}`.trim() || currentUser.email;
+    document.querySelectorAll('.admin-only').forEach(el => {
+      el.style.display = currentProfile.is_admin ? '' : 'none';
+    });
+  }
+}
 
 /* =========================
    SUPABASE
 ========================= */
 
 async function loadData(){
-
   if(!db) return;
 
-  const [
-    collaboratorsResult,
-    meetingsResult,
-    seatsResult
-  ] = await Promise.all([
-
-    db
-      .from('collaborators')
-      .select('*')
-      .order('name'),
-
-    db
-      .from('meetings')
-      .select('*')
-      .order('date')
-      .order('start'),
-
-    db
-      .from('seat_allocations')
-      .select('*')
-      .order('startDate')
-
+  const [collaboratorsResult, meetingsResult, seatsResult] = await Promise.all([
+    db.from('collaborators').select('*').order('name'),
+    db.from('meetings').select('*').order('date').order('start'),
+    db.from('seat_allocations').select('*').order('startDate')
   ]);
 
-  if(collaboratorsResult.error)
-    throw collaboratorsResult.error;
+  if(collaboratorsResult.error) throw collaboratorsResult.error;
+  if(meetingsResult.error) throw meetingsResult.error;
+  if(seatsResult.error) throw seatsResult.error;
 
-  if(meetingsResult.error)
-    throw meetingsResult.error;
-
-  if(seatsResult.error)
-    throw seatsResult.error;
-
-  collaborators =
-    collaboratorsResult.data || [];
-
-  meetings =
-    meetingsResult.data || [];
-
-  seatAllocations =
-    seatsResult.data || [];
+  collaborators = collaboratorsResult.data || [];
+  meetings = meetingsResult.data || [];
+  seatAllocations = seatsResult.data || [];
 
   renderDashboard();
   renderSeats();
-
+  renderRequestsList();
+  updateRequestsBadge();
 }
 
 function setupRealtime(){
+  if(!db || realtimeChannels.length) return;
 
-  if(
-    !db ||
-    realtimeChannels.length
-  ) return;
-
-  [
-    'collaborators',
-    'meetings',
-    'seat_allocations'
-
-  ].forEach(table => {
-
-    const channel =
-      db
-        .channel(
-          `be-${table}-${Date.now()}`
-        )
-        .on(
-          'postgres_changes',
-          {
-            event:'*',
-            schema:'public',
-            table
-          },
-          async () => {
-
-            try{
-
-              await loadData();
-
-              setStatus(
-                '● Sincronizado',
-                true
-              );
-
-            }catch(error){
-
-              console.error(error);
-
-              setStatus(
-                '● Sem conexão',
-                false
-              );
-
-            }
-
-          }
-        )
-        .subscribe();
+  ['collaborators','meetings','seat_allocations'].forEach(table => {
+    const channel = db
+      .channel(`be-${table}-${Date.now()}`)
+      .on('postgres_changes', {event:'*', schema:'public', table}, async () => {
+        try{
+          await loadData();
+        }catch(error){
+          console.error(error);
+        }
+      })
+      .subscribe();
 
     realtimeChannels.push(channel);
-
   });
-
 }
-
 
 /* =========================
    ABAS
 ========================= */
 
 function switchTab(tab){
+  const views = {coworking:'view-coworking', seats:'view-seats', requests:'view-requests'};
 
-  const coworking =
-    tab === 'coworking';
+  Object.keys(views).forEach(key => {
+    const btn = $(`btn-tab-${key}`);
+    if(btn) btn.classList.toggle('active', key === tab);
+    $(views[key]).style.display = key === tab ? 'block' : 'none';
+  });
 
-  $('btn-tab-coworking')
-    .classList.toggle(
-      'active',
-      coworking
-    );
-
-  $('btn-tab-seats')
-    .classList.toggle(
-      'active',
-      !coworking
-    );
-
-  $('view-coworking')
-    .style.display =
-      coworking
-      ? 'block'
-      : 'none';
-
-  $('view-seats')
-    .style.display =
-      coworking
-      ? 'none'
-      : 'block';
-
-  if(coworking)
-    renderDashboard();
-  else
-    renderSeats();
-
+  if(tab === 'coworking') renderDashboard();
+  else if(tab === 'seats') renderSeats();
+  else if(tab === 'requests') renderRequestsList();
 }
 
 function toggleSeatShift(shift) {
@@ -1683,26 +1339,18 @@ function toggleSeatShift(shift) {
   $('btn-shift-afternoon').classList.toggle('active', shift === 'afternoon');
 
   document.querySelectorAll('.shift-panel').forEach(panel => {
-    const isMorning = panel.querySelector('.shift-title').textContent.includes('MANHÃ');
-    if ((shift === 'morning' && isMorning) || (shift === 'afternoon' && !isMorning)) {
-      panel.style.display = 'block';
-    } else {
-      panel.style.display = 'none';
-    }
+    const isMorning = panel.querySelector('.shift-title').textContent.includes('Manhã');
+    panel.style.display = (shift === 'morning' && isMorning) || (shift === 'afternoon' && !isMorning) ? 'block' : 'none';
   });
 }
-
 
 /* =========================
    CALENDÁRIO
 ========================= */
 
-let agendaView = 'weekly';
-
 function toggleAgendaView(){
   agendaView = agendaView === 'weekly' ? 'daily' : 'weekly';
-  $('view-toggle-btn').textContent =
-    agendaView === 'weekly' ? 'Visualização: Semanal' : 'Visualização: Diária';
+  $('view-toggle-btn').textContent = agendaView === 'weekly' ? 'Visualização: Semanal' : 'Visualização: Diária';
   renderDashboard();
 }
 
@@ -1716,83 +1364,30 @@ function changePeriod(amount){
 
 function changeWeek(amount){ changePeriod(amount); }
 
-function meetingOccursOnDate(
-  meeting,
-  targetDate
-){
+function meetingOccursOnDate(meeting, targetDate){
+  if(!meeting || !meeting.date) return false;
 
-  if(
-    !meeting ||
-    !meeting.date
-  ) return false;
+  const start = dateFromInput(meeting.date);
+  const target = dateFromInput(targetDate);
 
-  const start =
-    dateFromInput(
-      meeting.date
-    );
+  if(target < start) return false;
 
-  const target =
-    dateFromInput(
-      targetDate
-    );
-
-  if(target < start)
-    return false;
-
-  switch(
-    meeting.recurrence ||
-    'none'
-  ){
-
+  switch(meeting.recurrence || 'none'){
     case 'none':
-
-      return (
-        meeting.date ===
-        targetDate
-      );
-
+      return meeting.date === targetDate;
     case 'daily':
-
-      return (
-        target.getDay() >= 1 &&
-        target.getDay() <= 5
-      );
-
+      return target.getDay() >= 1 && target.getDay() <= 5;
     case 'weekly':
-
-      return (
-        target.getDay() ===
-        start.getDay()
-      );
-
+      return target.getDay() === start.getDay();
     case 'biweekly':{
-
-      const difference =
-        Math.floor(
-          (target-start) /
-          86400000
-        );
-
-      return (
-        difference >= 0 &&
-        difference % 14 === 0
-      );
-
+      const difference = Math.floor((target-start) / 86400000);
+      return difference >= 0 && difference % 14 === 0;
     }
-
     case 'monthly':
-
-      return (
-        target.getDate() ===
-        start.getDate()
-      );
-
+      return target.getDate() === start.getDate();
     default:
-
       return false;
-
   }
-
 }
 
 function syncAgendaViewport(){
@@ -1801,64 +1396,69 @@ function syncAgendaViewport(){
   if(!calendar || !wrapper) return;
 
   if(window.innerWidth >= 900){
-    const header = calendar.querySelector('.grid-header');
-    const headerHeight = header ? header.getBoundingClientRect().height : 42;
-    const available = Math.max(40, wrapper.clientHeight - headerHeight);
-    const slotHeight = available / 11;
-    calendar.style.setProperty('--agenda-slot-height', `${slotHeight}px`);
+    const top = wrapper.getBoundingClientRect().top;
+    const available = Math.max(340, window.innerHeight - top - 16);
+    wrapper.style.height = `${available}px`;
+
+    const headerRowHeight = 46;
+    const slotHeight = Math.max(44, (available - headerRowHeight) / hours.length);
+    calendar.style.setProperty('--slot-height', `${slotHeight}px`);
   }else{
-    calendar.style.removeProperty('--agenda-slot-height');
+    wrapper.style.height = '';
+    calendar.style.removeProperty('--slot-height');
   }
 }
 
 window.addEventListener('resize', syncAgendaViewport);
 
-function renderDashboard(){
+function eventMarkup(meeting, hourStart){
+  const start = minutes(meeting.start);
+  const end = minutes(meeting.end);
+  const safeEnd = Math.max(end, start + 15);
+  const durationHours = (safeEnd - start) / 60;
+  const offsetPercent = ((start - hourStart) / 60) * 100;
+  const encoded = encodeURIComponent(JSON.stringify(meeting));
+  const isPending = meeting.status === 'pending';
+  const catClass = `cat-${meeting.category || 'time'}`;
+  const catColor = categoryColor(meeting.category);
+  const teamBadge = meeting.team ? `${esc(meeting.team)} · ` : '';
+  const ownerName = meeting.requested_by_name || meeting.owner || '—';
 
+  return `<div class="event-card ${catClass}${isPending ? ' pending' : ''}"
+    style="top:${Math.max(0,offsetPercent)}%;--event-duration-hours:${durationHours};--cat-color:${catColor};"
+    onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
+    <div class="event-title">${isPending ? '<span class="cat-dot"></span>' : ''}${teamBadge}${esc(meeting.title)}</div>
+    <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
+    <div class="event-owner">${esc(ownerName)}</div>
+  </div>`;
+}
+
+function renderDashboard(){
   const container = $('weekly-table');
   if(!container) return;
 
   const selected = $('week-picker').value || localDateString();
   const selectedDate = dateFromInput(selected);
-
-  function eventMarkup(meeting, hourStart){
-    const start = minutes(meeting.start);
-    const end = minutes(meeting.end);
-    const safeEnd = Math.max(end, start + 15);
-    const durationHours = (safeEnd - start) / 60;
-    const offsetPercent = ((start - hourStart) / 60) * 100;
-    const encoded = encodeURIComponent(JSON.stringify(meeting));
-    const typeBadge = meeting.type === 'Externa' ? '<span style="color:#fca5a5">[Ext]</span> ' : '';
-    const teamBadge = meeting.team ? `${esc(meeting.team)} | ` : '';
-
-    return `<div class="event-card"
-      style="top:${Math.max(0,offsetPercent)}%;--event-duration-hours:${durationHours};"
-      onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
-      <div class="event-title">${typeBadge}${teamBadge}${esc(meeting.title)}</div>
-      <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
-      <div class="event-owner">${meeting.owner ? 'Responsável: ' + esc(meeting.owner) : 'Responsável: —'}</div>
-    </div>`;
-  }
+  const todayStr = localDateString();
 
   if(agendaView === 'daily'){
 
     const target = localDateString(selectedDate);
     const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][selectedDate.getDay()];
 
-    $('week-label').textContent =
-      `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
+    $('week-label').textContent = `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
 
     let html = '<div class="grid-header">Hora</div>';
-    html += `<div class="grid-header"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
+    html += `<div class="grid-header${target === todayStr ? ' today' : ''}"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
 
     hours.forEach(hour => {
-
       const hourStart = minutes(hour);
       const hourEnd = hourStart + 60;
 
       html += `<div class="time-slot">${hour}</div>`;
 
       const events = meetings
+        .filter(m => m.status !== 'rejected')
         .filter(m => meetingOccursOnDate(m,target))
         .filter(m => {
           const start = minutes(m.start);
@@ -1866,7 +1466,7 @@ function renderDashboard(){
         })
         .sort((a,b) => minutes(a.start) - minutes(b.start));
 
-      html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
+      html += `<div class="day-cell${target === todayStr ? ' today' : ''}" onclick="handleSlotClick('${target}','${hour}')">`;
       events.forEach(meeting => html += eventMarkup(meeting, hourStart));
       html += '</div>';
     });
@@ -1880,28 +1480,27 @@ function renderDashboard(){
   const sunday = startOfWeek(selectedDate);
   const days = Array.from({length:7},(_,index)=>addDays(sunday,index));
 
-  $('week-label').textContent =
-    `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
+  $('week-label').textContent = `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
 
   let html = '<div class="grid-header">Hora</div>';
   const names = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
   days.forEach((day,index) => {
-    html += `<div class="grid-header"><strong>${names[index]}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
+    const dStr = localDateString(day);
+    html += `<div class="grid-header${dStr === todayStr ? ' today' : ''}"><strong>${names[index]}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
   });
 
   hours.forEach(hour => {
-
     const hourStart = minutes(hour);
     const hourEnd = hourStart + 60;
 
     html += `<div class="time-slot">${hour}</div>`;
 
     days.forEach(day => {
-
       const target = localDateString(day);
 
       const events = meetings
+        .filter(meeting => meeting.status !== 'rejected')
         .filter(meeting => meetingOccursOnDate(meeting,target))
         .filter(meeting => {
           const start = minutes(meeting.start);
@@ -1909,7 +1508,7 @@ function renderDashboard(){
         })
         .sort((a,b) => minutes(a.start) - minutes(b.start));
 
-      html += `<div class="day-cell" onclick="handleSlotClick('${target}','${hour}')">`;
+      html += `<div class="day-cell${target === todayStr ? ' today' : ''}" onclick="handleSlotClick('${target}','${hour}')">`;
       events.forEach(meeting => html += eventMarkup(meeting, hourStart));
       html += '</div>';
     });
@@ -1968,638 +1567,345 @@ function loadSavedLogo(){
   if(src) applySavedLogo(src);
 }
 
-function handleSlotClick(
-  date,
-  hour
-){
-
-  const next =
-    parseInt(
-      hour.slice(0,2),
-      10
-    ) + 1;
-
-  if(next > 19)
-    return;
-
-  openMeetingModal({
-
-    date,
-
-    start:hour,
-
-    end:
-      `${pad(next)}:00`
-
-  });
-
+function handleSlotClick(date, hour){
+  const next = parseInt(hour.slice(0,2), 10) + 1;
+  if(next > 19) return;
+  openMeetingModal({date, start:hour, end:`${pad(next)}:00`});
 }
-
 
 /* =========================
    REUNIÕES
 ========================= */
 
-function fillOwnerSelect(){
-
-  const select =
-    $('m-owner-select');
-
-  select.innerHTML =
-    '';
-
-  if(!collaborators.length){
-
-    select.innerHTML =
-      `
-      <option value="">
-        Cadastre um colaborador primeiro
-      </option>
-      `;
-
-    return;
-
-  }
-
-  collaborators.forEach(
-    collaborator => {
-
-      const option =
-        document.createElement(
-          'option'
-        );
-
-      option.value =
-        collaborator.name;
-
-      option.textContent =
-        `${collaborator.name}
-         (${collaborator.team || ''})`;
-
-      select.appendChild(
-        option
-      );
-
-    }
-  );
-
-}
-
 function fillTeamSelect() {
   const select = $('m-team-select');
   const defaultTeams = ['CSUM', 'CSUA', 'CEO', 'EDFE', 'ENGO', 'ENGE'];
-  const collTeams = collaborators.map(c => c.team).filter(t => ['CSUM','CSUA','CEO','EDFE','ENGO','ENGE'].includes(t));
+  const collTeams = collaborators.map(c => c.team).filter(t => defaultTeams.includes(t));
   const allTeams = [...new Set([...defaultTeams, ...collTeams])];
 
-  select.innerHTML = '<option value="">Sem time</option>' +
+  select.innerHTML = '<option value="">Sem departamento</option>' +
     allTeams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
 }
 
-function openMeetingModal(
-  data = null
-){
-
-  fillOwnerSelect();
-  fillTeamSelect();
-
-  $('meeting-form')
-    .reset();
-
-  $('m-id').value =
-    data?.id || '';
-
-  $('m-title').value =
-    data?.title || '';
-
-  $('m-team-select').value =
-    data?.team || '';
-
-  $('m-type').value =
-    data?.type || 'Interna';
-
-  $('m-owner-select').value =
-    data?.owner ||
-    collaborators[0]?.name ||
-    '';
-
-  $('m-attendees').value =
-    data?.attendees_count ||
-    1;
-
-  $('m-participants').value =
-    data?.participants ||
-    '';
-
-  $('m-date').value =
-    data?.date ||
-    $('week-picker').value ||
-    localDateString();
-
-  $('m-start').value =
-    data?.start
-      ? String(data.start).slice(0,5)
-      : '';
-
-  $('m-end').value =
-    data?.end
-      ? String(data.end).slice(0,5)
-      : '';
-
-  $('m-recurrence').value =
-    data?.recurrence ||
-    'none';
-
-  $('modal-title-text')
-    .textContent =
-      data?.id
-      ? 'Editar Reunião / Evento'
-      : 'Agendar Reunião';
-
-  $('btn-delete-meeting')
-    .style.display =
-      data?.id
-      ? 'inline-flex'
-      : 'none';
-
-  $('meeting-modal')
-    .style.display =
-      'flex';
-
+function currentUserDisplayName(){
+  if(!currentProfile) return currentUser?.email || '';
+  return `${currentProfile.first_name} ${currentProfile.last_name}`.trim() || currentProfile.email || currentUser?.email || '';
 }
 
-function openMeetingModalFromEncoded(
-  encoded
-){
+function openMeetingModal(data = null){
+  fillTeamSelect();
 
+  $('meeting-form').reset();
+
+  $('m-id').value = data?.id || '';
+  $('m-title').value = data?.title || '';
+  $('m-team-select').value = data?.team || '';
+  $('m-category').value = data?.category || 'time';
+  $('m-owner-display').value = data?.id ? (data.requested_by_name || data.owner || '') : currentUserDisplayName();
+  $('m-attendees').value = data?.attendees_count || 1;
+  $('m-participants').value = data?.participants || '';
+  $('m-date').value = data?.date || $('week-picker').value || localDateString();
+  $('m-start').value = data?.start ? String(data.start).slice(0,5) : '';
+  $('m-end').value = data?.end ? String(data.end).slice(0,5) : '';
+  $('m-recurrence').value = data?.recurrence || 'none';
+
+  const isAdmin = !!currentProfile?.is_admin;
+  const isOwner = !!data?.id && data.requested_by === currentUser?.id;
+  const canEdit = !data?.id || isAdmin || (isOwner && data.status === 'pending');
+
+  $('modal-title-text').textContent = data?.id
+    ? (canEdit ? 'Editar solicitação' : 'Detalhes da reunião')
+    : (isAdmin ? 'Nova reunião' : 'Solicitar reunião');
+
+  $('meeting-form').querySelectorAll('input,select,textarea').forEach(el => {
+    if(el.id === 'm-owner-display') return;
+    el.disabled = !canEdit;
+  });
+
+  $('btn-save-meeting').style.display = canEdit ? '' : 'none';
+  $('btn-delete-meeting').style.display = (data?.id && canEdit) ? 'inline-flex' : 'none';
+
+  $('meeting-modal').style.display = 'flex';
+}
+
+function openMeetingModalFromEncoded(encoded){
   try{
-
-    openMeetingModal(
-      JSON.parse(
-        decodeURIComponent(encoded)
-      )
-    );
-
+    openMeetingModal(JSON.parse(decodeURIComponent(encoded)));
   }catch(error){
-
     console.error(error);
-
-    alert(
-      'Não foi possível abrir a reunião.'
-    );
-
+    alert('Não foi possível abrir a reunião.');
   }
-
 }
 
 function closeMeetingModal(){
-
-  $('meeting-modal')
-    .style.display =
-      'none';
-
+  $('meeting-modal').style.display = 'none';
 }
 
-function meetingConflict(
-  candidate,
-  editingId = ''
-){
-
-  const start =
-    minutes(
-      candidate.start
-    );
-
-  const end =
-    minutes(
-      candidate.end
-    );
+function meetingConflict(candidate, editingId = ''){
+  const start = minutes(candidate.start);
+  const end = minutes(candidate.end);
 
   if(end <= start){
-
-    return (
-      'O horário final deve ser maior ' +
-      'que o horário inicial.'
-    );
-
+    return 'O horário final deve ser maior que o horário inicial.';
   }
 
-  /*
-    Verifica 1 ano para frente.
-    Assim uma recorrência não consegue
-    colidir com outra recorrência.
-  */
+  const base = dateFromInput(candidate.date);
 
-  const base =
-    dateFromInput(
-      candidate.date
-    );
+  for(let i=0;i<366;i++){
+    const day = localDateString(addDays(base,i));
 
-  for(
-    let i=0;
-    i<366;
-    i++
-  ){
+    if(!meetingOccursOnDate(candidate, day)) continue;
 
-    const day =
-      localDateString(
-        addDays(base,i)
-      );
+    for(const existing of meetings){
+      if(editingId && String(existing.id) === String(editingId)) continue;
+      if(existing.status === 'rejected') continue;
+      if(!meetingOccursOnDate(existing, day)) continue;
 
-    if(
-      !meetingOccursOnDate(
-        candidate,
-        day
-      )
-    ) continue;
-
-    for(
-      const existing of meetings
-    ){
-
-      if(
-        editingId &&
-        String(existing.id) ===
-        String(editingId)
-      )
-        continue;
-
-      if(
-        !meetingOccursOnDate(
-          existing,
-          day
-        )
-      )
-        continue;
-
-      if(
-        start <
-        minutes(existing.end) &&
-
-        end >
-        minutes(existing.start)
-      ){
-
-        return `
-          Conflito com "${existing.title}"
-          em
-          ${day.split('-').reverse().join('/')}
-          (
-          ${String(existing.start).slice(0,5)}
-          -
-          ${String(existing.end).slice(0,5)}
-          ).
-        `;
-
+      if(start < minutes(existing.end) && end > minutes(existing.start)){
+        return `Conflito com "${existing.title}" em ${day.split('-').reverse().join('/')} (${String(existing.start).slice(0,5)}-${String(existing.end).slice(0,5)}).`;
       }
-
     }
-
   }
 
   return null;
-
 }
 
 async function saveMeeting(event){
-
   event.preventDefault();
 
-  if(!db){
-
-    alert(
-      'O Supabase está indisponível. ' +
-      'A agenda continua visível, mas a reunião ' +
-      'não pode ser salva neste momento.'
-    );
-
+  if(!db || !currentUser){
+    alert('Você precisa estar logado para salvar.');
     return;
-
   }
 
-  const id =
-    $('m-id').value;
-
-  const owner =
-    $('m-owner-select').value;
-
-  const collaborator =
-    collaborators.find(
-      c => c.name === owner
-    );
+  const id = $('m-id').value;
+  const ownerName = currentUserDisplayName();
 
   const data = {
-
-    title:
-      $('m-title').value.trim(),
-
-    owner,
-
-    team:
-      $('m-team-select').value,
-
-    type:
-      $('m-type').value,
-
-    attendees_count:
-      parseInt(
-        $('m-attendees').value,
-        10
-      ) || 1,
-
-    participants:
-      $('m-participants').value.trim(),
-
-    date:
-      $('m-date').value,
-
-    start:
-      $('m-start').value,
-
-    end:
-      $('m-end').value,
-
-    recurrence:
-      $('m-recurrence').value
-
+    title: $('m-title').value.trim(),
+    owner: id ? $('m-owner-display').value : ownerName,
+    team: $('m-team-select').value,
+    category: $('m-category').value,
+    attendees_count: parseInt($('m-attendees').value, 10) || 1,
+    participants: $('m-participants').value.trim(),
+    date: $('m-date').value,
+    start: $('m-start').value,
+    end: $('m-end').value,
+    recurrence: $('m-recurrence').value
   };
 
-  if(
-    !data.title ||
-    !data.owner ||
-    !data.date ||
-    !data.start ||
-    !data.end
-  ){
-
-    alert(
-      'Preencha todos os campos obrigatórios.'
-    );
-
-    return;
-
+  if(!id){
+    data.requested_by = currentUser.id;
+    data.requested_by_name = ownerName;
+    data.requested_by_email = currentUser.email;
+    data.status = currentProfile?.is_admin ? 'approved' : 'pending';
   }
 
-  const conflict =
-    meetingConflict(
-      data,
-      id
-    );
-
-  if(conflict){
-
-    alert(conflict);
-
+  if(!data.title || !data.date || !data.start || !data.end){
+    alert('Preencha todos os campos obrigatórios.');
     return;
+  }
 
+  const conflict = meetingConflict(data, id);
+  if(conflict){
+    alert(conflict);
+    return;
   }
 
   try{
-
     let response;
 
     if(id){
-
-      response =
-        await db
-          .from('meetings')
-          .update(data)
-          .eq('id',id)
-          .select()
-          .single();
-
+      response = await db.from('meetings').update(data).eq('id', id).select().single();
     }else{
-
-      response =
-        await db
-          .from('meetings')
-          .insert([data])
-          .select()
-          .single();
-
+      response = await db.from('meetings').insert([data]).select().single();
     }
 
-    if(response.error)
-      throw response.error;
+    if(response.error) throw response.error;
 
     closeMeetingModal();
-
     await loadData();
 
-    setStatus(
-      '● Sincronizado',
-      true
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    // Compatibilidade: garante que salvar não quebre se não for criado nova coluna no seu banco Supabase.
-    const message = String(error?.message || '').toLowerCase();
-
-    if(message.includes('column') || message.includes('schema cache')){
-
-      try {
-        const fallbackData = {...data};
-        delete fallbackData.type;
-
-        if(data.type) {
-            fallbackData.participants = `[${data.type}] ` + fallbackData.participants;
-        }
-
-        let fallback;
-
-        if(id){
-          fallback = await db
-            .from('meetings')
-            .update(fallbackData)
-            .eq('id',id)
-            .select()
-            .single();
-        }else{
-          fallback = await db
-            .from('meetings')
-            .insert([fallbackData])
-            .select()
-            .single();
-        }
-
-        if(fallback.error)
-          throw fallback.error;
-
-        closeMeetingModal();
-        await loadData();
-        return;
-
-      } catch(fallbackError){
-        alert(
-          'Erro ao salvar reunião: ' +
-          fallbackError.message
-        );
-        return;
-      }
+    if(!id && !currentProfile?.is_admin){
+      notifyAdminByEmail(response.data);
+      alert('Solicitação enviada! O administrador vai revisar e aprovar.');
     }
 
-    setStatus(
-      '● Sem conexão',
-      false
-    );
-
-    alert(
-      'Erro ao salvar reunião: ' +
-      error.message
-    );
-
+  }catch(error){
+    console.error(error);
+    alert('Erro ao salvar reunião: ' + error.message);
   }
+}
 
+function notifyAdminByEmail(meeting){
+  const subject = encodeURIComponent(`Nova solicitação de reunião: ${meeting.title}`);
+  const body = encodeURIComponent(
+    'Uma nova reunião foi solicitada no Coworking Pro BE.\n\n' +
+    `Título: ${meeting.title}\n` +
+    `Solicitante: ${meeting.requested_by_name} (${meeting.requested_by_email})\n` +
+    `Reunião com: ${categoryLabel(meeting.category)}\n` +
+    `Data: ${meeting.date.split('-').reverse().join('/')}\n` +
+    `Horário: ${String(meeting.start).slice(0,5)} - ${String(meeting.end).slice(0,5)}\n` +
+    `Pessoas: ${meeting.attendees_count}\n\n` +
+    'Acesse o sistema para aprovar ou rejeitar.'
+  );
+  window.open(`mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`, '_blank');
 }
 
 async function deleteMeeting(){
-
-  const id =
-    $('m-id').value;
-
-  if(
-    !id ||
-    !confirm(
-      'Tem certeza que deseja excluir esta reunião?'
-    )
-  )
-    return;
-
-  if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
-    return;
-
-  }
+  const id = $('m-id').value;
+  if(!id || !confirm('Tem certeza que deseja excluir esta reunião?')) return;
+  if(!db) return;
 
   try{
-
-    const {error} =
-      await db
-        .from('meetings')
-        .delete()
-        .eq('id',id);
-
-    if(error)
-      throw error;
-
+    const {error} = await db.from('meetings').delete().eq('id',id);
+    if(error) throw error;
     closeMeetingModal();
-
     await loadData();
-
   }catch(error){
-
-    alert(
-      'Erro ao excluir reunião: ' +
-      error.message
-    );
-
+    alert('Erro ao excluir reunião: ' + error.message);
   }
-
 }
 
+/* =========================
+   SOLICITAÇÕES
+========================= */
+
+function renderRequestsList(){
+  const container = $('requests-list');
+  if(!container) return;
+
+  const pending = meetings
+    .filter(m => m.status === 'pending')
+    .sort((a,b) => (a.date+String(a.start)).localeCompare(b.date+String(b.start)));
+
+  if(!pending.length){
+    container.innerHTML = '<div class="empty-state">Nenhuma solicitação pendente.</div>';
+    return;
+  }
+
+  const isAdmin = !!currentProfile?.is_admin;
+
+  container.innerHTML = pending.map(m => `
+    <div class="request-card">
+      <div class="request-card-main">
+        <span class="cat-dot" style="--cat-color:${categoryColor(m.category)}"></span>
+        <div>
+          <div class="request-title">${esc(m.title)}</div>
+          <div class="request-meta">${esc(m.requested_by_name || m.owner || '')} · ${esc(categoryLabel(m.category))} · ${m.date.split('-').reverse().join('/')} · ${esc(String(m.start).slice(0,5))}-${esc(String(m.end).slice(0,5))}</div>
+        </div>
+      </div>
+      ${isAdmin ? `
+        <div class="request-actions">
+          <button class="btn" onclick="reviewRequest('${m.id}','approved')">Aprovar</button>
+          <button class="btn btn-danger" onclick="reviewRequest('${m.id}','rejected')">Rejeitar</button>
+        </div>
+      ` : '<span class="status-pill">Aguardando aprovação</span>'}
+    </div>
+  `).join('');
+}
+
+async function reviewRequest(id, decision){
+  if(!db) return;
+  try{
+    const {error} = await db.from('meetings').update({status:decision}).eq('id', id);
+    if(error) throw error;
+    await loadData();
+  }catch(error){
+    alert('Erro ao atualizar solicitação: ' + error.message);
+  }
+}
+
+function updateRequestsBadge(){
+  const badge = $('requests-badge');
+  if(!badge) return;
+  const count = meetings.filter(m => m.status === 'pending').length;
+  badge.textContent = count > 0 ? String(count) : '';
+}
+
+/* =========================
+   USUÁRIOS (admin)
+========================= */
+
+async function openUsersModal(){
+  if(!db) return;
+
+  try{
+    const {data, error} = await db.from('profiles').select('*').order('first_name');
+    if(error) throw error;
+
+    $('users-list').innerHTML = data.map(p => `
+      <div class="user-row">
+        <span>${esc(p.first_name)} ${esc(p.last_name)} <span style="color:var(--muted)">(${esc(p.email)})</span>${p.is_admin ? ' <strong>· admin</strong>' : ''}</span>
+        <button class="btn ${p.is_admin ? 'btn-danger' : ''}" onclick="toggleAdmin('${p.id}', ${!p.is_admin})">
+          ${p.is_admin ? 'Remover admin' : 'Tornar admin'}
+        </button>
+      </div>
+    `).join('');
+
+    $('users-modal').style.display = 'flex';
+  }catch(error){
+    alert('Erro ao carregar usuários: ' + error.message);
+  }
+}
+
+async function toggleAdmin(id, makeAdmin){
+  try{
+    const {error} = await db.from('profiles').update({is_admin: makeAdmin}).eq('id', id);
+    if(error) throw error;
+
+    await openUsersModal();
+
+    if(id === currentUser?.id){
+      await loadCurrentProfile();
+      refreshAuthUI();
+    }
+  }catch(error){
+    alert('Erro ao atualizar usuário: ' + error.message);
+  }
+}
+
+function closeUsersModal(){
+  $('users-modal').style.display = 'none';
+}
 
 /* =========================
    ASSENTOS
 ========================= */
 
-function seatOccursOnDate(
-  allocation,
-  targetDate
-){
+function seatOccursOnDate(allocation, targetDate){
+  const start = dateFromInput(allocation.startDate);
+  const target = dateFromInput(targetDate);
 
-  const start =
-    dateFromInput(
-      allocation.startDate
-    );
+  if(target < start) return false;
 
-  const target =
-    dateFromInput(
-      targetDate
-    );
+  const day = target.getDay();
 
-  if(target < start)
+  if(allocation.exceptDay && allocation.exceptDay !== 'none' && Number(allocation.exceptDay) === day){
     return false;
-
-  const day =
-    target.getDay();
-
-  if(
-    allocation.exceptDay &&
-    allocation.exceptDay !== 'none' &&
-    Number(
-      allocation.exceptDay
-    ) === day
-  ){
-
-    return false;
-
   }
 
-  switch(
-    allocation.recurrence ||
-    'daily'
-  ){
-
+  switch(allocation.recurrence || 'daily'){
     case 'single':
-
-      return (
-        allocation.startDate ===
-        targetDate
-      );
-
+      return allocation.startDate === targetDate;
     case 'daily':
-
-      return (
-        day >= 1 &&
-        day <= 5
-      );
-
+      return day >= 1 && day <= 5;
     case 'weekly':
-
-      return (
-        day === start.getDay()
-      );
-
+      return day === start.getDay();
     case 'biweekly':{
-
-      const difference =
-        Math.floor(
-          (target-start) /
-          86400000
-        );
-
-      return (
-        difference >= 0 &&
-        difference % 14 === 0
-      );
-
+      const difference = Math.floor((target-start) / 86400000);
+      return difference >= 0 && difference % 14 === 0;
     }
-
     default:
-
       return false;
-
   }
-
 }
 
 function storageTableId(table, period){
   return `${table}__${period}`;
 }
 
-function getSeatOccupant(
-  table,
-  seat,
-  date,
-  period = 'morning'
-){
-
+function getSeatOccupant(table, seat, date, period = 'morning'){
   const currentTableId = storageTableId(table, period);
 
   return seatAllocations
@@ -2611,19 +1917,14 @@ function getSeatOccupant(
       ) &&
       seatOccursOnDate(allocation,date)
     )
-    .sort((a,b) =>
-      String(b.startDate).localeCompare(String(a.startDate))
-    )[0] || null;
+    .sort((a,b) => String(b.startDate).localeCompare(String(a.startDate)))[0] || null;
 }
 
 function renderSeats(){
-
   const date = $('seat-search-date').value || localDateString();
 
   function chair(table, code, period){
-
     const allocation = getSeatOccupant(table,code,date,period);
-
     return `
       <div class="seat-chair ${allocation ? 'occupied' : ''}"
            onclick="openSeatModal('${table}','${code}','${period}')">
@@ -2633,54 +1934,32 @@ function renderSeats(){
     `;
   }
 
-  $('m1-morning-top').innerHTML =
-    chair('Meeting01','C1','morning') + chair('Meeting01','C2','morning');
-  $('m1-morning-bottom').innerHTML =
-    chair('Meeting01','C3','morning') + chair('Meeting01','C4','morning');
+  $('m1-morning-top').innerHTML = chair('Meeting01','C1','morning') + chair('Meeting01','C2','morning');
+  $('m1-morning-bottom').innerHTML = chair('Meeting01','C3','morning') + chair('Meeting01','C4','morning');
+  $('m1-afternoon-top').innerHTML = chair('Meeting01','C1','afternoon') + chair('Meeting01','C2','afternoon');
+  $('m1-afternoon-bottom').innerHTML = chair('Meeting01','C3','afternoon') + chair('Meeting01','C4','afternoon');
 
-  $('m1-afternoon-top').innerHTML =
-    chair('Meeting01','C1','afternoon') + chair('Meeting01','C2','afternoon');
-  $('m1-afternoon-bottom').innerHTML =
-    chair('Meeting01','C3','afternoon') + chair('Meeting01','C4','afternoon');
+  $('m2-morning-top').innerHTML = chair('Meeting02','C1','morning') + chair('Meeting02','C2','morning');
+  $('m2-morning-bottom').innerHTML = chair('Meeting02','C3','morning') + chair('Meeting02','C4','morning');
+  $('m2-afternoon-top').innerHTML = chair('Meeting02','C1','afternoon') + chair('Meeting02','C2','afternoon');
+  $('m2-afternoon-bottom').innerHTML = chair('Meeting02','C3','afternoon') + chair('Meeting02','C4','afternoon');
 
-  $('m2-morning-top').innerHTML =
-    chair('Meeting02','C1','morning') + chair('Meeting02','C2','morning');
-  $('m2-morning-bottom').innerHTML =
-    chair('Meeting02','C3','morning') + chair('Meeting02','C4','morning');
-
-  $('m2-afternoon-top').innerHTML =
-    chair('Meeting02','C1','afternoon') + chair('Meeting02','C2','afternoon');
-  $('m2-afternoon-bottom').innerHTML =
-    chair('Meeting02','C3','afternoon') + chair('Meeting02','C4','afternoon');
-
-  $('m3-morning-top').innerHTML =
-    chair('Marketing','C1','morning') + chair('Marketing','C2','morning') + chair('Marketing','C3','morning');
-  $('m3-morning-bottom').innerHTML =
-    chair('Marketing','C4','morning') + chair('Marketing','C5','morning') + chair('Marketing','C6','morning');
-
-  $('m3-afternoon-top').innerHTML =
-    chair('Marketing','C1','afternoon') + chair('Marketing','C2','afternoon') + chair('Marketing','C3','afternoon');
-  $('m3-afternoon-bottom').innerHTML =
-    chair('Marketing','C4','afternoon') + chair('Marketing','C5','afternoon') + chair('Marketing','C6','afternoon');
+  $('m3-morning-top').innerHTML = chair('Marketing','C1','morning') + chair('Marketing','C2','morning') + chair('Marketing','C3','morning');
+  $('m3-morning-bottom').innerHTML = chair('Marketing','C4','morning') + chair('Marketing','C5','morning') + chair('Marketing','C6','morning');
+  $('m3-afternoon-top').innerHTML = chair('Marketing','C1','afternoon') + chair('Marketing','C2','afternoon') + chair('Marketing','C3','afternoon');
+  $('m3-afternoon-bottom').innerHTML = chair('Marketing','C4','afternoon') + chair('Marketing','C5','afternoon') + chair('Marketing','C6','afternoon');
 }
 
-function openSeatModal(
-  table,
-  seat,
-  period = 'morning'
-){
-
+function openSeatModal(table, seat, period = 'morning'){
   const date = $('seat-search-date').value || localDateString();
   const existing = getSeatOccupant(table,seat,date,period);
   const select = $('s-collab-select');
 
   select.innerHTML = collaborators.length
     ? collaborators.map(c => `
-        <option value="${esc(c.name)}">
-          ${esc(c.name)} (${esc(c.team || '')})
-        </option>
+        <option value="${esc(c.name)}">${esc(c.name)} (${esc(c.team || '')})</option>
       `).join('')
-    : `<option value="">Cadastre um colaborador primeiro</option>`;
+    : '<option value="">Cadastre um colaborador primeiro</option>';
 
   $('s-table-id').value = table;
   $('s-seat-code').value = seat;
@@ -2691,48 +1970,29 @@ function openSeatModal(
   $('s-except-day').value = existing?.exceptDay || 'none';
   $('s-collab-select').value = existing?.collabName || '';
 
-  $('seat-modal-title').textContent =
-    `Alocar Assento - ${table} (${seat}) - ${period === 'morning' ? 'Manhã' : 'Tarde'}`;
+  $('seat-modal-title').textContent = `Alocar Assento - ${table} (${seat}) - ${period === 'morning' ? 'Manhã' : 'Tarde'}`;
 
   $('btn-remove-seat').style.display = existing ? 'inline-flex' : 'none';
   $('seat-modal').style.display = 'flex';
 }
 
 function closeSeatModal(){
-
-  $('seat-modal')
-    .style.display =
-      'none';
-
+  $('seat-modal').style.display = 'none';
 }
 
 function seatConflict(candidate, editingId = ''){
-
   const base = dateFromInput(candidate.startDate);
 
   for(let i=0;i<366;i++){
-
     const day = localDateString(addDays(base,i));
-
-    if(!seatOccursOnDate(candidate,day))
-      continue;
+    if(!seatOccursOnDate(candidate,day)) continue;
 
     for(const existing of seatAllocations){
-
-      if(editingId && String(existing.id) === String(editingId))
-        continue;
-
-      if(String(existing.tableId) !== String(candidate.tableId))
-        continue;
-
-      if(String(existing.seatCode) !== String(candidate.seatCode))
-        continue;
-
-      if(String(existing.period || 'morning') !== String(candidate.period || 'morning'))
-        continue;
-
-      if(seatOccursOnDate(existing,day))
-        return true;
+      if(editingId && String(existing.id) === String(editingId)) continue;
+      if(String(existing.tableId) !== String(candidate.tableId)) continue;
+      if(String(existing.seatCode) !== String(candidate.seatCode)) continue;
+      if(String(existing.period || 'morning') !== String(candidate.period || 'morning')) continue;
+      if(seatOccursOnDate(existing,day)) return true;
     }
   }
 
@@ -2740,7 +2000,6 @@ function seatConflict(candidate, editingId = ''){
 }
 
 async function saveSeatAllocation(event){
-
   event.preventDefault();
 
   if(!db){
@@ -2768,443 +2027,184 @@ async function saveSeatAllocation(event){
   }
 
   if(seatConflict(data,id)){
-    alert(
-      `Este assento já possui uma alocação conflitante no período da ${period === 'morning' ? 'manhã' : 'tarde'}.`
-    );
+    alert(`Este assento já possui uma alocação conflitante no período da ${period === 'morning' ? 'manhã' : 'tarde'}.`);
     return;
   }
 
   try{
-
     let response;
 
     if(id){
-      response = await db
-        .from('seat_allocations')
-        .update(data)
-        .eq('id',id)
-        .select()
-        .single();
+      response = await db.from('seat_allocations').update(data).eq('id',id).select().single();
     }else{
-      response = await db
-        .from('seat_allocations')
-        .insert([data])
-        .select()
-        .single();
+      response = await db.from('seat_allocations').insert([data]).select().single();
     }
 
-    if(response.error)
-      throw response.error;
+    if(response.error) throw response.error;
 
     closeSeatModal();
     await loadData();
 
   }catch(error){
-
     console.error(error);
 
-    // Compatibilidade: a separação também está no tableId,
-    // portanto o sistema continua funcionando sem a coluna "period".
     const message = String(error?.message || '').toLowerCase();
 
     if(message.includes('period') || message.includes('column') || message.includes('schema cache')){
-
       try{
-
         const fallbackData = {...data};
         delete fallbackData.period;
 
         let fallback;
 
         if(id){
-          fallback = await db
-            .from('seat_allocations')
-            .update(fallbackData)
-            .eq('id',id)
-            .select()
-            .single();
+          fallback = await db.from('seat_allocations').update(fallbackData).eq('id',id).select().single();
         }else{
-          fallback = await db
-            .from('seat_allocations')
-            .insert([fallbackData])
-            .select()
-            .single();
+          fallback = await db.from('seat_allocations').insert([fallbackData]).select().single();
         }
 
-        if(fallback.error)
-          throw fallback.error;
+        if(fallback.error) throw fallback.error;
 
         closeSeatModal();
         await loadData();
         return;
 
       }catch(fallbackError){
-
-        alert(
-          'Erro ao salvar assento: ' +
-          fallbackError.message
-        );
-
+        alert('Erro ao salvar assento: ' + fallbackError.message);
         return;
       }
     }
 
-    alert(
-      'Erro ao salvar assento: ' +
-      error.message
-    );
+    alert('Erro ao salvar assento: ' + error.message);
   }
 }
 
 async function removeSeatAllocation(){
-
-  const id =
-    $('s-existing-id').value;
-
-  if(
-    !id ||
-    !confirm(
-      'Deseja remover esta alocação?'
-    )
-  )
-    return;
-
+  const id = $('s-existing-id').value;
+  if(!id || !confirm('Deseja remover esta alocação?')) return;
   if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
+    alert('Supabase indisponível.');
     return;
-
   }
 
   try{
-
-    const {error} =
-      await db
-        .from('seat_allocations')
-        .delete()
-        .eq('id',id);
-
-    if(error)
-      throw error;
-
+    const {error} = await db.from('seat_allocations').delete().eq('id',id);
+    if(error) throw error;
     closeSeatModal();
-
     await loadData();
-
   }catch(error){
-
-    alert(
-      'Erro ao remover assento: ' +
-      error.message
-    );
-
+    alert('Erro ao remover assento: ' + error.message);
   }
-
 }
-
 
 /* =========================
    COLABORADORES
 ========================= */
 
 function openCollabModal(){
-
   renderCollabList();
-
-  $('collab-modal')
-    .style.display =
-      'flex';
-
+  $('collab-modal').style.display = 'flex';
 }
 
 function closeCollabModal(){
-
-  $('collab-modal')
-    .style.display =
-      'none';
-
+  $('collab-modal').style.display = 'none';
 }
 
 function renderCollabList(){
-
-  const list =
-    $('collab-list');
+  const list = $('collab-list');
 
   if(!collaborators.length){
-
-    list.innerHTML =
-      `
-        <div class="empty-state">
-          Nenhum colaborador cadastrado.
-        </div>
-      `;
-
+    list.innerHTML = '<div class="empty-state">Nenhum colaborador cadastrado.</div>';
     return;
-
   }
 
-  list.innerHTML =
-    collaborators
-      .slice()
-      .sort(
-        (a,b) =>
-          String(a.name)
-            .localeCompare(
-              String(b.name),
-              'pt-BR'
-            )
-      )
-      .map(
-        c =>
-          `
-          <div
-            style="
-              display:flex;
-              justify-content:space-between;
-              align-items:center;
-              padding:8px 0;
-              border-bottom:1px solid var(--line)
-            "
-          >
-
-            <span>
-              ${esc(c.name)}
-              <strong>
-                (${esc(c.team || '')})
-              </strong>
-            </span>
-
-            <button
-              class="btn btn-danger"
-              onclick="
-                deleteCollaborator(
-                  '${c.id}'
-                )
-              "
-            >
-              Excluir
-            </button>
-
-          </div>
-          `
-      )
-      .join('');
-
+  list.innerHTML = collaborators
+    .slice()
+    .sort((a,b) => String(a.name).localeCompare(String(b.name), 'pt-BR'))
+    .map(c => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
+        <span>${esc(c.name)} <strong>(${esc(c.team || '')})</strong></span>
+        <button class="btn btn-danger" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+      </div>
+    `)
+    .join('');
 }
 
 async function saveCollaborator(event){
-
   event.preventDefault();
 
   if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
+    alert('Supabase indisponível.');
     return;
-
   }
 
-  const name =
-    $('c-name')
-      .value
-      .trim();
+  const name = $('c-name').value.trim();
+  const team = $('c-team').value.trim();
 
-  const team =
-    $('c-team')
-      .value
-      .trim();
+  if(!name) return;
 
-  if(!name)
+  if(collaborators.some(c => String(c.name).toLowerCase() === name.toLowerCase())){
+    alert('Este colaborador já está cadastrado.');
     return;
-
-  if(
-    collaborators.some(
-      c =>
-        String(c.name)
-          .toLowerCase() ===
-        name.toLowerCase()
-    )
-  ){
-
-    alert(
-      'Este colaborador já está cadastrado.'
-    );
-
-    return;
-
   }
 
   try{
+    const {error} = await db.from('collaborators').insert([{name, team}]);
+    if(error) throw error;
 
-    const {error} =
-      await db
-        .from('collaborators')
-        .insert([
-          {
-            name,
-            team
-          }
-        ]);
-
-    if(error)
-      throw error;
-
-    $('c-name').value =
-      '';
-
-    $('c-team').value =
-      '';
+    $('c-name').value = '';
+    $('c-team').value = '';
 
     await loadData();
-
     renderCollabList();
 
   }catch(error){
-
-    alert(
-      'Erro ao cadastrar colaborador: ' +
-      error.message
-    );
-
+    alert('Erro ao cadastrar colaborador: ' + error.message);
   }
-
 }
 
 async function deleteCollaborator(id){
+  const collaborator = collaborators.find(c => String(c.id) === String(id));
+  if(!collaborator) return;
 
-  const collaborator =
-    collaborators.find(
-      c =>
-        String(c.id) ===
-        String(id)
-    );
-
-  if(!collaborator)
-    return;
-
-  const hasMeeting =
-    meetings.some(
-      meeting =>
-        meeting.owner ===
-        collaborator.name
-    );
-
-  const hasSeat =
-    seatAllocations.some(
-      seat =>
-        seat.collabName ===
-        collaborator.name
-    );
-
-  if(
-    !confirm(
-      `Excluir ${collaborator.name}?\n\n` +
-      `Os lugares ocupados por este colaborador também serão liberados.`
-    )
-  )
-    return;
-
-  if(!db)
-    return;
+  if(!confirm(`Excluir ${collaborator.name}?\n\nOs lugares ocupados por este colaborador também serão liberados.`)) return;
+  if(!db) return;
 
   try{
+    const {error: seatError} = await db.from('seat_allocations').delete().eq('collabName', collaborator.name);
+    if(seatError) throw seatError;
 
-    const {error: seatError} =
-      await db
-        .from('seat_allocations')
-        .delete()
-        .eq('collabName', collaborator.name);
-
-    if(seatError)
-      throw seatError;
-
-    const {error} =
-      await db
-        .from('collaborators')
-        .delete()
-        .eq('id',id);
-
-    if(error)
-      throw error;
+    const {error} = await db.from('collaborators').delete().eq('id',id);
+    if(error) throw error;
 
     await loadData();
-
     renderCollabList();
     renderSeats();
 
   }catch(error){
-
-    alert(
-      'Erro ao excluir colaborador: ' +
-      error.message
-    );
-
+    alert('Erro ao excluir colaborador: ' + error.message);
   }
-
 }
-
 
 /* =========================
    FECHAR MODAIS
 ========================= */
 
-document.addEventListener(
-  'keydown',
-  event => {
-
-    if(event.key === 'Escape'){
-
-      document
-        .querySelectorAll(
-          '.modal-backdrop'
-        )
-        .forEach(
-          modal =>
-            modal.style.display =
-              'none'
-        );
-
-    }
-
+document.addEventListener('keydown', event => {
+  if(event.key === 'Escape'){
+    document.querySelectorAll('.modal-backdrop').forEach(modal => modal.style.display = 'none');
   }
-);
+});
 
-document.addEventListener(
-  'DOMContentLoaded',
-  () => {
-
-    document
-      .querySelectorAll(
-        '.modal-backdrop'
-      )
-      .forEach(modal => {
-
-        modal.addEventListener(
-          'click',
-          event => {
-
-            if(
-              event.target ===
-              modal
-            ){
-
-              modal.style.display =
-                'none';
-
-            }
-
-          }
-        );
-
-      });
-
-  }
-);
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.modal-backdrop').forEach(modal => {
+    modal.addEventListener('click', event => {
+      if(event.target === modal){
+        modal.style.display = 'none';
+      }
+    });
+  });
+});
 
 </script>
 
