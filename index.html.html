@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -27,8 +26,6 @@
   --hover:#f3f3f1;
   --radius:12px;
   --slot-height:78px;
-  --sidebar-width:250px;
-  --supplier-purple:#7247F6;
 }
 
 *{font-family:inherit}
@@ -130,7 +127,6 @@ button{cursor:pointer}
   margin-top:6px;
   transition:opacity .15s ease;
 }
-
 .auth-submit:hover{opacity:.85}
 
 .auth-switch{
@@ -148,204 +144,7 @@ button{cursor:pointer}
   text-decoration:underline;
 }
 
-/* ============ SIDEBAR ============ */
-
-.sidebar{
-  position:fixed;
-  top:0;
-  left:0;
-  bottom:0;
-  width:var(--sidebar-width);
-  background:#fff;
-  border-right:1px solid var(--line);
-  z-index:100;
-  display:flex;
-  flex-direction:column;
-  padding:20px 14px;
-  transform:translateX(0);
-  transition:transform .22s ease;
-}
-
-.sidebar-brand{
-  padding:5px 10px 22px;
-  border-bottom:1px solid var(--line);
-  margin-bottom:18px;
-}
-
-.sidebar-brand-title{
-  font-size:17px;
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:-.4px;
-}
-
-.sidebar-brand-subtitle{
-  margin-top:4px;
-  font-size:10px;
-  color:var(--muted);
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
-
-.sidebar-section-title{
-  padding:0 10px 8px;
-  font-size:9px;
-  color:#999;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
-
-.sidebar-menu{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-
-.sidebar-button{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:#111;
-  padding:11px 12px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-align:left;
-  font-size:12px;
-  font-weight:700;
-  text-transform:uppercase;
-  transition:background .18s ease, color .18s ease, transform .18s ease;
-}
-
-.sidebar-button:hover{
-  background:var(--surface-soft);
-  transform:translateX(2px);
-}
-
-.sidebar-icon{
-  width:25px;
-  height:25px;
-  border-radius:7px;
-  background:var(--surface-soft);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  flex:none;
-}
-
-.sidebar-button.requests{
-  background:var(--supplier-purple);
-  color:#fff;
-  box-shadow:0 3px 10px rgba(114,71,246,.18);
-}
-
-.sidebar-button.requests:hover{
-  background:#6338e8;
-  transform:translateX(2px);
-}
-
-.sidebar-button.requests .sidebar-icon{
-  background:rgba(255,255,255,.18);
-  color:#fff;
-}
-
-.sidebar-badge{
-  margin-left:auto;
-  min-width:19px;
-  height:19px;
-  padding:0 5px;
-  border-radius:20px;
-  background:#fff;
-  color:var(--supplier-purple);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;
-  font-weight:900;
-}
-
-.sidebar-badge:empty{
-  display:none;
-}
-
-.sidebar-bottom{
-  margin-top:auto;
-  padding-top:15px;
-  border-top:1px solid var(--line);
-}
-
-.sidebar-user{
-  padding:0 10px 12px;
-  font-size:11px;
-  color:var(--muted);
-  font-weight:600;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.sidebar-logout{
-  color:#c0392b;
-}
-
-.sidebar-logout .sidebar-icon{
-  color:#c0392b;
-  background:#fff4f2;
-}
-
-.sidebar-toggle{
-  position:fixed;
-  top:13px;
-  left:calc(var(--sidebar-width) + 12px);
-  width:38px;
-  height:38px;
-  border:1px solid var(--line-strong);
-  border-radius:10px;
-  background:#fff;
-  z-index:110;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  box-shadow:0 2px 8px rgba(0,0,0,.05);
-  transition:left .22s ease, transform .18s ease;
-}
-
-.sidebar-toggle:hover{
-  background:var(--surface-soft);
-}
-
-.sidebar.collapsed{
-  transform:translateX(calc(-1 * var(--sidebar-width)));
-}
-
-.sidebar.collapsed + .sidebar-toggle{
-  left:14px;
-}
-
-.sidebar-overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.28);
-  z-index:90;
-}
-
 /* ============ ESTRUTURA GERAL ============ */
-
-#app-shell{
-  min-height:100vh;
-  padding-left:var(--sidebar-width);
-  transition:padding-left .22s ease;
-}
-
-#app-shell.sidebar-collapsed{
-  padding-left:0;
-}
 
 .header{
   height:64px;
@@ -357,7 +156,7 @@ button{cursor:pointer}
   padding:0 30px;
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:20
 }
 
 .logo{
@@ -370,7 +169,7 @@ button{cursor:pointer}
 .header-right{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:14px
 }
 
 .user-name-display{
@@ -382,7 +181,7 @@ button{cursor:pointer}
 .container{
   max-width:1500px;
   margin:auto;
-  padding:14px 24px;
+  padding:14px 24px
 }
 
 .toolbar{
@@ -391,14 +190,10 @@ button{cursor:pointer}
   justify-content:space-between;
   gap:15px;
   margin-bottom:12px;
-  flex-wrap:wrap;
+  flex-wrap:wrap
 }
 
-.tabs{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
 
 .tab{
   border:0;
@@ -412,14 +207,12 @@ button{cursor:pointer}
   transition:background .18s ease,box-shadow .18s ease;
 }
 
-.tab:not(.active):hover{
-  background:#ececea;
-}
+.tab:not(.active):hover{background:#ececea}
 
 .tab.active{
   background:#111;
   color:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,.12);
+  box-shadow:0 2px 8px rgba(0,0,0,.12)
 }
 
 .tab-badge{
@@ -437,16 +230,9 @@ button{cursor:pointer}
   margin-left:6px;
   vertical-align:middle;
 }
+.tab-badge:empty{display:none}
 
-.tab-badge:empty{
-  display:none;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
 
 .btn{
   border:1px solid var(--line-strong);
@@ -458,35 +244,16 @@ button{cursor:pointer}
   text-transform:uppercase;
   letter-spacing:.2px;
   color:var(--text);
-  transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease
 }
 
-.btn:hover{
-  background:var(--hover);
-  border-color:#b8b8b8;
-  transform:translateY(-1px);
-}
+.btn:hover{background:var(--hover);border-color:#b8b8b8;transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
 
-.btn:active{
-  transform:translateY(0);
-}
+.btn-primary{background:#111;color:#fff;border-color:#000000}
+.btn-danger{color:#c0392b;border-color:#e8b4ac}
 
-.btn-primary{
-  background:#111;
-  color:#fff;
-  border-color:#000000;
-}
-
-.btn-danger{
-  color:#c0392b;
-  border-color:#e8b4ac;
-}
-
-.week-controls{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+.week-controls{display:flex;align-items:center;gap:8px}
 
 .week-controls input,
 .date-input{
@@ -494,21 +261,17 @@ button{cursor:pointer}
   border:1px solid var(--line-strong);
   border-radius:10px;
   background:#fff;
-  transition:border-color .18s ease,box-shadow .18s ease;
+  transition:border-color .18s ease,box-shadow .18s ease
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus,
-.date-input:focus,
-.week-controls input:focus,
-.auth-field input:focus{
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus,
+.date-input:focus,.week-controls input:focus,.auth-field input:focus{
   outline:none;
   border-color:#888;
   box-shadow:0 0 0 3px rgba(0,0,0,.06);
 }
 
-/* ============ CALENDÁRIO ============ */
+/* ============ CALENDÁRIO — estilo Google Agenda ============ */
 
 .calendar-wrapper{
   background:#fff;
@@ -516,13 +279,11 @@ button{cursor:pointer}
   border-radius:14px;
   overflow:auto;
   scrollbar-width:thin;
-  box-shadow:0 2px 12px rgba(0,0,0,.03);
+  box-shadow:0 2px 12px rgba(0,0,0,.03)
 }
 
 @media(min-width:900px){
-  .calendar-wrapper{
-    max-height:calc(100vh - 220px);
-  }
+  .calendar-wrapper{max-height:calc(100vh - 220px)}
 }
 
 .calendar{
@@ -554,9 +315,7 @@ button{cursor:pointer}
   text-transform:uppercase;
 }
 
-.grid-header.today{
-  background:#eef0ee;
-}
+.grid-header.today{background:#eef0ee}
 
 .grid-header small{
   display:block;
@@ -576,7 +335,7 @@ button{cursor:pointer}
   color:var(--muted);
   background:#fcfcfb;
   border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line);
+  border-bottom:1px solid var(--line)
 }
 
 .day-cell{
@@ -585,19 +344,12 @@ button{cursor:pointer}
   border-bottom:1px solid var(--line);
   background:#fff;
   position:relative;
+  /* sem z-index aqui de proposito, para o card sobrepor as linhas de baixo corretamente */
 }
 
-.day-cell:hover{
-  background:#fcfcfb;
-}
-
-.day-cell.today{
-  background:#fafcfa;
-}
-
-.day-cell.today:hover{
-  background:#f5f8f5;
-}
+.day-cell:hover{background:#fcfcfb}
+.day-cell.today{background:#fafcfa}
+.day-cell.today:hover{background:#f5f8f5}
 
 .event-card{
   position:absolute;
@@ -620,47 +372,14 @@ button{cursor:pointer}
   box-shadow:0 4px 10px rgba(0,0,0,.18);
 }
 
-.event-title{
-  font-weight:700;
-  font-size:10.5px;
-  line-height:1.25;
-  margin-bottom:2px;
-}
+.event-title{font-weight:700;font-size:10.5px;line-height:1.25;margin-bottom:2px}
+.event-time{font-size:9.5px;line-height:1.2;opacity:.85;font-weight:500}
+.event-owner{margin-top:2px;font-size:9.5px;line-height:1.2;opacity:.8;font-weight:500}
 
-.event-time{
-  font-size:9.5px;
-  line-height:1.2;
-  opacity:.85;
-  font-weight:500;
-}
-
-.event-owner{
-  margin-top:2px;
-  font-size:9.5px;
-  line-height:1.2;
-  opacity:.8;
-  font-weight:500;
-}
-
-.event-card.cat-time{
-  background:#992C1A;
-  color:#fff;
-}
-
-.event-card.cat-fornecedor{
-  background:#7247F6;
-  color:#fff;
-}
-
-.event-card.cat-cliente{
-  background:#46B276;
-  color:#fff;
-}
-
-.event-card.cat-lead{
-  background:#FCBF44;
-  color:#111111;
-}
+.event-card.cat-time{background:#992C1A;color:#fff}
+.event-card.cat-fornecedor{background:#7247F6;color:#fff}
+.event-card.cat-cliente{background:#46B276;color:#fff}
+.event-card.cat-lead{background:#FCBF44;color:#111111}
 
 .event-card.pending{
   background:#fff;
@@ -694,28 +413,10 @@ button{cursor:pointer}
   background:#fff;
 }
 
-.request-card-main{
-  display:flex;
-  align-items:flex-start;
-  gap:8px;
-}
-
-.request-title{
-  font-size:14px;
-  font-weight:800;
-}
-
-.request-meta{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:3px;
-  font-weight:500;
-}
-
-.request-actions{
-  display:flex;
-  gap:8px;
-}
+.request-card-main{display:flex;align-items:flex-start;gap:8px}
+.request-title{font-size:14px;font-weight:800}
+.request-meta{font-size:12px;color:var(--muted);margin-top:3px;font-weight:500}
+.request-actions{display:flex;gap:8px}
 
 .status-pill{
   font-size:10.5px;
@@ -729,9 +430,7 @@ button{cursor:pointer}
 
 /* ============ ASSENTOS ============ */
 
-.seats-view{
-  display:none;
-}
+.seats-view{display:none}
 
 .seat-toolbar{
   background:#fff;
@@ -743,13 +442,13 @@ button{cursor:pointer}
   justify-content:space-between;
   align-items:center;
   gap:15px;
-  flex-wrap:wrap;
+  flex-wrap:wrap
 }
 
 .rooms{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
-  gap:20px;
+  gap:20px
 }
 
 .room{
@@ -757,15 +456,10 @@ button{cursor:pointer}
   border:1px solid var(--line);
   border-radius:14px;
   padding:20px;
-  box-shadow:0 2px 12px rgba(0,0,0,.03);
+  box-shadow:0 2px 12px rgba(0,0,0,.03)
 }
 
-.room h3{
-  margin:0 0 18px;
-  font-size:15px;
-  font-weight:800;
-  text-transform:uppercase;
-}
+.room h3{margin:0 0 18px;font-size:15px;font-weight:800;text-transform:uppercase}
 
 .seats-row{
   position:relative;
@@ -790,19 +484,12 @@ button{cursor:pointer}
   justify-content:center;
   align-items:center;
   cursor:pointer;
-  transition:.15s;
+  transition:.15s
 }
 
-.seat-chair:hover{
-  transform:translateY(-2px);
-  border-color:#888;
-}
+.seat-chair:hover{transform:translateY(-2px);border-color:#888}
 
-.seat-chair.occupied{
-  background:#111;
-  color:#fff;
-  border-color:#000000;
-}
+.seat-chair.occupied{background:#111;color:#fff;border-color:#000000}
 
 .seat-status{
   font-size:10px;
@@ -822,10 +509,10 @@ button{cursor:pointer}
   position:fixed;
   inset:0;
   background:rgba(15,23,42,.55);
-  z-index:200;
+  z-index:100;
   align-items:center;
   justify-content:center;
-  padding:20px;
+  padding:20px
 }
 
 .modal{
@@ -835,7 +522,7 @@ button{cursor:pointer}
   max-height:90vh;
   overflow:auto;
   border-radius:15px;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  box-shadow:0 20px 60px rgba(0,0,0,.2)
 }
 
 .modal-header{
@@ -843,43 +530,19 @@ button{cursor:pointer}
   border-bottom:1px solid var(--line);
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  align-items:center
 }
 
-.modal-header h2{
-  margin:0;
-  font-size:17px;
-  font-weight:800;
-  text-transform:uppercase;
-}
+.modal-header h2{margin:0;font-size:17px;font-weight:800;text-transform:uppercase}
 
-.close{
-  border:0;
-  background:none;
-  font-size:25px;
-  color:var(--muted);
-  font-weight:400;
-}
+.close{border:0;background:none;font-size:25px;color:var(--muted);font-weight:400}
 
-.modal-body{
-  padding:20px;
-}
+.modal-body{padding:20px}
 
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-.form-group{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.form-group.full{
-  grid-column:1/-1;
-}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
 
 .form-group label{
   font-size:11px;
@@ -899,71 +562,26 @@ button{cursor:pointer}
   font-weight:500;
 }
 
-.form-group input[readonly]{
-  background:var(--surface-soft);
-  color:var(--muted);
-}
-
-.form-group textarea{
-  min-height:80px;
-  resize:vertical;
-}
+.form-group input[readonly]{background:var(--surface-soft);color:var(--muted)}
+.form-group textarea{min-height:80px;resize:vertical}
 
 .modal-footer{
   padding:15px 20px;
   border-top:1px solid var(--line);
   display:flex;
   justify-content:space-between;
-  gap:8px;
+  gap:8px
 }
 
-.footer-right{
-  display:flex;
-  gap:8px;
-}
+.footer-right{display:flex;gap:8px}
 
-.empty-state{
-  text-align:center;
-  padding:30px;
-  color:var(--muted);
-  font-weight:500;
-}
+.empty-state{text-align:center;padding:30px;color:var(--muted);font-weight:500}
 
-.brand-area{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.logo-upload{
-  width:42px;
-  height:42px;
-  border:1.5px dashed #b0b0b0;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  cursor:pointer;
-  background:var(--surface-soft);
-  flex:none;
-}
-
-.logo-upload input{
-  display:none;
-}
-
-.logo-upload img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-}
-
-.logo-upload span{
-  font-size:24px;
-  color:var(--muted);
-  font-weight:500;
-}
+.brand-area{display:flex;align-items:center;gap:12px}
+.logo-upload{width:42px;height:42px;border:1.5px dashed #b0b0b0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:var(--surface-soft);flex:none}
+.logo-upload input{display:none}
+.logo-upload img{width:100%;height:100%;object-fit:contain}
+.logo-upload span{font-size:24px;color:var(--muted);font-weight:500}
 
 .user-row{
   display:flex;
@@ -977,8 +595,18 @@ button{cursor:pointer}
   font-weight:500;
 }
 
-/* ============ Layout das mesas ============ */
+@media(max-width:700px){
+  .brand-area{gap:8px}
+  .logo{font-size:16px}
+  .logo-upload{width:36px;height:36px}
+  .container{padding:12px}
+  .header{padding:0 14px}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:auto}
+  .user-name-display{display:none}
+}
 
+/* ============ Layout das mesas ============ */
 .room-layout{
   min-height:255px;
   padding:12px 6px;
@@ -989,43 +617,16 @@ button{cursor:pointer}
   justify-items:center;
   gap:0;
 }
-
 .room-table-shape{
-  grid-column:1;
-  grid-row:2;
-  position:static;
-  transform:none;
-  width:150px;
-  height:88px;
-  border:2px solid #000;
-  border-radius:6px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:12px;
-  font-weight:900;
-  z-index:1;
+  grid-column:1;grid-row:2;position:static;transform:none;
+  width:150px;height:88px;border:2px solid #000;border-radius:6px;background:#fff;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:12px;font-weight:900;z-index:1;
 }
-
-.room-table-shape span{
-  color:#000;
-}
-
-.marketing-table{
-  width:175px;
-}
-
-.room-layout > .seats-row:nth-of-type(2){
-  grid-column:1;
-  grid-row:1;
-}
-
-.room-layout > .seats-row:nth-of-type(3){
-  grid-column:1;
-  grid-row:3;
-}
+.room-table-shape span{color:#000}
+.marketing-table{width:175px}
+.room-layout > .seats-row:nth-of-type(2){grid-column:1;grid-row:1}
+.room-layout > .seats-row:nth-of-type(3){grid-column:1;grid-row:3}
 
 .shift-panel{
   border:1px solid var(--line);
@@ -1034,132 +635,16 @@ button{cursor:pointer}
   margin-top:12px;
   background:var(--surface-soft);
 }
-
-.shift-title{
-  text-align:center;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.8px;
-  margin-bottom:4px;
-  text-transform:uppercase;
-}
-
-.shift-layout{
-  min-height:210px;
-  grid-template-rows:64px 82px 64px;
-}
-
-.shift-layout .seat-chair{
-  width:105px;
-  min-height:50px;
-  font-size:11px;
-}
-
-.shift-layout .seat-status{
-  font-size:9px;
-}
-
-@media(max-width:900px){
-
-  :root{
-    --sidebar-width:250px;
-  }
-
-  #app-shell{
-    padding-left:0;
-  }
-
-  .sidebar{
-    box-shadow:10px 0 30px rgba(0,0,0,.08);
-  }
-
-  .sidebar:not(.mobile-open){
-    transform:translateX(calc(-1 * var(--sidebar-width)));
-  }
-
-  .sidebar-toggle{
-    left:14px;
-  }
-
-  .sidebar.collapsed + .sidebar-toggle{
-    left:14px;
-  }
-
-  .sidebar-overlay{
-    display:block;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .22s ease;
-  }
-
-  .sidebar.mobile-open ~ .sidebar-overlay{
-    opacity:1;
-    pointer-events:auto;
-  }
-
-  .header{
-    padding-left:68px;
-  }
-}
-
-@media(max-width:700px){
-
-  .brand-area{
-    gap:8px;
-  }
-
-  .logo{
-    font-size:16px;
-  }
-
-  .logo-upload{
-    width:36px;
-    height:36px;
-  }
-
-  .container{
-    padding:12px;
-  }
-
-  .header{
-    padding-right:14px;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-  .form-group.full{
-    grid-column:auto;
-  }
-
-  .user-name-display{
-    display:none;
-  }
-
-  .rooms{
-    grid-template-columns:1fr;
-  }
-
-  .room{
-    padding:15px;
-  }
-
-  .seat-chair{
-    width:100px;
-  }
-
-  .shift-layout .seat-chair{
-    width:90px;
-  }
-}
+.shift-title{text-align:center;font-size:11px;font-weight:900;letter-spacing:.8px;margin-bottom:4px;text-transform:uppercase}
+.shift-layout{min-height:210px;grid-template-rows:64px 82px 64px}
+.shift-layout .seat-chair{width:105px;min-height:50px;font-size:11px}
+.shift-layout .seat-status{font-size:9px}
+@media(max-width:700px){.shift-layout .seat-chair{width:90px}}
 
 </style>
 </head>
 
 <body>
-
-<!-- AUTENTICAÇÃO -->
 
 <section id="view-auth">
   <div class="auth-card">
@@ -1168,24 +653,20 @@ button{cursor:pointer}
     <div class="auth-error" id="auth-error"></div>
 
     <form onsubmit="handleAuthSubmit(event)">
-
       <div id="auth-signup-fields" style="display:none">
-
         <div class="auth-field">
           <label>Nome</label>
           <input id="auth-first-name" placeholder="Nome">
         </div>
-
         <div class="auth-field">
           <label>Sobrenome</label>
           <input id="auth-last-name" placeholder="Sobrenome">
         </div>
-
       </div>
 
       <div class="auth-field">
-        <label>Email</label>
-        <input id="auth-email" type="email" placeholder="seu@email.com" required>
+        <label>Email corporativo</label>
+        <input id="auth-email" type="email" placeholder="nome@edificabpo.com.br" required>
       </div>
 
       <div class="auth-field">
@@ -1194,702 +675,350 @@ button{cursor:pointer}
       </div>
 
       <div class="auth-field" id="auth-confirm-field" style="display:none">
-
         <label>Confirmar senha</label>
         <input id="auth-password-confirm" type="password" minlength="6">
-
       </div>
 
-      <button type="submit" class="auth-submit" id="auth-submit-btn">
-        Entrar
-      </button>
-
+      <button type="submit" class="auth-submit" id="auth-submit-btn">Entrar</button>
     </form>
 
     <div class="auth-switch">
       <span id="auth-toggle-text">Não tem conta?</span>
-      <a id="auth-toggle-link" onclick="setAuthMode(authMode === 'login' ? 'signup' : 'login')">
-        Criar conta
-      </a>
+      <a id="auth-toggle-link" onclick="setAuthMode(authMode === 'login' ? 'signup' : 'login')">Criar conta</a>
     </div>
-
   </div>
 </section>
 
-
-<!-- APP -->
-
 <div id="app-shell" style="display:none">
 
-  <!-- SIDEBAR -->
+<header class="header">
+  <div class="brand-area">
+    <label class="logo-upload" title="Adicionar logo">
+      <input id="logo-input" type="file" accept="image/*" onchange="handleLogoUpload(event)">
+      <img id="brand-logo" alt="Logo" style="display:none">
+      <span id="logo-placeholder">+</span>
+    </label>
+    <div class="logo">LOJA CONCEITO BE</div>
+  </div>
 
-  <aside id="sidebar" class="sidebar">
+  <div class="header-right">
+    <span id="user-name-display" class="user-name-display"></span>
+    <button class="btn" onclick="handleLogout()">Sair</button>
+  </div>
+</header>
 
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-title">
-        LOJA CONCEITO BE
-      </div>
+<main class="container">
 
-      <div class="sidebar-brand-subtitle">
-        Coworking Pro BE
-      </div>
+  <div class="toolbar">
+
+    <div class="tabs">
+      <button id="btn-tab-coworking" class="tab active" onclick="switchTab('coworking')">Coworking Pro BE</button>
+      <button id="btn-tab-seats" class="tab" onclick="switchTab('seats')">Mapeamento de lugares</button>
+      <button id="btn-tab-requests" class="tab" onclick="switchTab('requests')">Solicitações<span id="requests-badge" class="tab-badge"></span></button>
     </div>
 
-
-    <div class="sidebar-section-title">
-      Gestão
+    <div class="actions">
+      <button class="btn" onclick="openCollabModal()">Colaboradores</button>
+      <button class="btn admin-only" style="display:none" onclick="openUsersModal()">Usuários</button>
+      <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">Visualização: Semanal</button>
+      <button class="btn" onclick="exportAgendaPNG()">Exportar PNG</button>
+      <button class="btn btn-primary" onclick="openMeetingModal()">+ Nova reunião</button>
     </div>
+  </div>
 
-    <nav class="sidebar-menu">
+  <!-- AGENDA -->
 
-      <button class="sidebar-button requests" onclick="switchTab('requests'); closeSidebarMobile();">
-
-        <span class="sidebar-icon">✓</span>
-
-        <span>Solicitações</span>
-
-        <span id="sidebar-requests-badge" class="sidebar-badge"></span>
-
-      </button>
-
-
-      <button class="sidebar-button" onclick="openCollabModal(); closeSidebarMobile();">
-
-        <span class="sidebar-icon">👥</span>
-
-        <span>Colaboradores</span>
-
-      </button>
-
-
-      <button id="sidebar-users-button" class="sidebar-button admin-only" style="display:none" onclick="openUsersModal(); closeSidebarMobile();">
-
-        <span class="sidebar-icon">⚙</span>
-
-        <span>Usuários</span>
-
-      </button>
-
-    </nav>
-
-
-    <div class="sidebar-bottom">
-
-      <div id="sidebar-user-name" class="sidebar-user"></div>
-
-      <button class="sidebar-button sidebar-logout" onclick="handleLogout()">
-
-        <span class="sidebar-icon">↪</span>
-
-        <span>Sair</span>
-
-      </button>
-
-    </div>
-
-  </aside>
-
-
-  <button id="sidebar-toggle" class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir menu">
-    ☰
-  </button>
-
-  <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebarMobile()"></div>
-
-
-  <!-- HEADER -->
-
-  <header class="header">
-
-    <div class="brand-area">
-
-      <div class="logo">
-        LOJA CONCEITO BE
-      </div>
-
-    </div>
-
-    <div class="header-right">
-
-      <span id="user-name-display" class="user-name-display"></span>
-
-    </div>
-
-  </header>
-
-
-  <main class="container">
+  <section id="view-coworking">
 
     <div class="toolbar">
+      <div class="week-controls">
+        <button class="btn" onclick="changePeriod(-1)">←</button>
+        <input id="week-picker" type="date" onchange="renderDashboard()">
+        <button class="btn" onclick="changePeriod(1)">→</button>
+      </div>
+      <strong id="week-label"></strong>
+    </div>
 
-      <div class="tabs">
+    <div class="calendar-wrapper">
+      <div id="weekly-table" class="calendar agenda-export-area"></div>
+    </div>
 
-        <button id="btn-tab-coworking" class="tab active" onclick="switchTab('coworking')">
-          Coworking Pro BE
-        </button>
+  </section>
 
-        <button id="btn-tab-seats" class="tab" onclick="switchTab('seats')">
-          Mapeamento de lugares
-        </button>
+  <!-- MESAS -->
 
+  <section id="view-seats" class="seats-view">
+
+    <div class="seat-toolbar">
+      <div>
+        <strong>Mapa de mesas</strong>
+        <div style="font-size:12px;color:var(--muted)">Clique em um assento para alocar ou editar.</div>
       </div>
 
+      <div class="tabs" style="margin: 0 auto;">
+         <button id="btn-shift-morning" class="tab active" onclick="toggleSeatShift('morning')">Manhã</button>
+         <button id="btn-shift-afternoon" class="tab" onclick="toggleSeatShift('afternoon')">Tarde</button>
+      </div>
 
-      <div class="actions">
+      <input id="seat-search-date" class="date-input" type="date" onchange="renderSeats()">
+    </div>
 
-        <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">
-          Visualização: Semanal
-        </button>
+    <div class="rooms">
 
-        <button class="btn" onclick="exportAgendaPNG()">
-          Exportar PNG
-        </button>
+      <div class="room">
+        <h3>Meeting 01</h3>
+        <div class="shift-panel">
+          <div class="shift-title">Manhã</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 01</span></div>
+            <div id="m1-morning-top" class="seats-row"></div>
+            <div id="m1-morning-bottom" class="seats-row"></div>
+          </div>
+        </div>
+        <div class="shift-panel">
+          <div class="shift-title">Tarde</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 01</span></div>
+            <div id="m1-afternoon-top" class="seats-row"></div>
+            <div id="m1-afternoon-bottom" class="seats-row"></div>
+          </div>
+        </div>
+      </div>
 
-        <button class="btn btn-primary" onclick="openMeetingModal()">
-          + Nova reunião
-        </button>
+      <div class="room">
+        <h3>Meeting 02</h3>
+        <div class="shift-panel">
+          <div class="shift-title">Manhã</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 02</span></div>
+            <div id="m2-morning-top" class="seats-row"></div>
+            <div id="m2-morning-bottom" class="seats-row"></div>
+          </div>
+        </div>
+        <div class="shift-panel">
+          <div class="shift-title">Tarde</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape"><span>MEETING 02</span></div>
+            <div id="m2-afternoon-top" class="seats-row"></div>
+            <div id="m2-afternoon-bottom" class="seats-row"></div>
+          </div>
+        </div>
+      </div>
 
+      <div class="room">
+        <h3>Mesa Marketing</h3>
+        <div class="shift-panel">
+          <div class="shift-title">Manhã</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
+            <div id="m3-morning-top" class="seats-row"></div>
+            <div id="m3-morning-bottom" class="seats-row"></div>
+          </div>
+        </div>
+        <div class="shift-panel">
+          <div class="shift-title">Tarde</div>
+          <div class="room-layout shift-layout">
+            <div class="room-table-shape marketing-table"><span>MARKETING</span></div>
+            <div id="m3-afternoon-top" class="seats-row"></div>
+            <div id="m3-afternoon-bottom" class="seats-row"></div>
+          </div>
+        </div>
       </div>
 
     </div>
 
+  </section>
 
-    <!-- AGENDA -->
+  <!-- SOLICITAÇÕES -->
 
-    <section id="view-coworking">
+  <section id="view-requests" style="display:none">
+    <div id="requests-list"></div>
+  </section>
 
-      <div class="toolbar">
+</main>
 
-        <div class="week-controls">
-
-          <button class="btn" onclick="changePeriod(-1)">←</button>
-
-          <input id="week-picker" type="date" onchange="renderDashboard()">
-
-          <button class="btn" onclick="changePeriod(1)">→</button>
-
-        </div>
-
-        <strong id="week-label"></strong>
-
-      </div>
-
-
-      <div class="calendar-wrapper">
-
-        <div id="weekly-table" class="calendar agenda-export-area"></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- MESAS -->
-
-    <section id="view-seats" class="seats-view">
-
-      <div class="seat-toolbar">
-
-        <div>
-
-          <strong>Mapa de mesas</strong>
-
-          <div style="font-size:12px;color:var(--muted)">
-            Clique em um assento para alocar ou editar.
-          </div>
-
-        </div>
-
-
-        <div class="tabs" style="margin:0 auto;">
-
-          <button id="btn-shift-morning" class="tab active" onclick="toggleSeatShift('morning')">
-            Manhã
-          </button>
-
-          <button id="btn-shift-afternoon" class="tab" onclick="toggleSeatShift('afternoon')">
-            Tarde
-          </button>
-
-        </div>
-
-
-        <input id="seat-search-date" class="date-input" type="date" onchange="renderSeats()">
-
-      </div>
-
-
-      <div class="rooms">
-
-        <div class="room">
-
-          <h3>Meeting 01</h3>
-
-          <div class="shift-panel">
-
-            <div class="shift-title">Manhã</div>
-
-            <div class="room-layout shift-layout">
-
-              <div class="room-table-shape">
-                <span>MEETING 01</span>
-              </div>
-
-              <div id="m1-morning-top" class="seats-row"></div>
-              <div id="m1-morning-bottom" class="seats-row"></div>
-
-            </div>
-
-          </div>
-
-
-          <div class="shift-panel">
-
-            <div class="shift-title">Tarde</div>
-
-            <div class="room-layout shift-layout">
-
-              <div class="room-table-shape">
-                <span>MEETING 01</span>
-              </div>
-
-              <div id="m1-afternoon-top" class="seats-row"></div>
-              <div id="m1-afternoon-bottom" class="seats-row"></div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="room">
-
-          <h3>Meeting 02</h3>
-
-          <div class="shift-panel">
-
-            <div class="shift-title">Manhã</div>
-
-            <div class="room-layout shift-layout">
-
-              <div class="room-table-shape">
-                <span>MEETING 02</span>
-              </div>
-
-              <div id="m2-morning-top" class="seats-row"></div>
-              <div id="m2-morning-bottom" class="seats-row"></div>
-
-            </div>
-
-          </div>
-
-
-          <div class="shift-panel">
-
-            <div class="shift-title">Tarde</div>
-
-            <div class="room-layout shift-layout">
-
-              <div class="room-table-shape">
-                <span>MEETING 02</span>
-              </div>
-
-              <div id="m2-afternoon-top" class="seats-row"></div>
-              <div id="m2-afternoon-bottom" class="seats-row"></div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="room">
-
-          <h3>Mesa Marketing</h3>
-
-          <div class="shift-panel">
-
-            <div class="shift-title">Manhã</div>
-
-            <div class="room-layout shift-layout">
-
-              <div class="room-table-shape marketing-table">
-                <span>MARKETING</span>
-              </div>
-
-              <div id="m3-morning-top" class="seats-row"></div>
-              <div id="m3-morning-bottom" class="seats-row"></div>
-
-            </div>
-
-          </div>
-
-
-          <div class="shift-panel">
-
-            <div class="shift-title">Tarde</div>
-
-            <div class="room-layout shift-layout">
-
-              <div class="room-table-shape marketing-table">
-                <span>MARKETING</span>
-              </div>
-
-              <div id="m3-afternoon-top" class="seats-row"></div>
-              <div id="m3-afternoon-bottom" class="seats-row"></div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- SOLICITAÇÕES -->
-
-    <section id="view-requests" style="display:none">
-
-      <div id="requests-list"></div>
-
-    </section>
-
-  </main>
-
-</div>
-
+</div><!-- /#app-shell -->
 
 <!-- MODAL REUNIÃO -->
 
 <div id="meeting-modal" class="modal-backdrop">
-
   <div class="modal">
-
     <div class="modal-header">
-
-      <h2 id="modal-title-text">
-        Agendar Reunião
-      </h2>
-
+      <h2 id="modal-title-text">Agendar Reunião</h2>
       <button class="close" onclick="closeMeetingModal()">×</button>
-
     </div>
 
-
     <form id="meeting-form" onsubmit="saveMeeting(event)">
-
       <div class="modal-body">
-
         <input id="m-id" type="hidden">
 
         <div class="form-grid">
 
-          <div class="form-group full" style="display:flex;gap:14px;flex-wrap:wrap;">
-
-            <div class="form-group" style="flex:1;min-width:120px;">
-
-              <label>Departamento</label>
-
-              <select id="m-team-select"></select>
-
+          <div class="form-group full" style="display:flex; gap:14px; flex-wrap:wrap;">
+            <div class="form-group" style="flex:1; min-width:120px;">
+               <label>Departamento</label>
+               <select id="m-team-select"></select>
             </div>
-
-
-            <div class="form-group" style="flex:3;min-width:200px;">
-
-              <label>Título da reunião</label>
-
-              <input id="m-title" required placeholder="Ex.: Sprint Comercial">
-
+            <div class="form-group" style="flex:3; min-width:200px;">
+               <label>Título da reunião</label>
+               <input id="m-title" required placeholder="Ex.: Sprint Comercial">
             </div>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Reunião com</label>
-
             <select id="m-category" required>
-
               <option value="time">Time (interno)</option>
               <option value="fornecedor">Fornecedor</option>
               <option value="cliente">Cliente</option>
               <option value="lead">Lead</option>
-
             </select>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Solicitante</label>
-
             <input id="m-owner-display" readonly>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Nº de pessoas</label>
-
             <input id="m-attendees" type="number" min="1" value="1">
-
           </div>
 
-
           <div class="form-group">
-
             <label>Data</label>
-
             <input id="m-date" type="date" required>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Recorrência</label>
-
             <select id="m-recurrence">
-
               <option value="none">Sem recorrência</option>
               <option value="daily">Diária</option>
               <option value="weekly">Semanal</option>
               <option value="biweekly">Quinzenal</option>
               <option value="monthly">Mensal</option>
-
             </select>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Início</label>
-
             <input id="m-start" type="time" required>
-
           </div>
-
 
           <div class="form-group">
-
             <label>Fim</label>
-
             <input id="m-end" type="time" required>
-
           </div>
-
 
           <div class="form-group full">
-
             <label>Participantes / observações</label>
-
             <textarea id="m-participants" placeholder="Participantes, observações ou informações adicionais"></textarea>
-
           </div>
 
         </div>
-
       </div>
-
 
       <div class="modal-footer">
-
-        <button type="button" id="btn-delete-meeting" class="btn btn-danger" style="display:none" onclick="deleteMeeting()">
-          Excluir
-        </button>
-
+        <button type="button" id="btn-delete-meeting" class="btn btn-danger" style="display:none" onclick="deleteMeeting()">Excluir</button>
         <div class="footer-right">
-
-          <button type="button" class="btn" onclick="closeMeetingModal()">
-            Cancelar
-          </button>
-
-          <button type="submit" class="btn btn-primary" id="btn-save-meeting">
-            Salvar
-          </button>
-
+          <button type="button" class="btn" onclick="closeMeetingModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-meeting">Salvar</button>
         </div>
-
       </div>
-
     </form>
-
   </div>
-
 </div>
-
 
 <!-- MODAL ASSENTO -->
 
 <div id="seat-modal" class="modal-backdrop">
-
   <div class="modal">
-
     <div class="modal-header">
-
-      <h2 id="seat-modal-title">
-        Alocar Assento
-      </h2>
-
+      <h2 id="seat-modal-title">Alocar Assento</h2>
       <button class="close" onclick="closeSeatModal()">×</button>
-
     </div>
 
-
     <form onsubmit="saveSeatAllocation(event)">
-
       <div class="modal-body">
-
         <input id="s-table-id" type="hidden">
         <input id="s-seat-code" type="hidden">
         <input id="s-existing-id" type="hidden">
 
-
         <div class="form-grid">
-
           <div class="form-group full">
-
             <label>Colaborador</label>
-
             <select id="s-collab-select" required></select>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Data inicial</label>
-
             <input id="s-start-date" type="date" required>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Período</label>
-
             <select id="s-period">
-
               <option value="morning">Manhã</option>
               <option value="afternoon">Tarde</option>
-
             </select>
-
           </div>
 
-
           <div class="form-group">
-
             <label>Recorrência</label>
-
             <select id="s-recurrence">
-
               <option value="single">Apenas este dia</option>
               <option value="daily">Todos os dias úteis</option>
               <option value="weekly">Semanal</option>
               <option value="biweekly">Quinzenal</option>
-
             </select>
-
           </div>
 
-
           <div class="form-group full">
-
             <label>Dia de exceção</label>
-
             <select id="s-except-day">
-
               <option value="none">Sem exceção</option>
               <option value="1">Segunda-feira</option>
               <option value="2">Terça-feira</option>
               <option value="3">Quarta-feira</option>
               <option value="4">Quinta-feira</option>
               <option value="5">Sexta-feira</option>
-
             </select>
-
           </div>
-
         </div>
-
       </div>
-
 
       <div class="modal-footer">
-
-        <button type="button" id="btn-remove-seat" class="btn btn-danger" style="display:none" onclick="removeSeatAllocation()">
-          Remover
-        </button>
-
+        <button type="button" id="btn-remove-seat" class="btn btn-danger" style="display:none" onclick="removeSeatAllocation()">Remover</button>
         <div class="footer-right">
-
-          <button type="button" class="btn" onclick="closeSeatModal()">
-            Cancelar
-          </button>
-
-          <button type="submit" class="btn btn-primary">
-            Salvar
-          </button>
-
+          <button type="button" class="btn" onclick="closeSeatModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
-
       </div>
-
     </form>
-
   </div>
-
 </div>
-
 
 <!-- MODAL COLABORADORES -->
 
 <div id="collab-modal" class="modal-backdrop">
-
   <div class="modal">
-
     <div class="modal-header">
-
       <h2>Colaboradores</h2>
-
       <button class="close" onclick="closeCollabModal()">×</button>
-
     </div>
 
-
     <div class="modal-body">
-
       <form onsubmit="saveCollaborator(event)">
-
         <div class="form-grid">
-
           <div class="form-group">
-
             <label>Nome</label>
-
             <input id="c-name" required placeholder="Nome do colaborador">
-
           </div>
 
-
           <div class="form-group">
-
             <label>Equipe</label>
-
             <select id="c-team" required>
-
               <option value="">Selecione o time</option>
               <option value="CSUM">CSUM</option>
               <option value="CSUA">CSUA</option>
@@ -1897,72 +1026,40 @@ button{cursor:pointer}
               <option value="EDFE">EDFE</option>
               <option value="ENGO">ENGO</option>
               <option value="ENGE">ENGE</option>
-
             </select>
-
           </div>
-
         </div>
 
-
         <br>
-
-        <button class="btn btn-primary" type="submit">
-          + Adicionar colaborador
-        </button>
-
+        <button class="btn btn-primary" type="submit">+ Adicionar colaborador</button>
       </form>
 
-
       <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
-
       <div id="collab-list"></div>
-
     </div>
-
   </div>
-
 </div>
 
-
-<!-- MODAL USUÁRIOS -->
+<!-- MODAL USUÁRIOS (admin) -->
 
 <div id="users-modal" class="modal-backdrop">
-
   <div class="modal">
-
     <div class="modal-header">
-
       <h2>Usuários</h2>
-
       <button class="close" onclick="closeUsersModal()">×</button>
-
     </div>
-
     <div class="modal-body">
-
       <div id="users-list"></div>
-
     </div>
-
   </div>
-
 </div>
-
 
 <script>
 
 const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
-
 const ADMIN_EMAIL = 'gabriel.s@edificabpo.com.br';
-
-/*
- * Não existe mais restrição de domínio.
- * Qualquer email válido pode criar uma conta.
- */
-
-const CORP_DOMAIN = '';
+const CORP_DOMAIN = '@edificabpo.com.br';
 
 let db = null;
 
@@ -1981,46 +1078,30 @@ const hours = [
   '13:00','14:00','15:00','16:00','17:00','18:00'
 ];
 
-const CATEGORY_COLORS = {
-  time:'#992C1A',
-  fornecedor:'#7247F6',
-  cliente:'#46B276',
-  lead:'#FCBF44'
-};
+const CATEGORY_COLORS = {time:'#992C1A', fornecedor:'#7247F6', cliente:'#46B276', lead:'#FCBF44'};
+const CATEGORY_LABELS = {time:'Time (interno)', fornecedor:'Fornecedor', cliente:'Cliente', lead:'Lead'};
 
-const CATEGORY_LABELS = {
-  time:'Time (interno)',
-  fornecedor:'Fornecedor',
-  cliente:'Cliente',
-  lead:'Lead'
-};
-
-function categoryColor(cat){
-  return CATEGORY_COLORS[cat] || '#646464';
-}
-
-function categoryLabel(cat){
-  return CATEGORY_LABELS[cat] || cat || '';
-}
+function categoryColor(cat){ return CATEGORY_COLORS[cat] || '#646464'; }
+function categoryLabel(cat){ return CATEGORY_LABELS[cat] || cat || ''; }
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
 
-function localDateString(date = new Date()){
+function localDateString(date = new Date()) {
   return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
 }
 
-function dateFromInput(value){
+function dateFromInput(value) {
   return new Date(`${value}T00:00:00`);
 }
 
-function addDays(date,amount){
+function addDays(date,amount) {
   const d = new Date(date);
   d.setDate(d.getDate()+amount);
   return d;
 }
 
-function startOfWeek(date){
+function startOfWeek(date) {
   const d = new Date(date);
   const day = d.getDay();
   d.setDate(d.getDate() - day);
@@ -2028,56 +1109,16 @@ function startOfWeek(date){
   return d;
 }
 
-function minutes(time){
+function minutes(time) {
   const [h,m] = String(time || '').slice(0,5).split(':').map(Number);
   return (h || 0)*60 + (m || 0);
 }
 
-function esc(value){
+function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g,char => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[char]));
 }
-
-
-/* =========================
-   SIDEBAR
-========================= */
-
-function toggleSidebar(){
-
-  const sidebar = $('sidebar');
-  const app = $('app-shell');
-
-  if(window.innerWidth <= 900){
-
-    sidebar.classList.toggle('mobile-open');
-
-  }else{
-
-    sidebar.classList.toggle('collapsed');
-    app.classList.toggle('sidebar-collapsed');
-
-  }
-
-}
-
-function closeSidebarMobile(){
-
-  const sidebar = $('sidebar');
-
-  if(window.innerWidth <= 900){
-
-    sidebar.classList.remove('mobile-open');
-
-  }
-
-}
-
 
 /* =========================
    INICIALIZAÇÃO
@@ -2086,3067 +1127,1086 @@ function closeSidebarMobile(){
 document.addEventListener('DOMContentLoaded', init);
 
 async function init(){
-
   const today = localDateString();
-
   $('week-picker').value = today;
   $('seat-search-date').value = today;
 
+  loadSavedLogo();
   toggleSeatShift('morning');
   setAuthMode('login');
 
   if(!window.supabase){
-
-    $('view-auth').innerHTML =
-      '<div class="auth-card"><p>Não foi possível carregar a conexão com o servidor. Recarregue a página.</p></div>';
-
+    $('view-auth').innerHTML = '<div class="auth-card"><p>Não foi possível carregar a conexão com o servidor. Recarregue a página.</p></div>';
     $('view-auth').style.display = 'flex';
-
     return;
-
   }
 
-  db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   db.auth.onAuthStateChange(async (event, session) => {
-
     currentUser = session?.user || null;
 
     if(currentUser){
-
       await loadCurrentProfile();
-
     }else{
-
       currentProfile = null;
-
     }
 
     refreshAuthUI();
 
-
     if(currentUser && currentProfile){
-
       try{
-
         await loadData();
         setupRealtime();
-
       }catch(error){
-
         console.error(error);
-
       }
-
     }else{
-
       collaborators = [];
       meetings = [];
       seatAllocations = [];
-
       realtimeChannels.forEach(ch => db.removeChannel(ch));
-
       realtimeChannels = [];
-
     }
-
   });
-
 }
-
 
 /* =========================
    AUTENTICAÇÃO
 ========================= */
 
 function setAuthMode(mode){
-
   authMode = mode;
-
   const isSignup = mode === 'signup';
-
   $('auth-title').textContent = isSignup ? 'Criar conta' : 'Entrar';
-
-  $('auth-signup-fields').style.display =
-    isSignup ? 'block' : 'none';
-
-  $('auth-confirm-field').style.display =
-    isSignup ? 'flex' : 'none';
-
-  $('auth-submit-btn').textContent =
-    isSignup ? 'Criar conta' : 'Entrar';
-
-  $('auth-toggle-text').textContent =
-    isSignup ? 'Já tem conta?' : 'Não tem conta?';
-
-  $('auth-toggle-link').textContent =
-    isSignup ? 'Entrar' : 'Criar conta';
-
+  $('auth-signup-fields').style.display = isSignup ? 'block' : 'none';
+  $('auth-confirm-field').style.display = isSignup ? 'flex' : 'none';
+  $('auth-submit-btn').textContent = isSignup ? 'Criar conta' : 'Entrar';
+  $('auth-toggle-text').textContent = isSignup ? 'Já tem conta?' : 'Não tem conta?';
+  $('auth-toggle-link').textContent = isSignup ? 'Entrar' : 'Criar conta';
   $('auth-error').textContent = '';
-
   $('auth-error').style.color = '#c0392b';
-
 }
 
-
 async function handleAuthSubmit(event){
-
   event.preventDefault();
-
   $('auth-error').style.color = '#c0392b';
   $('auth-error').textContent = '';
 
   const email = $('auth-email').value.trim();
   const password = $('auth-password').value;
 
-
-/*
- * REMOVIDA A VALIDAÇÃO:
- *
- * if(!email.toLowerCase().endsWith(CORP_DOMAIN))
- *
- * Agora qualquer email válido aceito pelo Supabase pode ser utilizado.
- */
-
+  if(!email.toLowerCase().endsWith(CORP_DOMAIN)){
+    $('auth-error').textContent = `Use seu email corporativo (${CORP_DOMAIN}).`;
+    return;
+  }
 
   if(authMode === 'signup'){
-
-    const firstName =
-      $('auth-first-name').value.trim();
-
-    const lastName =
-      $('auth-last-name').value.trim();
-
-    const confirmPassword =
-      $('auth-password-confirm').value;
-
+    const firstName = $('auth-first-name').value.trim();
+    const lastName = $('auth-last-name').value.trim();
+    const confirmPassword = $('auth-password-confirm').value;
 
     if(!firstName || !lastName){
-
-      $('auth-error').textContent =
-        'Preencha nome e sobrenome.';
-
+      $('auth-error').textContent = 'Preencha nome e sobrenome.';
       return;
-
     }
-
-
     if(password !== confirmPassword){
-
-      $('auth-error').textContent =
-        'As senhas não coincidem.';
-
+      $('auth-error').textContent = 'As senhas não coincidem.';
       return;
-
     }
-
-
     if(password.length < 6){
-
-      $('auth-error').textContent =
-        'A senha deve ter ao menos 6 caracteres.';
-
+      $('auth-error').textContent = 'A senha deve ter ao menos 6 caracteres.';
       return;
-
     }
-
 
     const {error} = await db.auth.signUp({
-
       email,
       password,
-
-      options:{
-        data:{
-          first_name:firstName,
-          last_name:lastName
-        }
-      }
-
+      options:{ data:{ first_name:firstName, last_name:lastName } }
     });
-
 
     if(error){
-
-      $('auth-error').textContent =
-        error.message;
-
+      $('auth-error').textContent = error.message;
       return;
-
     }
 
-
-    $('auth-error').style.color =
-      '#2f8f5e';
-
-    $('auth-error').textContent =
-      'Conta criada! Se for solicitado, confirme pelo email recebido e faça login.';
-
+    $('auth-error').style.color = '#2f8f5e';
+    $('auth-error').textContent = 'Conta criada! Se for solicitado, confirme pelo email recebido e faça login.';
     setAuthMode('login');
-
     return;
-
   }
 
-
-  const {error} =
-    await db.auth.signInWithPassword({
-      email,
-      password
-    });
-
-
+  const {error} = await db.auth.signInWithPassword({email, password});
   if(error){
-
-    $('auth-error').textContent =
-      'Email ou senha inválidos.';
-
+    $('auth-error').textContent = 'Email ou senha inválidos.';
   }
-
 }
-
 
 async function handleLogout(){
-
-  if(db){
-
-    await db.auth.signOut();
-
-  }
-
+  if(db) await db.auth.signOut();
 }
-
 
 async function loadCurrentProfile(){
-
-  if(!db || !currentUser){
-
-    currentProfile = null;
-
-    return;
-
-  }
-
-
-  const {data,error} =
-    await db
-      .from('profiles')
-      .select('*')
-      .eq('id',currentUser.id)
-      .single();
-
-
+  if(!db || !currentUser){ currentProfile = null; return; }
+  const {data, error} = await db.from('profiles').select('*').eq('id', currentUser.id).single();
   if(error){
-
     console.error(error);
-
     currentProfile = null;
-
     return;
-
   }
-
-
   currentProfile = data;
-
 }
-
 
 function refreshAuthUI(){
-
-  const authed =
-    !!currentUser && !!currentProfile;
-
-
-  $('view-auth').style.display =
-    authed ? 'none' : 'flex';
-
-  $('app-shell').style.display =
-    authed ? 'block' : 'none';
-
+  const authed = !!currentUser && !!currentProfile;
+  $('view-auth').style.display = authed ? 'none' : 'flex';
+  $('app-shell').style.display = authed ? 'block' : 'none';
 
   if(authed){
-
-    const displayName =
-      `${currentProfile.first_name} ${currentProfile.last_name}`.trim()
-      || currentUser.email;
-
-
-    $('user-name-display').textContent =
-      displayName;
-
-
-    $('sidebar-user-name').textContent =
-      currentUser.email;
-
-
-    document
-      .querySelectorAll('.admin-only')
-      .forEach(el => {
-
-        el.style.display =
-          currentProfile.is_admin ? '' : 'none';
-
-      });
-
+    $('user-name-display').textContent = `${currentProfile.first_name} ${currentProfile.last_name}`.trim() || currentUser.email;
+    document.querySelectorAll('.admin-only').forEach(el => {
+      el.style.display = currentProfile.is_admin ? '' : 'none';
+    });
   }
-
 }
-
 
 /* =========================
    SUPABASE
 ========================= */
 
 async function loadData(){
-
   if(!db) return;
 
-
-  const [
-    collaboratorsResult,
-    meetingsResult,
-    seatsResult
-  ] = await Promise.all([
-
-    db
-      .from('collaborators')
-      .select('*')
-      .order('name'),
-
-    db
-      .from('meetings')
-      .select('*')
-      .order('date')
-      .order('start'),
-
-    db
-      .from('seat_allocations')
-      .select('*')
-      .order('startDate')
-
+  const [collaboratorsResult, meetingsResult, seatsResult] = await Promise.all([
+    db.from('collaborators').select('*').order('name'),
+    db.from('meetings').select('*').order('date').order('start'),
+    db.from('seat_allocations').select('*').order('startDate')
   ]);
 
+  if(collaboratorsResult.error) throw collaboratorsResult.error;
+  if(meetingsResult.error) throw meetingsResult.error;
+  if(seatsResult.error) throw seatsResult.error;
 
-  if(collaboratorsResult.error)
-    throw collaboratorsResult.error;
-
-  if(meetingsResult.error)
-    throw meetingsResult.error;
-
-  if(seatsResult.error)
-    throw seatsResult.error;
-
-
-  collaborators =
-    collaboratorsResult.data || [];
-
-  meetings =
-    meetingsResult.data || [];
-
-  seatAllocations =
-    seatsResult.data || [];
-
+  collaborators = collaboratorsResult.data || [];
+  meetings = meetingsResult.data || [];
+  seatAllocations = seatsResult.data || [];
 
   renderDashboard();
   renderSeats();
   renderRequestsList();
   updateRequestsBadge();
-
 }
-
 
 function setupRealtime(){
+  if(!db || realtimeChannels.length) return;
 
-  if(!db || realtimeChannels.length)
-    return;
+  ['collaborators','meetings','seat_allocations'].forEach(table => {
+    const channel = db
+      .channel(`be-${table}-${Date.now()}`)
+      .on('postgres_changes', {event:'*', schema:'public', table}, async () => {
+        try{
+          await loadData();
+        }catch(error){
+          console.error(error);
+        }
+      })
+      .subscribe();
 
-
-  ['collaborators','meetings','seat_allocations']
-    .forEach(table => {
-
-      const channel = db
-        .channel(`be-${table}-${Date.now()}`)
-        .on(
-          'postgres_changes',
-          {
-            event:'*',
-            schema:'public',
-            table
-          },
-          async () => {
-
-            try{
-
-              await loadData();
-
-            }catch(error){
-
-              console.error(error);
-
-            }
-
-          }
-        )
-        .subscribe();
-
-
-      realtimeChannels.push(channel);
-
-    });
-
+    realtimeChannels.push(channel);
+  });
 }
-
 
 /* =========================
    ABAS
 ========================= */
 
 function switchTab(tab){
-
-  const views = {
-    coworking:'view-coworking',
-    seats:'view-seats',
-    requests:'view-requests'
-  };
-
+  const views = {coworking:'view-coworking', seats:'view-seats', requests:'view-requests'};
 
   Object.keys(views).forEach(key => {
-
-    const btn =
-      $(`btn-tab-${key}`);
-
-    if(btn)
-      btn.classList.toggle(
-        'active',
-        key === tab
-      );
-
-
-    $(views[key]).style.display =
-      key === tab ? 'block' : 'none';
-
+    const btn = $(`btn-tab-${key}`);
+    if(btn) btn.classList.toggle('active', key === tab);
+    $(views[key]).style.display = key === tab ? 'block' : 'none';
   });
 
-
-  if(tab === 'coworking')
-    renderDashboard();
-
-  else if(tab === 'seats')
-    renderSeats();
-
-  else if(tab === 'requests')
-    renderRequestsList();
-
+  if(tab === 'coworking') renderDashboard();
+  else if(tab === 'seats') renderSeats();
+  else if(tab === 'requests') renderRequestsList();
 }
 
+function toggleSeatShift(shift) {
+  $('btn-shift-morning').classList.toggle('active', shift === 'morning');
+  $('btn-shift-afternoon').classList.toggle('active', shift === 'afternoon');
 
-function toggleSeatShift(shift){
-
-  $('btn-shift-morning')
-    .classList.toggle(
-      'active',
-      shift === 'morning'
-    );
-
-  $('btn-shift-afternoon')
-    .classList.toggle(
-      'active',
-      shift === 'afternoon'
-    );
-
-
-  document
-    .querySelectorAll('.shift-panel')
-    .forEach(panel => {
-
-      const isMorning =
-        panel
-          .querySelector('.shift-title')
-          .textContent
-          .includes('Manhã');
-
-
-      panel.style.display =
-        (
-          shift === 'morning' &&
-          isMorning
-        ) ||
-        (
-          shift === 'afternoon' &&
-          !isMorning
-        )
-          ? 'block'
-          : 'none';
-
-    });
-
+  document.querySelectorAll('.shift-panel').forEach(panel => {
+    const isMorning = panel.querySelector('.shift-title').textContent.includes('Manhã');
+    panel.style.display = (shift === 'morning' && isMorning) || (shift === 'afternoon' && !isMorning) ? 'block' : 'none';
+  });
 }
-
 
 /* =========================
    CALENDÁRIO
 ========================= */
 
 function toggleAgendaView(){
-
-  agendaView =
-    agendaView === 'weekly'
-      ? 'daily'
-      : 'weekly';
-
-
-  $('view-toggle-btn').textContent =
-    agendaView === 'weekly'
-      ? 'Visualização: Semanal'
-      : 'Visualização: Diária';
-
-
+  agendaView = agendaView === 'weekly' ? 'daily' : 'weekly';
+  $('view-toggle-btn').textContent = agendaView === 'weekly' ? 'Visualização: Semanal' : 'Visualização: Diária';
   renderDashboard();
-
 }
-
 
 function changePeriod(amount){
-
-  const input =
-    $('week-picker');
-
-
-  const date =
-    dateFromInput(
-      input.value || localDateString()
-    );
-
-
-  date.setDate(
-    date.getDate()
-    +
-    amount *
-    (
-      agendaView === 'weekly'
-        ? 7
-        : 1
-    )
-  );
-
-
-  input.value =
-    localDateString(date);
-
-
+  const input = $('week-picker');
+  const date = dateFromInput(input.value || localDateString());
+  date.setDate(date.getDate() + amount * (agendaView === 'weekly' ? 7 : 1));
+  input.value = localDateString(date);
   renderDashboard();
-
 }
 
+function changeWeek(amount){ changePeriod(amount); }
 
-function changeWeek(amount){
-  changePeriod(amount);
-}
+function meetingOccursOnDate(meeting, targetDate){
+  if(!meeting || !meeting.date) return false;
 
+  const start = dateFromInput(meeting.date);
+  const target = dateFromInput(targetDate);
 
-function meetingOccursOnDate(
-  meeting,
-  targetDate
-){
-
-  if(!meeting || !meeting.date)
-    return false;
-
-
-  const start =
-    dateFromInput(meeting.date);
-
-  const target =
-    dateFromInput(targetDate);
-
-
-  if(target < start)
-    return false;
-
+  if(target < start) return false;
 
   switch(meeting.recurrence || 'none'){
-
     case 'none':
       return meeting.date === targetDate;
-
     case 'daily':
-      return target.getDay() >= 1 &&
-             target.getDay() <= 5;
-
+      return target.getDay() >= 1 && target.getDay() <= 5;
     case 'weekly':
       return target.getDay() === start.getDay();
-
     case 'biweekly':{
-
-      const difference =
-        Math.floor(
-          (target-start)/86400000
-        );
-
-      return difference >= 0 &&
-             difference % 14 === 0;
-
+      const difference = Math.floor((target-start) / 86400000);
+      return difference >= 0 && difference % 14 === 0;
     }
-
     case 'monthly':
       return target.getDate() === start.getDate();
-
     default:
       return false;
-
   }
-
 }
-
 
 function syncAgendaViewport(){
-
-  const calendar =
-    $('weekly-table');
-
-  const wrapper =
-    document.querySelector(
-      '.calendar-wrapper'
-    );
-
-
-  if(!calendar || !wrapper)
-    return;
-
+  const calendar = $('weekly-table');
+  const wrapper = document.querySelector('.calendar-wrapper');
+  if(!calendar || !wrapper) return;
 
   if(window.innerWidth >= 900){
-
-    const top =
-      wrapper.getBoundingClientRect().top;
-
-
-    const available =
-      Math.max(
-        340,
-        window.innerHeight - top - 16
-      );
-
-
-    wrapper.style.height =
-      `${available}px`;
-
+    const top = wrapper.getBoundingClientRect().top;
+    const available = Math.max(340, window.innerHeight - top - 16);
+    wrapper.style.height = `${available}px`;
 
     const headerRowHeight = 46;
-
-
-    const slotHeight =
-      Math.max(
-        44,
-        (available-headerRowHeight)
-        /hours.length
-      );
-
-
-    calendar.style.setProperty(
-      '--slot-height',
-      `${slotHeight}px`
-    );
-
+    const slotHeight = Math.max(44, (available - headerRowHeight) / hours.length);
+    calendar.style.setProperty('--slot-height', `${slotHeight}px`);
   }else{
-
     wrapper.style.height = '';
-
-    calendar.style.removeProperty(
-      '--slot-height'
-    );
-
+    calendar.style.removeProperty('--slot-height');
   }
-
 }
 
+window.addEventListener('resize', syncAgendaViewport);
 
-window.addEventListener(
-  'resize',
-  syncAgendaViewport
-);
+function eventMarkup(meeting, hourStart){
+  const start = minutes(meeting.start);
+  const end = minutes(meeting.end);
+  const safeEnd = Math.max(end, start + 15);
+  const durationHours = (safeEnd - start) / 60;
+  const offsetPercent = ((start - hourStart) / 60) * 100;
+  const encoded = encodeURIComponent(JSON.stringify(meeting));
+  const isPending = meeting.status === 'pending';
+  const catClass = `cat-${meeting.category || 'time'}`;
+  const catColor = categoryColor(meeting.category);
+  const teamBadge = meeting.team ? `${esc(meeting.team)} · ` : '';
+  const ownerName = meeting.requested_by_name || meeting.owner || '—';
 
-
-function eventMarkup(
-  meeting,
-  hourStart
-){
-
-  const start =
-    minutes(meeting.start);
-
-  const end =
-    minutes(meeting.end);
-
-
-  const safeEnd =
-    Math.max(
-      end,
-      start + 15
-    );
-
-
-  const durationHours =
-    (safeEnd-start)/60;
-
-
-  const offsetPercent =
-    ((start-hourStart)/60)*100;
-
-
-  const encoded =
-    encodeURIComponent(
-      JSON.stringify(meeting)
-    );
-
-
-  const isPending =
-    meeting.status === 'pending';
-
-
-  const catClass =
-    `cat-${meeting.category || 'time'}`;
-
-
-  const catColor =
-    categoryColor(meeting.category);
-
-
-  const teamBadge =
-    meeting.team
-      ? `${esc(meeting.team)} · `
-      : '';
-
-
-  const ownerName =
-    meeting.requested_by_name ||
-    meeting.owner ||
-    '—';
-
-
-  return `
-    <div
-      class="event-card ${catClass}${isPending ? ' pending' : ''}"
-      style="
-        top:${Math.max(0,offsetPercent)}%;
-        --event-duration-hours:${durationHours};
-        --cat-color:${catColor};
-      "
-      onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')"
-    >
-
-      <div class="event-title">
-
-        ${
-          isPending
-            ? '<span class="cat-dot"></span>'
-            : ''
-        }
-
-        ${teamBadge}${esc(meeting.title)}
-
-      </div>
-
-      <div class="event-time">
-        ${esc(String(meeting.start || '').slice(0,5))}
-        -
-        ${esc(String(meeting.end || '').slice(0,5))}
-      </div>
-
-      <div class="event-owner">
-        ${esc(ownerName)}
-      </div>
-
-    </div>
-  `;
-
+  return `<div class="event-card ${catClass}${isPending ? ' pending' : ''}"
+    style="top:${Math.max(0,offsetPercent)}%;--event-duration-hours:${durationHours};--cat-color:${catColor};"
+    onclick="event.stopPropagation();openMeetingModalFromEncoded('${encoded}')">
+    <div class="event-title">${isPending ? '<span class="cat-dot"></span>' : ''}${teamBadge}${esc(meeting.title)}</div>
+    <div class="event-time">${esc(String(meeting.start || '').slice(0,5))} - ${esc(String(meeting.end || '').slice(0,5))}</div>
+    <div class="event-owner">${esc(ownerName)}</div>
+  </div>`;
 }
-
 
 function renderDashboard(){
+  const container = $('weekly-table');
+  if(!container) return;
 
-  const container =
-    $('weekly-table');
-
-
-  if(!container)
-    return;
-
-
-  const selected =
-    $('week-picker').value ||
-    localDateString();
-
-
-  const selectedDate =
-    dateFromInput(selected);
-
-
-  const todayStr =
-    localDateString();
-
+  const selected = $('week-picker').value || localDateString();
+  const selectedDate = dateFromInput(selected);
+  const todayStr = localDateString();
 
   if(agendaView === 'daily'){
 
-    const target =
-      localDateString(selectedDate);
+    const target = localDateString(selectedDate);
+    const dayName = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][selectedDate.getDay()];
 
+    $('week-label').textContent = `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
 
-    const dayName =
-      ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
-      [selectedDate.getDay()];
-
-
-    $('week-label').textContent =
-      `${dayName} - ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}`;
-
-
-    let html =
-      '<div class="grid-header">Hora</div>';
-
-
-    html += `
-      <div class="grid-header${target === todayStr ? ' today' : ''}">
-        <strong>${dayName}</strong><br>
-        <small>
-          ${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}
-        </small>
-      </div>
-    `;
-
+    let html = '<div class="grid-header">Hora</div>';
+    html += `<div class="grid-header${target === todayStr ? ' today' : ''}"><strong>${dayName}</strong><br><small>${pad(selectedDate.getDate())}/${pad(selectedDate.getMonth()+1)}</small></div>`;
 
     hours.forEach(hour => {
+      const hourStart = minutes(hour);
+      const hourEnd = hourStart + 60;
 
-      const hourStart =
-        minutes(hour);
+      html += `<div class="time-slot">${hour}</div>`;
 
-      const hourEnd =
-        hourStart+60;
+      const events = meetings
+        .filter(m => m.status !== 'rejected')
+        .filter(m => meetingOccursOnDate(m,target))
+        .filter(m => {
+          const start = minutes(m.start);
+          return start >= hourStart && start < hourEnd;
+        })
+        .sort((a,b) => minutes(a.start) - minutes(b.start));
 
-
-      html += `
-        <div class="time-slot">
-          ${hour}
-        </div>
-      `;
-
-
-      const events =
-        meetings
-          .filter(
-            m => m.status !== 'rejected'
-          )
-          .filter(
-            m => meetingOccursOnDate(
-              m,
-              target
-            )
-          )
-          .filter(m => {
-
-            const start =
-              minutes(m.start);
-
-            return start >= hourStart &&
-                   start < hourEnd;
-
-          })
-          .sort(
-            (a,b) =>
-              minutes(a.start) -
-              minutes(b.start)
-          );
-
-
-      html += `
-        <div
-          class="day-cell${target === todayStr ? ' today' : ''}"
-          onclick="handleSlotClick('${target}','${hour}')"
-        >
-      `;
-
-
-      events.forEach(meeting => {
-
-        html +=
-          eventMarkup(
-            meeting,
-            hourStart
-          );
-
-      });
-
-
+      html += `<div class="day-cell${target === todayStr ? ' today' : ''}" onclick="handleSlotClick('${target}','${hour}')">`;
+      events.forEach(meeting => html += eventMarkup(meeting, hourStart));
       html += '</div>';
-
     });
 
-
-    container.className =
-      'calendar agenda-export-area daily-calendar';
-
-
-    container.innerHTML =
-      html;
-
-
-    requestAnimationFrame(
-      syncAgendaViewport
-    );
-
-
+    container.className = 'calendar agenda-export-area daily-calendar';
+    container.innerHTML = html;
+    requestAnimationFrame(syncAgendaViewport);
     return;
-
   }
 
+  const sunday = startOfWeek(selectedDate);
+  const days = Array.from({length:7},(_,index)=>addDays(sunday,index));
 
-  const sunday =
-    startOfWeek(selectedDate);
+  $('week-label').textContent = `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
 
-
-  const days =
-    Array.from(
-      {length:7},
-      (_,index) =>
-        addDays(sunday,index)
-    );
-
-
-  $('week-label').textContent =
-    `${pad(days[0].getDate())}/${pad(days[0].getMonth()+1)} - ${pad(days[6].getDate())}/${pad(days[6].getMonth()+1)}`;
-
-
-  let html =
-    '<div class="grid-header">Hora</div>';
-
-
-  const names =
-    ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-
+  let html = '<div class="grid-header">Hora</div>';
+  const names = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
   days.forEach((day,index) => {
-
-    const dStr =
-      localDateString(day);
-
-
-    html += `
-      <div class="grid-header${dStr === todayStr ? ' today' : ''}">
-        <strong>${names[index]}</strong><br>
-        <small>
-          ${pad(day.getDate())}/${pad(day.getMonth()+1)}
-        </small>
-      </div>
-    `;
-
+    const dStr = localDateString(day);
+    html += `<div class="grid-header${dStr === todayStr ? ' today' : ''}"><strong>${names[index]}</strong><br><small>${pad(day.getDate())}/${pad(day.getMonth()+1)}</small></div>`;
   });
-
 
   hours.forEach(hour => {
+    const hourStart = minutes(hour);
+    const hourEnd = hourStart + 60;
 
-    const hourStart =
-      minutes(hour);
-
-    const hourEnd =
-      hourStart+60;
-
-
-    html += `
-      <div class="time-slot">
-        ${hour}
-      </div>
-    `;
-
+    html += `<div class="time-slot">${hour}</div>`;
 
     days.forEach(day => {
+      const target = localDateString(day);
 
-      const target =
-        localDateString(day);
+      const events = meetings
+        .filter(meeting => meeting.status !== 'rejected')
+        .filter(meeting => meetingOccursOnDate(meeting,target))
+        .filter(meeting => {
+          const start = minutes(meeting.start);
+          return start >= hourStart && start < hourEnd;
+        })
+        .sort((a,b) => minutes(a.start) - minutes(b.start));
 
-
-      const events =
-        meetings
-          .filter(
-            meeting =>
-              meeting.status !== 'rejected'
-          )
-          .filter(
-            meeting =>
-              meetingOccursOnDate(
-                meeting,
-                target
-              )
-          )
-          .filter(meeting => {
-
-            const start =
-              minutes(meeting.start);
-
-            return start >= hourStart &&
-                   start < hourEnd;
-
-          })
-          .sort(
-            (a,b) =>
-              minutes(a.start) -
-              minutes(b.start)
-          );
-
-
-      html += `
-        <div
-          class="day-cell${target === todayStr ? ' today' : ''}"
-          onclick="handleSlotClick('${target}','${hour}')"
-        >
-      `;
-
-
-      events.forEach(meeting => {
-
-        html +=
-          eventMarkup(
-            meeting,
-            hourStart
-          );
-
-      });
-
-
+      html += `<div class="day-cell${target === todayStr ? ' today' : ''}" onclick="handleSlotClick('${target}','${hour}')">`;
+      events.forEach(meeting => html += eventMarkup(meeting, hourStart));
       html += '</div>';
-
     });
-
   });
 
-
-  container.className =
-    'calendar agenda-export-area';
-
-
-  container.innerHTML =
-    html;
-
-
-  requestAnimationFrame(
-    syncAgendaViewport
-  );
-
+  container.className = 'calendar agenda-export-area';
+  container.innerHTML = html;
+  requestAnimationFrame(syncAgendaViewport);
 }
-
 
 function exportAgendaPNG(){
-
   if(!window.html2canvas){
-
-    const script =
-      document.createElement('script');
-
-
-    script.src =
-      'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-
-
-    script.onload =
-      () => exportAgendaPNG();
-
-
-    script.onerror =
-      () =>
-        alert(
-          'Não foi possível carregar o exportador PNG.'
-        );
-
-
-    document.head.appendChild(
-      script
-    );
-
+    const script=document.createElement('script');
+    script.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    script.onload=()=>exportAgendaPNG();
+    script.onerror=()=>alert('Não foi possível carregar o exportador PNG.');
+    document.head.appendChild(script);
     return;
-
   }
-
-
-  const area =
-    document.querySelector(
-      '.agenda-export-area'
-    );
-
-
-  if(!area)
-    return;
-
-
-  html2canvas(
-    area,
-    {
-      backgroundColor:'#ffffff',
-      scale:2,
-      useCORS:true,
-      logging:false
-    }
-  )
-  .then(canvas => {
-
-    const link =
-      document.createElement('a');
-
-
-    const date =
-      $('week-picker').value ||
-      localDateString();
-
-
-    link.download =
-      `coworking-pro-be-${date}-${agendaView}.png`;
-
-
-    link.href =
-      canvas.toDataURL('image/png');
-
-
+  const area=document.querySelector('.agenda-export-area');
+  if(!area) return;
+  html2canvas(area,{backgroundColor:'#ffffff',scale:2,useCORS:true,logging:false}).then(canvas=>{
+    const link=document.createElement('a');
+    const date=$('week-picker').value || localDateString();
+    link.download=`coworking-pro-be-${date}-${agendaView}.png`;
+    link.href=canvas.toDataURL('image/png');
     link.click();
-
-  })
-  .catch(error => {
-
+  }).catch(error=>{
     console.error(error);
-
-    alert(
-      'Não foi possível exportar a agenda em PNG.'
-    );
-
+    alert('Não foi possível exportar a agenda em PNG.');
   });
-
 }
 
-
-function handleSlotClick(date,hour){
-
-  const next =
-    parseInt(
-      hour.slice(0,2),
-      10
-    )+1;
-
-
-  if(next > 19)
-    return;
-
-
-  openMeetingModal({
-    date,
-    start:hour,
-    end:`${pad(next)}:00`
-  });
-
+function handleLogoUpload(event){
+  const file=event.target.files?.[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    localStorage.setItem('be_logo',reader.result);
+    applySavedLogo(reader.result);
+  };
+  reader.readAsDataURL(file);
 }
 
+function applySavedLogo(src){
+  const img=$('brand-logo');
+  const placeholder=$('logo-placeholder');
+  if(!img) return;
+  img.src=src;
+  img.style.display='block';
+  if(placeholder) placeholder.style.display='none';
+}
+
+function loadSavedLogo(){
+  const src=localStorage.getItem('be_logo');
+  if(src) applySavedLogo(src);
+}
+
+function handleSlotClick(date, hour){
+  const next = parseInt(hour.slice(0,2), 10) + 1;
+  if(next > 19) return;
+  openMeetingModal({date, start:hour, end:`${pad(next)}:00`});
+}
 
 /* =========================
    REUNIÕES
 ========================= */
 
-function fillTeamSelect(){
+function fillTeamSelect() {
+  const select = $('m-team-select');
+  const defaultTeams = ['CSUM', 'CSUA', 'CEO', 'EDFE', 'ENGO', 'ENGE'];
+  const collTeams = collaborators.map(c => c.team).filter(t => defaultTeams.includes(t));
+  const allTeams = [...new Set([...defaultTeams, ...collTeams])];
 
-  const select =
-    $('m-team-select');
-
-
-  const defaultTeams =
-    [
-      'CSUM',
-      'CSUA',
-      'CEO',
-      'EDFE',
-      'ENGO',
-      'ENGE'
-    ];
-
-
-  const collTeams =
-    collaborators
-      .map(c => c.team)
-      .filter(
-        t =>
-          defaultTeams.includes(t)
-      );
-
-
-  const allTeams =
-    [
-      ...new Set(
-        [
-          ...defaultTeams,
-          ...collTeams
-        ]
-      )
-    ];
-
-
-  select.innerHTML =
-    '<option value="">Sem departamento</option>' +
-    allTeams
-      .map(
-        t =>
-          `<option value="${esc(t)}">${esc(t)}</option>`
-      )
-      .join('');
-
+  select.innerHTML = '<option value="">Sem departamento</option>' +
+    allTeams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
 }
-
 
 function currentUserDisplayName(){
-
-  if(!currentProfile)
-    return currentUser?.email || '';
-
-
-  return (
-    `${currentProfile.first_name} ${currentProfile.last_name}`.trim()
-    ||
-    currentProfile.email
-    ||
-    currentUser?.email
-    ||
-    ''
-  );
-
+  if(!currentProfile) return currentUser?.email || '';
+  return `${currentProfile.first_name} ${currentProfile.last_name}`.trim() || currentProfile.email || currentUser?.email || '';
 }
 
-
 function openMeetingModal(data = null){
-
   fillTeamSelect();
 
   $('meeting-form').reset();
 
+  $('m-id').value = data?.id || '';
+  $('m-title').value = data?.title || '';
+  $('m-team-select').value = data?.team || '';
+  $('m-category').value = data?.category || 'time';
+  $('m-owner-display').value = data?.id ? (data.requested_by_name || data.owner || '') : currentUserDisplayName();
+  $('m-attendees').value = data?.attendees_count || 1;
+  $('m-participants').value = data?.participants || '';
+  $('m-date').value = data?.date || $('week-picker').value || localDateString();
+  $('m-start').value = data?.start ? String(data.start).slice(0,5) : '';
+  $('m-end').value = data?.end ? String(data.end).slice(0,5) : '';
+  $('m-recurrence').value = data?.recurrence || 'none';
 
-  $('m-id').value =
-    data?.id || '';
+  const isAdmin = !!currentProfile?.is_admin;
+  const isOwner = !!data?.id && data.requested_by === currentUser?.id;
+  const canEdit = !data?.id || isAdmin || (isOwner && data.status === 'pending');
 
-  $('m-title').value =
-    data?.title || '';
+  $('modal-title-text').textContent = data?.id
+    ? (canEdit ? 'Editar solicitação' : 'Detalhes da reunião')
+    : (isAdmin ? 'Nova reunião' : 'Solicitar reunião');
 
-  $('m-team-select').value =
-    data?.team || '';
+  $('meeting-form').querySelectorAll('input,select,textarea').forEach(el => {
+    if(el.id === 'm-owner-display') return;
+    el.disabled = !canEdit;
+  });
 
-  $('m-category').value =
-    data?.category || 'time';
+  $('btn-save-meeting').style.display = canEdit ? '' : 'none';
+  $('btn-delete-meeting').style.display = (data?.id && canEdit) ? 'inline-flex' : 'none';
 
-  $('m-owner-display').value =
-    data?.id
-      ? (
-          data.requested_by_name ||
-          data.owner ||
-          ''
-        )
-      : currentUserDisplayName();
-
-
-  $('m-attendees').value =
-    data?.attendees_count || 1;
-
-
-  $('m-participants').value =
-    data?.participants || '';
-
-
-  $('m-date').value =
-    data?.date ||
-    $('week-picker').value ||
-    localDateString();
-
-
-  $('m-start').value =
-    data?.start
-      ? String(data.start).slice(0,5)
-      : '';
-
-
-  $('m-end').value =
-    data?.end
-      ? String(data.end).slice(0,5)
-      : '';
-
-
-  $('m-recurrence').value =
-    data?.recurrence || 'none';
-
-
-  const isAdmin =
-    !!currentProfile?.is_admin;
-
-
-  const isOwner =
-    !!data?.id &&
-    data.requested_by === currentUser?.id;
-
-
-  const canEdit =
-    !data?.id ||
-    isAdmin ||
-    (
-      isOwner &&
-      data.status === 'pending'
-    );
-
-
-  $('modal-title-text').textContent =
-    data?.id
-      ? (
-          canEdit
-            ? 'Editar solicitação'
-            : 'Detalhes da reunião'
-        )
-      : (
-          isAdmin
-            ? 'Nova reunião'
-            : 'Solicitar reunião'
-        );
-
-
-  $('meeting-form')
-    .querySelectorAll(
-      'input,select,textarea'
-    )
-    .forEach(el => {
-
-      if(el.id === 'm-owner-display')
-        return;
-
-      el.disabled =
-        !canEdit;
-
-    });
-
-
-  $('btn-save-meeting').style.display =
-    canEdit ? '' : 'none';
-
-
-  $('btn-delete-meeting').style.display =
-    (
-      data?.id &&
-      canEdit
-    )
-      ? 'inline-flex'
-      : 'none';
-
-
-  $('meeting-modal').style.display =
-    'flex';
-
+  $('meeting-modal').style.display = 'flex';
 }
-
 
 function openMeetingModalFromEncoded(encoded){
-
   try{
-
-    openMeetingModal(
-      JSON.parse(
-        decodeURIComponent(encoded)
-      )
-    );
-
+    openMeetingModal(JSON.parse(decodeURIComponent(encoded)));
   }catch(error){
-
     console.error(error);
-
-    alert(
-      'Não foi possível abrir a reunião.'
-    );
-
+    alert('Não foi possível abrir a reunião.');
   }
-
 }
-
 
 function closeMeetingModal(){
-
-  $('meeting-modal').style.display =
-    'none';
-
+  $('meeting-modal').style.display = 'none';
 }
 
-
-function meetingConflict(
-  candidate,
-  editingId = ''
-){
-
-  const start =
-    minutes(candidate.start);
-
-  const end =
-    minutes(candidate.end);
-
+function meetingConflict(candidate, editingId = ''){
+  const start = minutes(candidate.start);
+  const end = minutes(candidate.end);
 
   if(end <= start){
-
     return 'O horário final deve ser maior que o horário inicial.';
-
   }
 
-
-  const base =
-    dateFromInput(candidate.date);
-
+  const base = dateFromInput(candidate.date);
 
   for(let i=0;i<366;i++){
+    const day = localDateString(addDays(base,i));
 
-    const day =
-      localDateString(
-        addDays(base,i)
-      );
-
-
-    if(
-      !meetingOccursOnDate(
-        candidate,
-        day
-      )
-    )
-      continue;
-
+    if(!meetingOccursOnDate(candidate, day)) continue;
 
     for(const existing of meetings){
+      if(editingId && String(existing.id) === String(editingId)) continue;
+      if(existing.status === 'rejected') continue;
+      if(!meetingOccursOnDate(existing, day)) continue;
 
-      if(
-        editingId &&
-        String(existing.id) ===
-        String(editingId)
-      )
-        continue;
-
-
-      if(existing.status === 'rejected')
-        continue;
-
-
-      if(
-        !meetingOccursOnDate(
-          existing,
-          day
-        )
-      )
-        continue;
-
-
-      if(
-        start < minutes(existing.end) &&
-        end > minutes(existing.start)
-      ){
-
+      if(start < minutes(existing.end) && end > minutes(existing.start)){
         return `Conflito com "${existing.title}" em ${day.split('-').reverse().join('/')} (${String(existing.start).slice(0,5)}-${String(existing.end).slice(0,5)}).`;
-
       }
-
     }
-
   }
-
 
   return null;
-
 }
-
 
 async function saveMeeting(event){
-
   event.preventDefault();
 
-
   if(!db || !currentUser){
-
-    alert(
-      'Você precisa estar logado para salvar.'
-    );
-
+    alert('Você precisa estar logado para salvar.');
     return;
-
   }
 
-
-  const id =
-    $('m-id').value;
-
-
-  const ownerName =
-    currentUserDisplayName();
-
+  const id = $('m-id').value;
+  const ownerName = currentUserDisplayName();
 
   const data = {
-
-    title:
-      $('m-title').value.trim(),
-
-    owner:
-      id
-        ? $('m-owner-display').value
-        : ownerName,
-
-    team:
-      $('m-team-select').value,
-
-    category:
-      $('m-category').value,
-
-    attendees_count:
-      parseInt(
-        $('m-attendees').value,
-        10
-      ) || 1,
-
-    participants:
-      $('m-participants').value.trim(),
-
-    date:
-      $('m-date').value,
-
-    start:
-      $('m-start').value,
-
-    end:
-      $('m-end').value,
-
-    recurrence:
-      $('m-recurrence').value
-
+    title: $('m-title').value.trim(),
+    owner: id ? $('m-owner-display').value : ownerName,
+    team: $('m-team-select').value,
+    category: $('m-category').value,
+    attendees_count: parseInt($('m-attendees').value, 10) || 1,
+    participants: $('m-participants').value.trim(),
+    date: $('m-date').value,
+    start: $('m-start').value,
+    end: $('m-end').value,
+    recurrence: $('m-recurrence').value
   };
 
-
   if(!id){
-
-    data.requested_by =
-      currentUser.id;
-
-    data.requested_by_name =
-      ownerName;
-
-    data.requested_by_email =
-      currentUser.email;
-
-    data.status =
-      currentProfile?.is_admin
-        ? 'approved'
-        : 'pending';
-
+    data.requested_by = currentUser.id;
+    data.requested_by_name = ownerName;
+    data.requested_by_email = currentUser.email;
+    data.status = currentProfile?.is_admin ? 'approved' : 'pending';
   }
 
-
-  if(
-    !data.title ||
-    !data.date ||
-    !data.start ||
-    !data.end
-  ){
-
-    alert(
-      'Preencha todos os campos obrigatórios.'
-    );
-
+  if(!data.title || !data.date || !data.start || !data.end){
+    alert('Preencha todos os campos obrigatórios.');
     return;
-
   }
 
-
-  const conflict =
-    meetingConflict(
-      data,
-      id
-    );
-
-
+  const conflict = meetingConflict(data, id);
   if(conflict){
-
     alert(conflict);
-
     return;
-
   }
-
 
   try{
-
     let response;
 
-
     if(id){
-
-      response =
-        await db
-          .from('meetings')
-          .update(data)
-          .eq('id',id)
-          .select()
-          .single();
-
+      response = await db.from('meetings').update(data).eq('id', id).select().single();
     }else{
-
-      response =
-        await db
-          .from('meetings')
-          .insert([data])
-          .select()
-          .single();
-
+      response = await db.from('meetings').insert([data]).select().single();
     }
 
-
-    if(response.error)
-      throw response.error;
-
+    if(response.error) throw response.error;
 
     closeMeetingModal();
-
     await loadData();
 
-
-    if(
-      !id &&
-      !currentProfile?.is_admin
-    ){
-
-      notifyAdminByEmail(
-        response.data
-      );
-
-
-      alert(
-        'Solicitação enviada! O administrador vai revisar e aprovar.'
-      );
-
+    if(!id && !currentProfile?.is_admin){
+      notifyAdminByEmail(response.data);
+      alert('Solicitação enviada! O administrador vai revisar e aprovar.');
     }
 
-
   }catch(error){
-
     console.error(error);
-
-    alert(
-      'Erro ao salvar reunião: ' +
-      error.message
-    );
-
+    alert('Erro ao salvar reunião: ' + error.message);
   }
-
 }
-
 
 function notifyAdminByEmail(meeting){
-
-  const subject =
-    encodeURIComponent(
-      `Nova solicitação de reunião: ${meeting.title}`
-    );
-
-
-  const body =
-    encodeURIComponent(
-
-      'Uma nova reunião foi solicitada no Coworking Pro BE.\n\n' +
-
-      `Título: ${meeting.title}\n` +
-
-      `Solicitante: ${meeting.requested_by_name} (${meeting.requested_by_email})\n` +
-
-      `Reunião com: ${categoryLabel(meeting.category)}\n` +
-
-      `Data: ${meeting.date.split('-').reverse().join('/')}\n` +
-
-      `Horário: ${String(meeting.start).slice(0,5)} - ${String(meeting.end).slice(0,5)}\n` +
-
-      `Pessoas: ${meeting.attendees_count}\n\n` +
-
-      'Acesse o sistema para aprovar ou rejeitar.'
-
-    );
-
-
-  window.open(
-    `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`,
-    '_blank'
+  const subject = encodeURIComponent(`Nova solicitação de reunião: ${meeting.title}`);
+  const body = encodeURIComponent(
+    'Uma nova reunião foi solicitada no Coworking Pro BE.\n\n' +
+    `Título: ${meeting.title}\n` +
+    `Solicitante: ${meeting.requested_by_name} (${meeting.requested_by_email})\n` +
+    `Reunião com: ${categoryLabel(meeting.category)}\n` +
+    `Data: ${meeting.date.split('-').reverse().join('/')}\n` +
+    `Horário: ${String(meeting.start).slice(0,5)} - ${String(meeting.end).slice(0,5)}\n` +
+    `Pessoas: ${meeting.attendees_count}\n\n` +
+    'Acesse o sistema para aprovar ou rejeitar.'
   );
-
+  window.open(`mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`, '_blank');
 }
-
 
 async function deleteMeeting(){
-
-  const id =
-    $('m-id').value;
-
-
-  if(
-    !id ||
-    !confirm(
-      'Tem certeza que deseja excluir esta reunião?'
-    )
-  )
-    return;
-
-
-  if(!db)
-    return;
-
+  const id = $('m-id').value;
+  if(!id || !confirm('Tem certeza que deseja excluir esta reunião?')) return;
+  if(!db) return;
 
   try{
-
-    const {error} =
-      await db
-        .from('meetings')
-        .delete()
-        .eq('id',id);
-
-
-    if(error)
-      throw error;
-
-
+    const {error} = await db.from('meetings').delete().eq('id',id);
+    if(error) throw error;
     closeMeetingModal();
-
     await loadData();
-
-
   }catch(error){
-
-    alert(
-      'Erro ao excluir reunião: ' +
-      error.message
-    );
-
+    alert('Erro ao excluir reunião: ' + error.message);
   }
-
 }
-
 
 /* =========================
    SOLICITAÇÕES
 ========================= */
 
 function renderRequestsList(){
+  const container = $('requests-list');
+  if(!container) return;
 
-  const container =
-    $('requests-list');
-
-
-  if(!container)
-    return;
-
-
-  const pending =
-    meetings
-      .filter(
-        m => m.status === 'pending'
-      )
-      .sort(
-        (a,b) =>
-          (
-            a.date +
-            String(a.start)
-          )
-          .localeCompare(
-            b.date +
-            String(b.start)
-          )
-      );
-
+  const pending = meetings
+    .filter(m => m.status === 'pending')
+    .sort((a,b) => (a.date+String(a.start)).localeCompare(b.date+String(b.start)));
 
   if(!pending.length){
-
-    container.innerHTML =
-      '<div class="empty-state">Nenhuma solicitação pendente.</div>';
-
+    container.innerHTML = '<div class="empty-state">Nenhuma solicitação pendente.</div>';
     return;
-
   }
 
+  const isAdmin = !!currentProfile?.is_admin;
 
-  const isAdmin =
-    !!currentProfile?.is_admin;
-
-
-  container.innerHTML =
-    pending
-      .map(m => `
-
-        <div class="request-card">
-
-          <div class="request-card-main">
-
-            <span
-              class="cat-dot"
-              style="--cat-color:${categoryColor(m.category)}"
-            ></span>
-
-            <div>
-
-              <div class="request-title">
-                ${esc(m.title)}
-              </div>
-
-              <div class="request-meta">
-
-                ${esc(m.requested_by_name || m.owner || '')}
-
-                ·
-
-                ${esc(categoryLabel(m.category))}
-
-                ·
-
-                ${m.date.split('-').reverse().join('/')}
-
-                ·
-
-                ${esc(String(m.start).slice(0,5))}-${esc(String(m.end).slice(0,5))}
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          ${
-            isAdmin
-
-              ? `
-
-                <div class="request-actions">
-
-                  <button
-                    class="btn"
-                    onclick="reviewRequest('${m.id}','approved')"
-                  >
-                    Aprovar
-                  </button>
-
-                  <button
-                    class="btn btn-danger"
-                    onclick="reviewRequest('${m.id}','rejected')"
-                  >
-                    Rejeitar
-                  </button>
-
-                </div>
-
-              `
-
-              : `
-
-                <span class="status-pill">
-                  Aguardando aprovação
-                </span>
-
-              `
-          }
-
+  container.innerHTML = pending.map(m => `
+    <div class="request-card">
+      <div class="request-card-main">
+        <span class="cat-dot" style="--cat-color:${categoryColor(m.category)}"></span>
+        <div>
+          <div class="request-title">${esc(m.title)}</div>
+          <div class="request-meta">${esc(m.requested_by_name || m.owner || '')} · ${esc(categoryLabel(m.category))} · ${m.date.split('-').reverse().join('/')} · ${esc(String(m.start).slice(0,5))}-${esc(String(m.end).slice(0,5))}</div>
         </div>
-
-      `)
-      .join('');
-
+      </div>
+      ${isAdmin ? `
+        <div class="request-actions">
+          <button class="btn" onclick="reviewRequest('${m.id}','approved')">Aprovar</button>
+          <button class="btn btn-danger" onclick="reviewRequest('${m.id}','rejected')">Rejeitar</button>
+        </div>
+      ` : '<span class="status-pill">Aguardando aprovação</span>'}
+    </div>
+  `).join('');
 }
 
-
-async function reviewRequest(
-  id,
-  decision
-){
-
-  if(!db)
-    return;
-
-
+async function reviewRequest(id, decision){
+  if(!db) return;
   try{
-
-    const {error} =
-      await db
-        .from('meetings')
-        .update({
-          status:decision
-        })
-        .eq('id',id);
-
-
-    if(error)
-      throw error;
-
-
+    const {error} = await db.from('meetings').update({status:decision}).eq('id', id);
+    if(error) throw error;
     await loadData();
-
-
   }catch(error){
-
-    alert(
-      'Erro ao atualizar solicitação: ' +
-      error.message
-    );
-
+    alert('Erro ao atualizar solicitação: ' + error.message);
   }
-
 }
-
 
 function updateRequestsBadge(){
-
-  const count =
-    meetings.filter(
-      m => m.status === 'pending'
-    ).length;
-
-
-  const badge =
-    $('sidebar-requests-badge');
-
-
-  if(badge){
-
-    badge.textContent =
-      count > 0
-        ? String(count)
-        : '';
-
-  }
-
+  const badge = $('requests-badge');
+  if(!badge) return;
+  const count = meetings.filter(m => m.status === 'pending').length;
+  badge.textContent = count > 0 ? String(count) : '';
 }
 
-
 /* =========================
-   USUÁRIOS
+   USUÁRIOS (admin)
 ========================= */
 
 async function openUsersModal(){
-
-  if(!db)
-    return;
-
+  if(!db) return;
 
   try{
+    const {data, error} = await db.from('profiles').select('*').order('first_name');
+    if(error) throw error;
 
-    const {data,error} =
-      await db
-        .from('profiles')
-        .select('*')
-        .order('first_name');
+    $('users-list').innerHTML = data.map(p => `
+      <div class="user-row">
+        <span>${esc(p.first_name)} ${esc(p.last_name)} <span style="color:var(--muted)">(${esc(p.email)})</span>${p.is_admin ? ' <strong>· admin</strong>' : ''}</span>
+        <button class="btn ${p.is_admin ? 'btn-danger' : ''}" onclick="toggleAdmin('${p.id}', ${!p.is_admin})">
+          ${p.is_admin ? 'Remover admin' : 'Tornar admin'}
+        </button>
+      </div>
+    `).join('');
 
-
-    if(error)
-      throw error;
-
-
-    $('users-list').innerHTML =
-      data
-        .map(p => `
-
-          <div class="user-row">
-
-            <span>
-
-              ${esc(p.first_name)}
-              ${esc(p.last_name)}
-
-              <span style="color:var(--muted)">
-                (${esc(p.email)})
-              </span>
-
-              ${p.is_admin
-                ? ' <strong>· admin</strong>'
-                : ''
-              }
-
-            </span>
-
-
-            <button
-              class="btn ${p.is_admin ? 'btn-danger' : ''}"
-              onclick="toggleAdmin('${p.id}', ${!p.is_admin})"
-            >
-
-              ${
-                p.is_admin
-                  ? 'Remover admin'
-                  : 'Tornar admin'
-              }
-
-            </button>
-
-          </div>
-
-        `)
-        .join('');
-
-
-    $('users-modal').style.display =
-      'flex';
-
-
+    $('users-modal').style.display = 'flex';
   }catch(error){
-
-    alert(
-      'Erro ao carregar usuários: ' +
-      error.message
-    );
-
+    alert('Erro ao carregar usuários: ' + error.message);
   }
-
 }
 
-
-async function toggleAdmin(
-  id,
-  makeAdmin
-){
-
+async function toggleAdmin(id, makeAdmin){
   try{
-
-    const {error} =
-      await db
-        .from('profiles')
-        .update({
-          is_admin:makeAdmin
-        })
-        .eq('id',id);
-
-
-    if(error)
-      throw error;
-
+    const {error} = await db.from('profiles').update({is_admin: makeAdmin}).eq('id', id);
+    if(error) throw error;
 
     await openUsersModal();
 
-
     if(id === currentUser?.id){
-
       await loadCurrentProfile();
-
       refreshAuthUI();
-
     }
-
-
   }catch(error){
-
-    alert(
-      'Erro ao atualizar usuário: ' +
-      error.message
-    );
-
+    alert('Erro ao atualizar usuário: ' + error.message);
   }
-
 }
-
 
 function closeUsersModal(){
-
-  $('users-modal').style.display =
-    'none';
-
+  $('users-modal').style.display = 'none';
 }
-
 
 /* =========================
    ASSENTOS
 ========================= */
 
-function seatOccursOnDate(
-  allocation,
-  targetDate
-){
+function seatOccursOnDate(allocation, targetDate){
+  const start = dateFromInput(allocation.startDate);
+  const target = dateFromInput(targetDate);
 
-  const start =
-    dateFromInput(
-      allocation.startDate
-    );
+  if(target < start) return false;
 
+  const day = target.getDay();
 
-  const target =
-    dateFromInput(targetDate);
-
-
-  if(target < start)
+  if(allocation.exceptDay && allocation.exceptDay !== 'none' && Number(allocation.exceptDay) === day){
     return false;
-
-
-  const day =
-    target.getDay();
-
-
-  if(
-    allocation.exceptDay &&
-    allocation.exceptDay !== 'none' &&
-    Number(allocation.exceptDay) === day
-  ){
-
-    return false;
-
   }
 
-
-  switch(
-    allocation.recurrence || 'daily'
-  ){
-
+  switch(allocation.recurrence || 'daily'){
     case 'single':
       return allocation.startDate === targetDate;
-
     case 'daily':
-      return day >= 1 &&
-             day <= 5;
-
+      return day >= 1 && day <= 5;
     case 'weekly':
       return day === start.getDay();
-
     case 'biweekly':{
-
-      const difference =
-        Math.floor(
-          (target-start)/86400000
-        );
-
-
-      return difference >= 0 &&
-             difference % 14 === 0;
-
+      const difference = Math.floor((target-start) / 86400000);
+      return difference >= 0 && difference % 14 === 0;
     }
-
     default:
       return false;
-
   }
-
 }
 
-
-function storageTableId(
-  table,
-  period
-){
-
+function storageTableId(table, period){
   return `${table}__${period}`;
-
 }
 
-
-function getSeatOccupant(
-  table,
-  seat,
-  date,
-  period='morning'
-){
-
-  const currentTableId =
-    storageTableId(
-      table,
-      period
-    );
-
+function getSeatOccupant(table, seat, date, period = 'morning'){
+  const currentTableId = storageTableId(table, period);
 
   return seatAllocations
-    .filter(
-      allocation =>
-
-        String(allocation.seatCode) ===
-        String(seat)
-
-        &&
-
-        (
-          String(allocation.tableId) ===
-          currentTableId
-
-          ||
-
-          (
-            period === 'morning' &&
-
-            String(allocation.tableId) ===
-            String(table)
-          )
-        )
-
-        &&
-
-        seatOccursOnDate(
-          allocation,
-          date
-        )
+    .filter(allocation =>
+      String(allocation.seatCode) === String(seat) &&
+      (
+        String(allocation.tableId) === currentTableId ||
+        (period === 'morning' && String(allocation.tableId) === String(table))
+      ) &&
+      seatOccursOnDate(allocation,date)
     )
-    .sort(
-      (a,b) =>
-        String(b.startDate)
-          .localeCompare(
-            String(a.startDate)
-          )
-    )[0] || null;
-
+    .sort((a,b) => String(b.startDate).localeCompare(String(a.startDate)))[0] || null;
 }
-
 
 function renderSeats(){
+  const date = $('seat-search-date').value || localDateString();
 
-  const date =
-    $('seat-search-date').value ||
-    localDateString();
-
-
-  function chair(
-    table,
-    code,
-    period
-  ){
-
-    const allocation =
-      getSeatOccupant(
-        table,
-        code,
-        date,
-        period
-      );
-
-
+  function chair(table, code, period){
+    const allocation = getSeatOccupant(table,code,date,period);
     return `
-
-      <div
-        class="seat-chair ${allocation ? 'occupied' : ''}"
-        onclick="openSeatModal('${table}','${code}','${period}')"
-      >
-
-        <span>
-          ${code}
-        </span>
-
-        <span class="seat-status">
-          ${esc(
-            allocation?.collabName ||
-            'Livre'
-          )}
-        </span>
-
+      <div class="seat-chair ${allocation ? 'occupied' : ''}"
+           onclick="openSeatModal('${table}','${code}','${period}')">
+        <span>${code}</span>
+        <span class="seat-status">${esc(allocation?.collabName || 'Livre')}</span>
       </div>
-
     `;
-
   }
 
+  $('m1-morning-top').innerHTML = chair('Meeting01','C1','morning') + chair('Meeting01','C2','morning');
+  $('m1-morning-bottom').innerHTML = chair('Meeting01','C3','morning') + chair('Meeting01','C4','morning');
+  $('m1-afternoon-top').innerHTML = chair('Meeting01','C1','afternoon') + chair('Meeting01','C2','afternoon');
+  $('m1-afternoon-bottom').innerHTML = chair('Meeting01','C3','afternoon') + chair('Meeting01','C4','afternoon');
 
-  $('m1-morning-top').innerHTML =
-    chair('Meeting01','C1','morning') +
-    chair('Meeting01','C2','morning');
+  $('m2-morning-top').innerHTML = chair('Meeting02','C1','morning') + chair('Meeting02','C2','morning');
+  $('m2-morning-bottom').innerHTML = chair('Meeting02','C3','morning') + chair('Meeting02','C4','morning');
+  $('m2-afternoon-top').innerHTML = chair('Meeting02','C1','afternoon') + chair('Meeting02','C2','afternoon');
+  $('m2-afternoon-bottom').innerHTML = chair('Meeting02','C3','afternoon') + chair('Meeting02','C4','afternoon');
 
-
-  $('m1-morning-bottom').innerHTML =
-    chair('Meeting01','C3','morning') +
-    chair('Meeting01','C4','morning');
-
-
-  $('m1-afternoon-top').innerHTML =
-    chair('Meeting01','C1','afternoon') +
-    chair('Meeting01','C2','afternoon');
-
-
-  $('m1-afternoon-bottom').innerHTML =
-    chair('Meeting01','C3','afternoon') +
-    chair('Meeting01','C4','afternoon');
-
-
-  $('m2-morning-top').innerHTML =
-    chair('Meeting02','C1','morning') +
-    chair('Meeting02','C2','morning');
-
-
-  $('m2-morning-bottom').innerHTML =
-    chair('Meeting02','C3','morning') +
-    chair('Meeting02','C4','morning');
-
-
-  $('m2-afternoon-top').innerHTML =
-    chair('Meeting02','C1','afternoon') +
-    chair('Meeting02','C2','afternoon');
-
-
-  $('m2-afternoon-bottom').innerHTML =
-    chair('Meeting02','C3','afternoon') +
-    chair('Meeting02','C4','afternoon');
-
-
-  $('m3-morning-top').innerHTML =
-    chair('Marketing','C1','morning') +
-    chair('Marketing','C2','morning') +
-    chair('Marketing','C3','morning');
-
-
-  $('m3-morning-bottom').innerHTML =
-    chair('Marketing','C4','morning') +
-    chair('Marketing','C5','morning') +
-    chair('Marketing','C6','morning');
-
-
-  $('m3-afternoon-top').innerHTML =
-    chair('Marketing','C1','afternoon') +
-    chair('Marketing','C2','afternoon') +
-    chair('Marketing','C3','afternoon');
-
-
-  $('m3-afternoon-bottom').innerHTML =
-    chair('Marketing','C4','afternoon') +
-    chair('Marketing','C5','afternoon') +
-    chair('Marketing','C6','afternoon');
-
+  $('m3-morning-top').innerHTML = chair('Marketing','C1','morning') + chair('Marketing','C2','morning') + chair('Marketing','C3','morning');
+  $('m3-morning-bottom').innerHTML = chair('Marketing','C4','morning') + chair('Marketing','C5','morning') + chair('Marketing','C6','morning');
+  $('m3-afternoon-top').innerHTML = chair('Marketing','C1','afternoon') + chair('Marketing','C2','afternoon') + chair('Marketing','C3','afternoon');
+  $('m3-afternoon-bottom').innerHTML = chair('Marketing','C4','afternoon') + chair('Marketing','C5','afternoon') + chair('Marketing','C6','afternoon');
 }
 
+function openSeatModal(table, seat, period = 'morning'){
+  const date = $('seat-search-date').value || localDateString();
+  const existing = getSeatOccupant(table,seat,date,period);
+  const select = $('s-collab-select');
 
-function openSeatModal(
-  table,
-  seat,
-  period='morning'
-){
+  select.innerHTML = collaborators.length
+    ? collaborators.map(c => `
+        <option value="${esc(c.name)}">${esc(c.name)} (${esc(c.team || '')})</option>
+      `).join('')
+    : '<option value="">Cadastre um colaborador primeiro</option>';
 
-  const date =
-    $('seat-search-date').value ||
-    localDateString();
+  $('s-table-id').value = table;
+  $('s-seat-code').value = seat;
+  $('s-existing-id').value = existing?.id || '';
+  $('s-period').value = existing?.period || period;
+  $('s-start-date').value = existing?.startDate || date;
+  $('s-recurrence').value = existing?.recurrence || 'daily';
+  $('s-except-day').value = existing?.exceptDay || 'none';
+  $('s-collab-select').value = existing?.collabName || '';
 
+  $('seat-modal-title').textContent = `Alocar Assento - ${table} (${seat}) - ${period === 'morning' ? 'Manhã' : 'Tarde'}`;
 
-  const existing =
-    getSeatOccupant(
-      table,
-      seat,
-      date,
-      period
-    );
-
-
-  const select =
-    $('s-collab-select');
-
-
-  select.innerHTML =
-    collaborators.length
-
-      ? collaborators
-          .map(c => `
-
-            <option value="${esc(c.name)}">
-              ${esc(c.name)}
-              (${esc(c.team || '')})
-            </option>
-
-          `)
-          .join('')
-
-      : '<option value="">Cadastre um colaborador primeiro</option>';
-
-
-  $('s-table-id').value =
-    table;
-
-  $('s-seat-code').value =
-    seat;
-
-  $('s-existing-id').value =
-    existing?.id || '';
-
-  $('s-period').value =
-    existing?.period || period;
-
-  $('s-start-date').value =
-    existing?.startDate || date;
-
-  $('s-recurrence').value =
-    existing?.recurrence || 'daily';
-
-  $('s-except-day').value =
-    existing?.exceptDay || 'none';
-
-  $('s-collab-select').value =
-    existing?.collabName || '';
-
-
-  $('seat-modal-title').textContent =
-    `Alocar Assento - ${table} (${seat}) - ${
-      period === 'morning'
-        ? 'Manhã'
-        : 'Tarde'
-    }`;
-
-
-  $('btn-remove-seat').style.display =
-    existing
-      ? 'inline-flex'
-      : 'none';
-
-
-  $('seat-modal').style.display =
-    'flex';
-
+  $('btn-remove-seat').style.display = existing ? 'inline-flex' : 'none';
+  $('seat-modal').style.display = 'flex';
 }
-
 
 function closeSeatModal(){
-
-  $('seat-modal').style.display =
-    'none';
-
+  $('seat-modal').style.display = 'none';
 }
 
-
-function seatConflict(
-  candidate,
-  editingId=''
-){
-
-  const base =
-    dateFromInput(
-      candidate.startDate
-    );
-
+function seatConflict(candidate, editingId = ''){
+  const base = dateFromInput(candidate.startDate);
 
   for(let i=0;i<366;i++){
+    const day = localDateString(addDays(base,i));
+    if(!seatOccursOnDate(candidate,day)) continue;
 
-    const day =
-      localDateString(
-        addDays(base,i)
-      );
-
-
-    if(
-      !seatOccursOnDate(
-        candidate,
-        day
-      )
-    )
-      continue;
-
-
-    for(
-      const existing
-      of seatAllocations
-    ){
-
-      if(
-        editingId &&
-        String(existing.id) ===
-        String(editingId)
-      )
-        continue;
-
-
-      if(
-        String(existing.tableId) !==
-        String(candidate.tableId)
-      )
-        continue;
-
-
-      if(
-        String(existing.seatCode) !==
-        String(candidate.seatCode)
-      )
-        continue;
-
-
-      if(
-        String(existing.period || 'morning') !==
-        String(candidate.period || 'morning')
-      )
-        continue;
-
-
-      if(
-        seatOccursOnDate(
-          existing,
-          day
-        )
-      )
-        return true;
-
+    for(const existing of seatAllocations){
+      if(editingId && String(existing.id) === String(editingId)) continue;
+      if(String(existing.tableId) !== String(candidate.tableId)) continue;
+      if(String(existing.seatCode) !== String(candidate.seatCode)) continue;
+      if(String(existing.period || 'morning') !== String(candidate.period || 'morning')) continue;
+      if(seatOccursOnDate(existing,day)) return true;
     }
-
   }
-
 
   return false;
-
 }
 
-
 async function saveSeatAllocation(event){
-
   event.preventDefault();
 
-
   if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
+    alert('Supabase indisponível.');
     return;
-
   }
 
-
-  const id =
-    $('s-existing-id').value;
-
-
-  const table =
-    $('s-table-id').value;
-
-
-  const period =
-    $('s-period').value ||
-    'morning';
-
+  const id = $('s-existing-id').value;
+  const table = $('s-table-id').value;
+  const period = $('s-period').value || 'morning';
 
   const data = {
-
-    tableId:
-      storageTableId(
-        table,
-        period
-      ),
-
-    seatCode:
-      $('s-seat-code').value,
-
-    collabName:
-      $('s-collab-select').value,
-
-    startDate:
-      $('s-start-date').value,
-
-    recurrence:
-      $('s-recurrence').value,
-
-    exceptDay:
-      $('s-except-day').value,
-
+    tableId: storageTableId(table, period),
+    seatCode: $('s-seat-code').value,
+    collabName: $('s-collab-select').value,
+    startDate: $('s-start-date').value,
+    recurrence: $('s-recurrence').value,
+    exceptDay: $('s-except-day').value,
     period
-
   };
 
-
-  if(
-    !data.collabName ||
-    !data.startDate
-  ){
-
-    alert(
-      'Preencha colaborador e data.'
-    );
-
+  if(!data.collabName || !data.startDate){
+    alert('Preencha colaborador e data.');
     return;
-
   }
 
-
-  if(
-    seatConflict(
-      data,
-      id
-    )
-  ){
-
-    alert(
-      `Este assento já possui uma alocação conflitante no período da ${
-        period === 'morning'
-          ? 'manhã'
-          : 'tarde'
-      }.`
-    );
-
+  if(seatConflict(data,id)){
+    alert(`Este assento já possui uma alocação conflitante no período da ${period === 'morning' ? 'manhã' : 'tarde'}.`);
     return;
-
   }
-
 
   try{
-
     let response;
 
-
     if(id){
-
-      response =
-        await db
-          .from('seat_allocations')
-          .update(data)
-          .eq('id',id)
-          .select()
-          .single();
-
+      response = await db.from('seat_allocations').update(data).eq('id',id).select().single();
     }else{
-
-      response =
-        await db
-          .from('seat_allocations')
-          .insert([data])
-          .select()
-          .single();
-
+      response = await db.from('seat_allocations').insert([data]).select().single();
     }
 
-
-    if(response.error)
-      throw response.error;
-
+    if(response.error) throw response.error;
 
     closeSeatModal();
-
     await loadData();
 
-
   }catch(error){
-
     console.error(error);
 
+    const message = String(error?.message || '').toLowerCase();
 
-    const message =
-      String(
-        error?.message || ''
-      )
-      .toLowerCase();
-
-
-    if(
-      message.includes('period') ||
-      message.includes('column') ||
-      message.includes('schema cache')
-    ){
-
+    if(message.includes('period') || message.includes('column') || message.includes('schema cache')){
       try{
-
-        const fallbackData =
-          {...data};
-
-
+        const fallbackData = {...data};
         delete fallbackData.period;
-
 
         let fallback;
 
-
         if(id){
-
-          fallback =
-            await db
-              .from('seat_allocations')
-              .update(fallbackData)
-              .eq('id',id)
-              .select()
-              .single();
-
+          fallback = await db.from('seat_allocations').update(fallbackData).eq('id',id).select().single();
         }else{
-
-          fallback =
-            await db
-              .from('seat_allocations')
-              .insert([fallbackData])
-              .select()
-              .single();
-
+          fallback = await db.from('seat_allocations').insert([fallbackData]).select().single();
         }
 
-
-        if(fallback.error)
-          throw fallback.error;
-
+        if(fallback.error) throw fallback.error;
 
         closeSeatModal();
-
         await loadData();
-
         return;
-
 
       }catch(fallbackError){
-
-        alert(
-          'Erro ao salvar assento: ' +
-          fallbackError.message
-        );
-
+        alert('Erro ao salvar assento: ' + fallbackError.message);
         return;
-
       }
-
     }
 
-
-    alert(
-      'Erro ao salvar assento: ' +
-      error.message
-    );
-
+    alert('Erro ao salvar assento: ' + error.message);
   }
-
 }
-
 
 async function removeSeatAllocation(){
-
-  const id =
-    $('s-existing-id').value;
-
-
-  if(
-    !id ||
-    !confirm(
-      'Deseja remover esta alocação?'
-    )
-  )
-    return;
-
-
+  const id = $('s-existing-id').value;
+  if(!id || !confirm('Deseja remover esta alocação?')) return;
   if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
+    alert('Supabase indisponível.');
     return;
-
   }
-
 
   try{
-
-    const {error} =
-      await db
-        .from('seat_allocations')
-        .delete()
-        .eq('id',id);
-
-
-    if(error)
-      throw error;
-
-
+    const {error} = await db.from('seat_allocations').delete().eq('id',id);
+    if(error) throw error;
     closeSeatModal();
-
     await loadData();
-
-
   }catch(error){
-
-    alert(
-      'Erro ao remover assento: ' +
-      error.message
-    );
-
+    alert('Erro ao remover assento: ' + error.message);
   }
-
 }
-
 
 /* =========================
    COLABORADORES
 ========================= */
 
 function openCollabModal(){
-
   renderCollabList();
-
-  $('collab-modal').style.display =
-    'flex';
-
+  $('collab-modal').style.display = 'flex';
 }
-
 
 function closeCollabModal(){
-
-  $('collab-modal').style.display =
-    'none';
-
+  $('collab-modal').style.display = 'none';
 }
-
 
 function renderCollabList(){
-
-  const list =
-    $('collab-list');
-
+  const list = $('collab-list');
 
   if(!collaborators.length){
-
-    list.innerHTML =
-      '<div class="empty-state">Nenhum colaborador cadastrado.</div>';
-
+    list.innerHTML = '<div class="empty-state">Nenhum colaborador cadastrado.</div>';
     return;
-
   }
 
-
-  list.innerHTML =
-    collaborators
-      .slice()
-      .sort(
-        (a,b) =>
-          String(a.name)
-            .localeCompare(
-              String(b.name),
-              'pt-BR'
-            )
-      )
-      .map(c => `
-
-        <div
-          style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding:8px 0;
-            border-bottom:1px solid var(--line)
-          "
-        >
-
-          <span>
-
-            ${esc(c.name)}
-
-            <strong>
-              (${esc(c.team || '')})
-            </strong>
-
-          </span>
-
-
-          <button
-            class="btn btn-danger"
-            onclick="deleteCollaborator('${c.id}')"
-          >
-            Excluir
-          </button>
-
-        </div>
-
-      `)
-      .join('');
-
+  list.innerHTML = collaborators
+    .slice()
+    .sort((a,b) => String(a.name).localeCompare(String(b.name), 'pt-BR'))
+    .map(c => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
+        <span>${esc(c.name)} <strong>(${esc(c.team || '')})</strong></span>
+        <button class="btn btn-danger" onclick="deleteCollaborator('${c.id}')">Excluir</button>
+      </div>
+    `)
+    .join('');
 }
 
-
 async function saveCollaborator(event){
-
   event.preventDefault();
 
-
   if(!db){
-
-    alert(
-      'Supabase indisponível.'
-    );
-
+    alert('Supabase indisponível.');
     return;
-
   }
 
+  const name = $('c-name').value.trim();
+  const team = $('c-team').value.trim();
 
-  const name =
-    $('c-name').value.trim();
+  if(!name) return;
 
-
-  const team =
-    $('c-team').value.trim();
-
-
-  if(!name)
+  if(collaborators.some(c => String(c.name).toLowerCase() === name.toLowerCase())){
+    alert('Este colaborador já está cadastrado.');
     return;
-
-
-  if(
-    collaborators.some(
-      c =>
-        String(c.name).toLowerCase() ===
-        name.toLowerCase()
-    )
-  ){
-
-    alert(
-      'Este colaborador já está cadastrado.'
-    );
-
-    return;
-
   }
-
 
   try{
-
-    const {error} =
-      await db
-        .from('collaborators')
-        .insert([
-          {
-            name,
-            team
-          }
-        ]);
-
-
-    if(error)
-      throw error;
-
+    const {error} = await db.from('collaborators').insert([{name, team}]);
+    if(error) throw error;
 
     $('c-name').value = '';
     $('c-team').value = '';
 
-
     await loadData();
-
     renderCollabList();
 
-
   }catch(error){
-
-    alert(
-      'Erro ao cadastrar colaborador: ' +
-      error.message
-    );
-
+    alert('Erro ao cadastrar colaborador: ' + error.message);
   }
-
 }
-
 
 async function deleteCollaborator(id){
+  const collaborator = collaborators.find(c => String(c.id) === String(id));
+  if(!collaborator) return;
 
-  const collaborator =
-    collaborators.find(
-      c =>
-        String(c.id) ===
-        String(id)
-    );
-
-
-  if(!collaborator)
-    return;
-
-
-  if(
-    !confirm(
-      `Excluir ${collaborator.name}?\n\nOs lugares ocupados por este colaborador também serão liberados.`
-    )
-  )
-    return;
-
-
-  if(!db)
-    return;
-
+  if(!confirm(`Excluir ${collaborator.name}?\n\nOs lugares ocupados por este colaborador também serão liberados.`)) return;
+  if(!db) return;
 
   try{
+    const {error: seatError} = await db.from('seat_allocations').delete().eq('collabName', collaborator.name);
+    if(seatError) throw seatError;
 
-    const {error:seatError} =
-      await db
-        .from('seat_allocations')
-        .delete()
-        .eq(
-          'collabName',
-          collaborator.name
-        );
-
-
-    if(seatError)
-      throw seatError;
-
-
-    const {error} =
-      await db
-        .from('collaborators')
-        .delete()
-        .eq('id',id);
-
-
-    if(error)
-      throw error;
-
+    const {error} = await db.from('collaborators').delete().eq('id',id);
+    if(error) throw error;
 
     await loadData();
-
     renderCollabList();
-
     renderSeats();
 
-
   }catch(error){
-
-    alert(
-      'Erro ao excluir colaborador: ' +
-      error.message
-    );
-
+    alert('Erro ao excluir colaborador: ' + error.message);
   }
-
 }
-
 
 /* =========================
    FECHAR MODAIS
 ========================= */
 
-document.addEventListener(
-  'keydown',
-  event => {
-
-    if(event.key === 'Escape'){
-
-      document
-        .querySelectorAll(
-          '.modal-backdrop'
-        )
-        .forEach(
-          modal =>
-            modal.style.display =
-              'none'
-        );
-
-    }
-
+document.addEventListener('keydown', event => {
+  if(event.key === 'Escape'){
+    document.querySelectorAll('.modal-backdrop').forEach(modal => modal.style.display = 'none');
   }
-);
+});
 
-
-document.addEventListener(
-  'DOMContentLoaded',
-  () => {
-
-    document
-      .querySelectorAll(
-        '.modal-backdrop'
-      )
-      .forEach(modal => {
-
-        modal.addEventListener(
-          'click',
-          event => {
-
-            if(
-              event.target === modal
-            ){
-
-              modal.style.display =
-                'none';
-
-            }
-
-          }
-        );
-
-      });
-
-  }
-);
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.modal-backdrop').forEach(modal => {
+    modal.addEventListener('click', event => {
+      if(event.target === modal){
+        modal.style.display = 'none';
+      }
+    });
+  });
+});
 
 </script>
 
 </body>
 </html>
-```
