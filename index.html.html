@@ -146,42 +146,90 @@ button{cursor:pointer}
 
 /* ============ ESTRUTURA GERAL ============ */
 
-.header{
-  height:64px;
-  background:#fff;
-  border-bottom:1px solid var(--line);
+.app-layout{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 30px;
+  align-items:stretch;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:216px;
+  flex:none;
+  background:#fbfbfa;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:20px 14px;
   position:sticky;
   top:0;
-  z-index:20
+  align-self:flex-start;
+  height:100vh;
+  overflow-y:auto;
+}
+
+.sidebar-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
 }
 
 .logo{
-  font-size:22px;
+  font-size:15px;
   font-weight:900;
-  letter-spacing:-.5px;
+  letter-spacing:-.3px;
   text-transform:uppercase;
+  line-height:1.2;
 }
 
-.header-right{
+.sidebar-nav{
   display:flex;
-  align-items:center;
-  gap:14px
+  flex-direction:column;
+  gap:6px;
+}
+
+.sidebar-btn{
+  width:100%;
+  text-align:left;
+  border:1px solid var(--line-strong);
+  background:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.2px;
+  color:var(--text);
+  cursor:pointer;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  position:relative;
+}
+.sidebar-btn:hover{background:var(--hover);border-color:#b8b8b8}
+
+.sidebar-btn-accent{background:#7247F6;border-color:#7247F6;color:#fff}
+.sidebar-btn-accent:hover{background:#5f37e0;border-color:#5f37e0}
+
+.sidebar-footer{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
 }
 
 .user-name-display{
-  font-size:13px;
+  font-size:12px;
   font-weight:700;
-  color:var(--text);
+  color:var(--muted);
+  padding:0 2px;
 }
 
-.container{
-  max-width:1500px;
-  margin:auto;
-  padding:14px 24px
+.main-content{
+  flex:1;
+  min-width:0;
+  padding:14px 24px 24px;
 }
 
 .toolbar{
@@ -577,11 +625,12 @@ button{cursor:pointer}
 
 .empty-state{text-align:center;padding:30px;color:var(--muted);font-weight:500}
 
-.brand-area{display:flex;align-items:center;gap:12px}
-.logo-upload{width:42px;height:42px;border:1.5px dashed #b0b0b0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:var(--surface-soft);flex:none}
+.logo-upload{width:38px;height:38px;border:1.5px dashed #b0b0b0;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#fff;flex:none}
 .logo-upload input{display:none}
 .logo-upload img{width:100%;height:100%;object-fit:contain}
-.logo-upload span{font-size:24px;color:var(--muted);font-weight:500}
+.logo-upload span{font-size:20px;color:var(--muted);font-weight:500}
+.logo-upload.locked{cursor:default;border-style:solid;border-color:var(--line-strong)}
+.logo-upload.locked:not(.has-logo){display:none}
 
 .user-row{
   display:flex;
@@ -595,12 +644,23 @@ button{cursor:pointer}
   font-weight:500;
 }
 
-@media(max-width:700px){
-  .brand-area{gap:8px}
-  .logo{font-size:16px}
-  .logo-upload{width:36px;height:36px}
-  .container{padding:12px}
-  .header{padding:0 14px}
+@media(max-width:800px){
+  .app-layout{flex-direction:column;min-height:0}
+  .sidebar{
+    width:100%;
+    height:auto;
+    position:static;
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+    padding:12px 14px;
+  }
+  .sidebar-logo{margin-bottom:0}
+  .sidebar-nav{flex-direction:row;flex-wrap:wrap}
+  .sidebar-btn{width:auto}
+  .sidebar-footer{margin-top:0;margin-left:auto;flex-direction:row;border-top:0;padding-top:0}
+  .main-content{padding:12px}
+  .logo-upload{width:32px;height:32px}
   .form-grid{grid-template-columns:1fr}
   .form-group.full{grid-column:auto}
   .user-name-display{display:none}
@@ -666,7 +726,7 @@ button{cursor:pointer}
 
       <div class="auth-field">
         <label>Email corporativo</label>
-        <input id="auth-email" type="email" placeholder="nome@edificabpo.com.br" required>
+        <input id="auth-email" type="email" placeholder="seu@email.com" required>
       </div>
 
       <div class="auth-field">
@@ -691,35 +751,42 @@ button{cursor:pointer}
 
 <div id="app-shell" style="display:none">
 
-<header class="header">
-  <div class="brand-area">
-    <label class="logo-upload" title="Adicionar logo">
-      <input id="logo-input" type="file" accept="image/*" onchange="handleLogoUpload(event)">
+<div class="app-layout">
+
+<aside class="sidebar">
+
+  <div class="sidebar-logo">
+    <label class="logo-upload" id="logo-upload-label" title="Logo">
+      <input id="logo-input" type="file" accept="image/*" onchange="handleLogoUpload(event)" disabled>
       <img id="brand-logo" alt="Logo" style="display:none">
       <span id="logo-placeholder">+</span>
     </label>
     <div class="logo">LOJA CONCEITO BE</div>
   </div>
 
-  <div class="header-right">
-    <span id="user-name-display" class="user-name-display"></span>
-    <button class="btn" onclick="handleLogout()">Sair</button>
-  </div>
-</header>
+  <nav class="sidebar-nav">
+    <button class="sidebar-btn" onclick="openCollabModal()">Colaboradores</button>
+    <button class="sidebar-btn admin-only" style="display:none" onclick="openUsersModal()">Usuários</button>
+    <button id="btn-tab-requests" class="sidebar-btn sidebar-btn-accent" onclick="switchTab('requests')">Solicitações<span id="requests-badge" class="tab-badge"></span></button>
+  </nav>
 
-<main class="container">
+  <div class="sidebar-footer">
+    <span id="user-name-display" class="user-name-display"></span>
+    <button class="sidebar-btn" onclick="handleLogout()">Sair</button>
+  </div>
+
+</aside>
+
+<main class="main-content">
 
   <div class="toolbar">
 
     <div class="tabs">
       <button id="btn-tab-coworking" class="tab active" onclick="switchTab('coworking')">Coworking Pro BE</button>
       <button id="btn-tab-seats" class="tab" onclick="switchTab('seats')">Mapeamento de lugares</button>
-      <button id="btn-tab-requests" class="tab" onclick="switchTab('requests')">Solicitações<span id="requests-badge" class="tab-badge"></span></button>
     </div>
 
     <div class="actions">
-      <button class="btn" onclick="openCollabModal()">Colaboradores</button>
-      <button class="btn admin-only" style="display:none" onclick="openUsersModal()">Usuários</button>
       <button class="btn" onclick="toggleAgendaView()" id="view-toggle-btn">Visualização: Semanal</button>
       <button class="btn" onclick="exportAgendaPNG()">Exportar PNG</button>
       <button class="btn btn-primary" onclick="openMeetingModal()">+ Nova reunião</button>
@@ -836,6 +903,8 @@ button{cursor:pointer}
   </section>
 
 </main>
+
+</div><!-- /.app-layout -->
 
 </div><!-- /#app-shell -->
 
@@ -1059,7 +1128,6 @@ button{cursor:pointer}
 const SUPABASE_URL = 'https://twrtjqqaaiyleefbhdlz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_lP0I0ScAAxzrtd20Gk6QMw_ID2j8bBd';
 const ADMIN_EMAIL = 'gabriel.s@edificabpo.com.br';
-const CORP_DOMAIN = '@edificabpo.com.br';
 
 let db = null;
 
@@ -1131,7 +1199,6 @@ async function init(){
   $('week-picker').value = today;
   $('seat-search-date').value = today;
 
-  loadSavedLogo();
   toggleSeatShift('morning');
   setAuthMode('login');
 
@@ -1157,6 +1224,7 @@ async function init(){
     if(currentUser && currentProfile){
       try{
         await loadData();
+        await loadAppSettings();
         setupRealtime();
       }catch(error){
         console.error(error);
@@ -1195,11 +1263,6 @@ async function handleAuthSubmit(event){
 
   const email = $('auth-email').value.trim();
   const password = $('auth-password').value;
-
-  if(!email.toLowerCase().endsWith(CORP_DOMAIN)){
-    $('auth-error').textContent = `Use seu email corporativo (${CORP_DOMAIN}).`;
-    return;
-  }
 
   if(authMode === 'signup'){
     const firstName = $('auth-first-name').value.trim();
@@ -1267,6 +1330,10 @@ function refreshAuthUI(){
     document.querySelectorAll('.admin-only').forEach(el => {
       el.style.display = currentProfile.is_admin ? '' : 'none';
     });
+
+    $('logo-input').disabled = !currentProfile.is_admin;
+    $('logo-upload-label').classList.toggle('locked', !currentProfile.is_admin);
+    $('logo-upload-label').title = currentProfile.is_admin ? 'Alterar logo' : 'Logo';
   }
 }
 
@@ -1545,10 +1612,31 @@ function exportAgendaPNG(){
 function handleLogoUpload(event){
   const file=event.target.files?.[0];
   if(!file) return;
+
+  if(!currentProfile?.is_admin){
+    event.target.value='';
+    return;
+  }
+
+  if(file.size > 2*1024*1024){
+    alert('Escolha uma imagem menor que 2MB.');
+    event.target.value='';
+    return;
+  }
+
   const reader=new FileReader();
-  reader.onload=()=>{
-    localStorage.setItem('be_logo',reader.result);
-    applySavedLogo(reader.result);
+  reader.onload=async ()=>{
+    const dataUrl = reader.result;
+    applySavedLogo(dataUrl);
+
+    if(!db) return;
+
+    try{
+      const {error} = await db.from('app_settings').update({logo_data:dataUrl}).eq('id',1);
+      if(error) throw error;
+    }catch(error){
+      alert('A logo mudou aqui, mas não foi possível salvar para todo mundo: ' + error.message);
+    }
   };
   reader.readAsDataURL(file);
 }
@@ -1556,15 +1644,23 @@ function handleLogoUpload(event){
 function applySavedLogo(src){
   const img=$('brand-logo');
   const placeholder=$('logo-placeholder');
+  const label=$('logo-upload-label');
   if(!img) return;
   img.src=src;
   img.style.display='block';
   if(placeholder) placeholder.style.display='none';
+  if(label) label.classList.add('has-logo');
 }
 
-function loadSavedLogo(){
-  const src=localStorage.getItem('be_logo');
-  if(src) applySavedLogo(src);
+async function loadAppSettings(){
+  if(!db) return;
+  try{
+    const {data, error} = await db.from('app_settings').select('logo_data').eq('id',1).single();
+    if(error) throw error;
+    if(data?.logo_data) applySavedLogo(data.logo_data);
+  }catch(error){
+    console.error(error);
+  }
 }
 
 function handleSlotClick(date, hour){
